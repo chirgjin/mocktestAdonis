@@ -20,20 +20,68 @@ class User extends Model {
             }
         })
     }
-    
-    /**
-    * A relationship on tokens is required for auth to
-    * work. Since features like `refreshTokens` or
-    * `rememberToken` will be saved inside the
-    * tokens table.
-    *
-    * @method tokens
-    *
-    * @return {Object}
-    */
-    tokens () {
-        return this.hasMany('App/Models/Token')
+
+    static get hidden() {
+        return ['active', 'isAdmin', 'isSuperAdmin', 'id', 'password', 'activation_token', 'reset_token', 'login_token'];
     }
+    
+    static get computed() {
+        return ['active', 'isAdmin', 'isSuperAdmin', 'name'];
+    }
+
+    getActive({ email_verified }) {
+        return !!email_verified;
+    }
+
+    getRoles(roles) {
+        return roles.split(",");
+    }
+
+    setRoles(roles) {
+        return Array.isArray(roles) ? roles.join(",") : roles && roles.toString() || 'student';
+    }
+
+    addRole(role) {
+        this.roles = this.roles.push(role);
+    }
+
+    removeRole(role) {
+        this.roles = this.roles.filter(r => role == r);
+    }
+
+    getIsAdmin({roles}) {
+        return roles.indexOf("admin") > -1;
+    }
+
+    getIsSuperAdmin({roles}) {
+        return roles.indexOf("superAdmin") > -1;
+    }
+
+    getName({ firstname, lastname }) {
+        return `${firstname||''} ${lastname||''}`.trim();
+    }
+    
+
+
+
+    exams() {
+        return this
+        .belongsToMany('App/Models/Exam')
+        .pivotTable('user_exams')
+    }
+
+    tests() {
+        return this.hasMany('App/Models/UserTest')
+    }
+
+    examAnalysis() {
+        return this.hasMany('App/Models/UserExamAnalysis')
+    }
+
+    answers() {
+        //return this.manyThrough()
+    }
+
 }
 
 module.exports = User

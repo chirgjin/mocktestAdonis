@@ -14,8 +14,8 @@ class UserSchema extends Schema {
             
             table.string('password', 60).notNullable()
             table.string('roles', 50).notNullable().defaultTo('student')
-            table.string('first_name', 50).notNullable()
-            table.string('last_name', 50)
+            table.string('firstname', 50).notNullable()
+            table.string('lastname', 50)
             table.string('college', 255)
             
             table.boolean('email_verified').defaultTo(false)
