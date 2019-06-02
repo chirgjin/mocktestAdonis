@@ -1,0 +1,29 @@
+'use strict'
+
+/** @type {import('@adonisjs/lucid/src/Schema')} */
+const Schema = use('Schema')
+
+class UserTestSchema extends Schema {
+    up () {
+        this.create('user_tests', (table) => {
+            table.increments()
+
+            table.integer('user_id').unsigned().notNullable().references('id').inTable('users')
+            table.integer('exam_id').unsigned().notNullable().references('id').inTable('exams')
+            table.integer('exam_section_id').unsigned().references('id').inTable('exam_sections')
+
+            table.integer('status').notNullable().defaultTo(0)
+            table.integer('time_taken').notNullable().defaultTo(0)
+            table.float('marks_obtained', 6, 2).defaultTo(null)
+            table.timestamp('completed_at').defaultTo(null)
+            
+            table.timestamps()
+        })
+    }
+    
+    down () {
+        this.drop('user_tests')
+    }
+}
+
+module.exports = UserTestSchema
