@@ -12,7 +12,7 @@ class TestSchema extends Schema {
             table.integer('exam_section_id').unsigned().notNullable().references('id').inTable('exam_sections');
             table.string('difficulty').notNullable().references('name').inTable('difficulties')
 
-            table.string('name', 50).notNullable()
+            table.string('name', 50).notNullable().unique()
             table.string('description', 255).notNullable()
             table.text('instructions').notNullable()
             table.integer('negative_marks').notNullable().defaultTo(0)

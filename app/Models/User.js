@@ -3,8 +3,8 @@
 /** @type {import('@adonisjs/framework/src/Hash')} */
 const Hash = use('Hash')
 
-/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model')
+/** @type {typeof import('./Model')} */
+const Model = use('App/Models/Model')
 
 class User extends Model {
     static boot () {
@@ -29,6 +29,10 @@ class User extends Model {
         return ['active', 'isAdmin', 'isSuperAdmin', 'name'];
     }
 
+    static get getters() {
+        return ['roles'];
+    }
+
     getActive({ email_verified }) {
         return !!email_verified;
     }
@@ -37,16 +41,21 @@ class User extends Model {
         return roles.split(",");
     }
 
+    getRole(roles=null) {
+        
+        return roles.split(",");
+    }
+
     setRoles(roles) {
         return Array.isArray(roles) ? roles.join(",") : roles && roles.toString() || 'student';
     }
 
     addRole(role) {
-        this.roles = this.roles.push(role);
+        this.roles = this.rolelist.push(role);
     }
 
     removeRole(role) {
-        this.roles = this.roles.filter(r => role == r);
+        this.roles = this.rolelist.filter(r => role == r);
     }
 
     getIsAdmin({roles}) {
@@ -60,9 +69,26 @@ class User extends Model {
     getName({ firstname, lastname }) {
         return `${firstname||''} ${lastname||''}`.trim();
     }
+    /*
+    get name() {
+        return this.getName(this.$attributes);
+    }
+
+    get isAdmin() {
+        return this.getIsAdmin(this.$attributes);
+    }
+
+    get isSuperAdmin() {
+        return this.getIsSuperAdmin(this.$attributes);
+    }*/
+
+    get rolelist() {
+        // console.log(this, this.roles);
+        return this.getRoles(this.$attributes.roles);
+    }
+
+
     
-
-
 
     exams() {
         return this
