@@ -41,7 +41,7 @@ module.exports = {
         | below value to true.
         |
         */
-        allowMethodSpoofing: true,
+        allowMethodSpoofing: false,
         
         /*
         |--------------------------------------------------------------------------
@@ -236,7 +236,7 @@ module.exports = {
     */
     cookie: {
         httpOnly: true,
-        sameSite: false,
+        sameSite: true,
         path: '/',
         maxAge: 7200
     }

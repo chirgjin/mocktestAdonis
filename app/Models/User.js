@@ -4,7 +4,7 @@
 const Hash = use('Hash')
 
 /** @type {typeof import('./Model')} */
-const Model = use('App/Models/Model')
+const Model = use("Model")
 
 class User extends Model {
     static boot () {
@@ -14,8 +14,11 @@ class User extends Model {
         * A hook to hash the user password before saving
         * it to the database.
         */
+
         this.addHook('beforeSave', async (userInstance) => {
+
             if (userInstance.dirty.password) {
+                
                 userInstance.password = await Hash.make(userInstance.password)
             }
         })
@@ -80,12 +83,12 @@ class User extends Model {
 
     get isSuperAdmin() {
         return this.getIsSuperAdmin(this.$attributes);
-    }*/
+    }
 
     get rolelist() {
         // console.log(this, this.roles);
         return this.getRoles(this.$attributes.roles);
-    }
+    }*/
 
 
     

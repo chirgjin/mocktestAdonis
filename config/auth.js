@@ -16,7 +16,7 @@ module.exports = {
     | Available Serializers - lucid, database
     |
     */
-    authenticator: 'session',
+    authenticator: 'jwtStudent',
     
     /*
     |--------------------------------------------------------------------------
@@ -65,14 +65,64 @@ module.exports = {
     | via HTTP `Authorization` header.
     |
     */
-    jwt: {
+    jwtStudent: {
         serializer: 'lucid',
         model: 'App/Models/User',
         scheme: 'jwt',
-        uid: 'email',
+        uid: 'username',
         password: 'password',
         options: {
-            secret: Env.get('APP_KEY')
+            algorithm : Env.get('JWT_ALGO', 'HS256'),
+            expiresIn : Env.get('JWT_EXPIRY', '1d'),
+            audience : 'student',
+            issuer : Env.get('APP_NAME', 'MockTestIndia'),
+            subject : 'login',
+            secret: Env.get('APP_KEY'),
+        }
+    },
+    jwtAdmin : {
+        serializer: 'lucid',
+        model: 'App/Models/User',
+        scheme: 'jwt',
+        uid: 'username',
+        password: 'password',
+        options: {
+            algorithm : Env.get('JWT_ALGO', 'HS256'),
+            expiresIn : Env.get('JWT_EXPIRY', '1d'),
+            audience : 'admin',
+            issuer : Env.get('APP_NAME', 'MockTestIndia'),
+            subject : 'login',
+            secret: Env.get('APP_KEY'),
+        }
+    },
+    jwtResetPass : {
+        serializer: 'lucid',
+        model: 'App/Models/User',
+        scheme: 'jwt',
+        uid: 'username',
+        password: 'password',
+        options: {
+            algorithm : Env.get('JWT_ALGO', 'HS256'),
+            expiresIn : Env.get('JWT_EXPIRY', '1d'),
+            audience : 'student',
+            issuer : Env.get('APP_NAME', 'MockTestIndia'),
+            subject : 'resetPassword',
+            secret: Env.get('APP_KEY'),
+        }
+    },
+    jwtConfirmEmail : {
+        serializer: 'lucid',
+        model: 'App/Models/User',
+        scheme: 'jwt',
+        uid: 'username',
+        password: 'password',
+        options: {
+            algorithm : Env.get('JWT_ALGO', 'HS256'),
+            expiresIn : Env.get('JWT_EXPIRY', '1d'),
+            audience : 'student',
+            issuer : Env.get('APP_NAME', 'MockTestIndia'),
+            subject : 'resetPassword',
+            secret: Env.get('APP_KEY'),
         }
     },
     
