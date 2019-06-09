@@ -85,7 +85,9 @@ class UserController {
 
         await user.load('exams');
 
-        return response.success(user);
+        return response.success(Object.assign(user.toJSON(), {
+            exams : user.getRelated("exams")
+        }));
     }
 
     /**
@@ -171,7 +173,9 @@ class UserController {
 
         await user.load('exams');
 
-        return response.success(user);
+        return response.success(Object.assign(user.toJSON(), {
+            exams : user.getRelated("exams")
+        }));
 
     }
     
@@ -189,6 +193,7 @@ class UserController {
         if(!auth.user.canEditUser(user)) {
             throw new PermissionDeniedException();
         }
+
         //delete associations too
         await user.delete();
 
