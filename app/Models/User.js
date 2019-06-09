@@ -6,6 +6,9 @@ const Hash = use('Hash')
 /** @type {typeof import('./Model')} */
 const Model = use("Model")
 
+/** @type {typeof import('../Helpers/Permissions')} */
+const Permissions = use("App/Helpers/Permissions");
+
 class User extends Model {
     static boot () {
         super.boot()
@@ -50,7 +53,7 @@ class User extends Model {
     }
 
     setRoles(roles) {
-        return Array.isArray(roles) ? roles.join(",") : roles && roles.toString() || 'student';
+        return Array.isArray(roles) ? roles.filter(role => role == 'student' || role == 'admin' || role == 'superAdmin').join(",") : roles && roles.toString() || 'student';
     }
 
     addRole(role) {
@@ -109,6 +112,14 @@ class User extends Model {
 
     answers() {
         //return this.manyThrough()
+    }
+
+    canEditUser(user) {
+        return Permissions.canEditUser(this, user);
+    }
+
+    canAccessSettings() {
+        return Permissions.canAccessSettings(this);
     }
 
 }

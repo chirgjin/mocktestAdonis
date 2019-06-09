@@ -8,8 +8,8 @@ class UserAnswerSchema extends Schema {
         this.create('user_answers', (table) => {
             table.increments()
 
-            table.integer('user_test_id').unsigned().notNullable().references('id').inTable('user_tests')
-            table.integer('question_id').unsigned().notNullable().references('id').inTable('questions')
+            table.integer('user_test_id').unsigned().notNullable().references('id').inTable('user_tests').onDelete("CASCADE").onUpdate("NO ACTION")
+            table.integer('question_id').unsigned().notNullable().references('id').inTable('questions').onDelete("CASCADE").onUpdate("NO ACTION")
 
             table.integer('answer').defaultTo(null)
             table.float('time_taken').notNullable().defaultTo(0)

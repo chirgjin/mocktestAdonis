@@ -8,8 +8,8 @@ class UserTestSectionsSchema extends Schema {
         this.create('user_test_sections', (table) => {
             table.increments()
             
-            table.integer('user_test_id').unsigned().notNullable().references('id').inTable('user_tests')
-            table.integer('test_section_id').unsigned().notNullable().references('id').inTable('test_sections')
+            table.integer('user_test_id').unsigned().notNullable().references('id').inTable('user_tests').onDelete("CASCADE").onUpdate("NO ACTION")
+            table.integer('test_section_id').unsigned().notNullable().references('id').inTable('test_sections').onDelete("CASCADE").onUpdate("NO ACTION")
         })
     }
     

@@ -8,8 +8,8 @@ class UserExamAnalysisSchema extends Schema {
         this.create('user_exam_analyses', (table) => {
             table.increments()
 
-            table.integer('user_id').unsigned().notNullable().references('id').inTable('users')
-            table.integer('exam_id').unsigned().notNullable().references('id').inTable('exams')
+            table.integer('user_id').unsigned().notNullable().references('id').inTable('users').onDelete("CASCADE").onUpdate("NO ACTION")
+            table.integer('exam_id').unsigned().notNullable().references('id').inTable('exams').onDelete("CASCADE").onUpdate("NO ACTION")
             
             //Answers related
             table.integer('incorrect_answers').notNullable().defaultTo(0)

@@ -8,9 +8,9 @@ class UserTestSchema extends Schema {
         this.create('user_tests', (table) => {
             table.increments()
 
-            table.integer('user_id').unsigned().notNullable().references('id').inTable('users')
-            table.integer('exam_id').unsigned().notNullable().references('id').inTable('exams')
-            table.integer('exam_section_id').unsigned().references('id').inTable('exam_sections')
+            table.integer('user_id').unsigned().notNullable().references('id').inTable('users').onDelete("CASCADE").onUpdate("NO ACTION")
+            table.integer('exam_id').unsigned().notNullable().references('id').inTable('exams').onDelete("CASCADE").onUpdate("NO ACTION")
+            table.integer('exam_section_id').unsigned().references('id').inTable('exam_sections').onDelete("CASCADE").onUpdate("NO ACTION")
 
             table.integer('status').notNullable().defaultTo(0)
             table.integer('time_taken').notNullable().defaultTo(0)

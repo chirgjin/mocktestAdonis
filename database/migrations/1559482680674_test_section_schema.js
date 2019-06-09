@@ -8,7 +8,7 @@ class TestSectionSchema extends Schema {
         this.create('test_sections', (table) => {
             table.increments()
 
-            table.integer('test_id').unsigned().notNullable().references('id').inTable('tests')
+            table.integer('test_id').unsigned().notNullable().references('id').inTable('tests').onDelete("CASCADE").onUpdate("NO ACTION")
 
             table.string('name', 50).notNullable()
             table.integer('number').notNullable()

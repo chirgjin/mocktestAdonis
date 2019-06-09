@@ -8,7 +8,7 @@ class QuestionOptionSchema extends Schema {
         this.create('question_options', (table) => {
             table.increments()
             
-            table.integer('question_id').unsigned().notNullable().references('id').inTable('questions')
+            table.integer('question_id').unsigned().notNullable().references('id').inTable('questions').onDelete("CASCADE").onUpdate("NO ACTION")
 
             table.integer('number')
             table.text('description').notNullable()

@@ -18,8 +18,21 @@ const Route = use('Route')
 
 // Route.on('/').render('welcome')
 
-Route.group('student', () => {
+Route.group('studentApi', () => {
 
-    Route.any('auth/login', 'AuthController.login').middleware('guest');
 
-}).prefix('api/student').namespace('Student');
+}).prefix('api/student').namespace('Student').middleware(['auth:jwtStudent'])
+
+Route.group('studentAuth', () => {
+
+    Route.get('login', 'AuthController.login');
+    Route.post('register', 'AuthController.register');
+    Route.post('forgotPassword', 'AuthController.forgotPassword');
+    Route.post('resetPassword', 'AuthControlller.resetPassword');
+
+}).prefix('api/student').namespace('Student').middleware('guest');
+
+Route.group('adminAuth', () => {
+
+    Route.get('login', 'AuthController.login');
+}).prefix('api/admin').namespace('Admin').middleware('guest');

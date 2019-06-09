@@ -8,8 +8,8 @@ class QuestionSchema extends Schema {
         this.create('questions', (table) => {
             table.increments()
 
-            table.integer('direction_id').unsigned().references('id').inTable('question_directions')
-            table.string('difficulty').notNullable().references('name').inTable('difficulties')
+            table.integer('direction_id').unsigned().references('id').inTable('question_directions').onDelete("CASCADE").onUpdate("NO ACTION")
+            table.string('difficulty').notNullable().references('name').inTable('difficulties').onDelete("CASCADE").onUpdate("NO ACTION")
 
             table.text('description').notNullable()
             table.integer('type').notNullable()

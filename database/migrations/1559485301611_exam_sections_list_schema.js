@@ -8,8 +8,8 @@ class ExamSectionsListSchema extends Schema {
         this.create('exam_section_list', (table) => {
             table.increments()
             
-            table.integer('exam_id').unsigned().notNullable().references('id').inTable('exams')
-            table.integer('exam_section_id').unsigned().notNullable().references('id').inTable('exam_sections')
+            table.integer('exam_id').unsigned().notNullable().references('id').inTable('exams').onDelete("CASCADE").onUpdate("NO ACTION")
+            table.integer('exam_section_id').unsigned().notNullable().references('id').inTable('exam_sections').onDelete("CASCADE").onUpdate("NO ACTION")
         })
     }
     

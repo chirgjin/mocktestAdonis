@@ -9,8 +9,8 @@ class TestSectionQuestionsSchema extends Schema {
             table.increments()
             
             
-            table.integer('question_id').unsigned().notNullable().references('id').inTable('questions')
-            table.integer('test_section_id').unsigned().notNullable().references('id').inTable('test_sections')
+            table.integer('question_id').unsigned().notNullable().references('id').inTable('questions').onDelete("CASCADE").onUpdate("NO ACTION")
+            table.integer('test_section_id').unsigned().notNullable().references('id').inTable('test_sections').onDelete("CASCADE").onUpdate("NO ACTION")
         })
     }
     
