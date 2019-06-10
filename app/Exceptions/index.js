@@ -5,4 +5,6 @@ module.exports = {
     NotFound : require("./NotFoundException"),
     IncorrectTypeException : require("./IncorrectTypeException"),
     IncorrectType : require("./IncorrectTypeException"),
+    MissingValueException : require("./MissingValueException"),
+    MissingValue : require("./MissingValueException"),
 }

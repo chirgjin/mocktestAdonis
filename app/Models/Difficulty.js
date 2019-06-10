@@ -7,6 +7,9 @@ class Difficulty extends Model {
     static get primaryKey() {
         return 'name';
     }
+    static get incrementing () {
+        return false
+    }
 
     static boot() {
         super.boot();
