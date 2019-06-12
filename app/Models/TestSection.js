@@ -5,6 +5,10 @@ const Model = use("Model")
 
 class TestSection extends Model {
 
+    static scopeOrderByNum(query) {
+        return query.orderBy('number', 'ASC');
+    }
+    
     static get hidden() {
         return [];
     }

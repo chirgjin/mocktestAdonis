@@ -6,7 +6,7 @@ const Model = use("Model")
 class QuestionDirection extends Model {
 
     static get hidden() {
-        return ['id', 'created_at', 'updated_at']
+        return ['id', 'answer', 'avg_time']
     }
 
     questions() {

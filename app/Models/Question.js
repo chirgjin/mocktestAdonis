@@ -5,8 +5,16 @@ const Model = use("Model")
 
 class Question extends Model {
 
+    static scopeWithAll(query, ) {
+        return query
+        .with('direction')
+        .with('options')
+        .with('images')
+    }
+
+
     static get hidden() {
-        return ['answer', 'avg_time'];
+        return [];
     }
 
     direction() {

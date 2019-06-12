@@ -5,7 +5,7 @@ const Model = use("Model")
 
 class Test extends Model {
     static get hidden() {
-        return ['enabled', 'options', 'created_by'];
+        return ['options', 'created_by'];
     }
 
     static boot() {

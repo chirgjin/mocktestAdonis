@@ -34,6 +34,15 @@ class TestController {
             q.where("created_by", parseInt(request.input("created_by")));
         }
 
+        if(request.input("with_sections") === '1') {
+            q.with("sections", (builder) => {
+                builder.orderByNum();
+                if(request.input("with_questions") === '1') {
+                    builder.with('questions', builder => builder.withAll().with('solution'));
+                }
+            });
+        }
+
         const tests = await q.fetch();
 
         return response.success(tests);
