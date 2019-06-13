@@ -8,6 +8,7 @@
 const {Test, TestSection, Exam, Difficulty, ExamSection} = use("App/Models");
 const MissingValueException = use("App/Exceptions/MissingValueException");
 const { validate } = use('Validator')
+const Helpers = use("App/Helpers")
 
 /**
 * Resourceful controller for interacting with tests
@@ -75,7 +76,8 @@ class TestController {
         }
 
         let sections = request.input("test_sections");
-        
+        let images = request.input("images");
+
         if(Array.isArray(sections)) {
             const len = sections.filter((section,i) => {
                 if(!section.name) {
@@ -98,6 +100,23 @@ class TestController {
         const difficulty = await Difficulty.findOrFail(testData.difficulty);
 
         testData.created_by = auth.user.id;
+
+
+        
+
+        if(Array.isArray(images)) {
+            for(let i=0;i<images.length;i++) {
+                images[i] = await Helpers.storeImage({
+                    image : new Buffer(images[i], 'base64'),
+                    type : 'test'
+                });
+            }
+
+            testData.instructions = Helpers.parseImages(testData.instructions, images.map(img => img.url));
+        }
+
+
+
 
         const test = await Test.create(testData);
 
