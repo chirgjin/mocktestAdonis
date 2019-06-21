@@ -27,8 +27,8 @@ class UserController {
     async index ({ request, response }) {
         
         const q = User.query();
-        if(request.input("name", null)) {
-            q.where('name', 'like', `%${request.input("name")}%`);
+        if(request.input("firstname", null)) {
+            q.where('firstname', 'like', `%${request.input("firstname")}%`);
         }
         
         const users = await q.fetch();
@@ -124,7 +124,15 @@ class UserController {
     */
     async show ({ params, request, response, auth }) {
 
-        const user = await User.findOrFail(params.id);
+        const user = await User
+        .query()
+        .where("id", params.id)
+        .with('exams')
+        .fetch();
+
+        if(!user) {
+            throw new Error("Not found");
+        }
 
         if(!auth.user.canEditUser(user)) {
             throw new PermissionDeniedException();

@@ -6,6 +6,7 @@
 
 const {Test, TestSection, Difficulty, Question, QuestionDirection, QuestionOption, QuestionSolution} = use("App/Models");
 const MissingValueException = use("App/Exceptions/MissingValueException");
+const NotFoundException = use("App/Exceptions/NotFoundException");
 const { validate } = use('Validator')
 const Helpers = use("App/Helpers")
 const Database = use('Database')
@@ -27,15 +28,14 @@ class QuestionController {
     }
     
     /**
-    * Render a form to be used for creating a new question.
-    * GET questions/create
+    * Create/save a new question.
+    * POST questions
     *
     * @param {object} ctx
     * @param {Request} ctx.request
     * @param {Response} ctx.response
-    * @param {View} ctx.view
     */
-    async create ({ request, response, view }) {
+    async store ({ request, response }) {
         const v = await validate(request.post(), {
             questions : "required|array",
             "questions.*.difficulty" : "required|alphaNumeric",
@@ -84,6 +84,11 @@ class QuestionController {
                         option.number = i;
                     }
                 });
+            }
+            else if(question.options && question.options.length > 0) {
+                const err = new Error(`questions.${i} can not have options`);
+                err.field = `questions.${i}.options`;
+                throw err;
             }
 
             if(typeof question.direction == 'number' && !directions[question.direction]) {
@@ -197,6 +202,27 @@ class QuestionController {
 
             //questions done, directions done, images done, solutions done, options done, attach questions to section done.. everything done ig
             await Promise.all(updateProms);
+
+            await Promise.all(createdImages.map(image => {
+                let arr;
+                if(image.type == 'question') {
+                    arr = createdQuestions;
+                }
+                else if(image.type == 'questionDirection') {
+                    arr = createdDirections;
+                }
+                else if(image.type == 'questionOption') {
+                    arr = optionsCreated;
+                }
+                else if(image.type == 'questionSolution') {
+                    arr = solutionsCreated;
+                }
+
+                image.reference_id = arr.filter(obj => obj.description.indexOf(image.url) > -1)[0].id;
+
+                return image.save();
+            }));
+
             await transaction.commit();
 
             return response.success({
@@ -214,17 +240,6 @@ class QuestionController {
     }
     
     /**
-    * Create/save a new question.
-    * POST questions
-    *
-    * @param {object} ctx
-    * @param {Request} ctx.request
-    * @param {Response} ctx.response
-    */
-    async store ({ request, response }) {
-    }
-    
-    /**
     * Display a single question.
     * GET questions/:id
     *
@@ -234,18 +249,18 @@ class QuestionController {
     * @param {View} ctx.view
     */
     async show ({ params, request, response, view }) {
-    }
-    
-    /**
-    * Render a form to update an existing question.
-    * GET questions/:id/edit
-    *
-    * @param {object} ctx
-    * @param {Request} ctx.request
-    * @param {Response} ctx.response
-    * @param {View} ctx.view
-    */
-    async edit ({ params, request, response, view }) {
+
+        const q = Question.query()
+        .withAll()
+        .with('solution')
+        .where('id', params.id);
+
+        const question = await q.fetch();
+        if(question.length < 1) {
+            throw new NotFoundException('Question');
+        }
+
+        return response.success(question[0]);
     }
     
     /**

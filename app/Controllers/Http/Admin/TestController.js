@@ -7,6 +7,7 @@
 /** @type {typeof import('../../../Models')} */
 const {Test, TestSection, Exam, Difficulty, ExamSection} = use("App/Models");
 const MissingValueException = use("App/Exceptions/MissingValueException");
+const NotFoundException = use("App/Exceptions/NotFoundException");
 const { validate } = use('Validator')
 const Helpers = use("App/Helpers")
 
@@ -150,7 +151,28 @@ class TestController {
     */
     async show ({ params, request, response}) {
 
+        const q = Test.query().where('id', params.id);
 
+        if(request.input('with_sections') == '1') {
+            q.with('sections', builder => {
+                if(request.input('with_questions') == '1') {
+                    builder.with('questions');
+                }
+            });
+        }
+
+        q.with('exam')
+        .with('examSection')
+        .with('createdBy')
+
+
+        const test = await q.fetch();
+
+        if(test.length< 1) {
+            throw new NotFoundException('Test');
+        }
+
+        return response.success(test[0]);
     }
     
     /**

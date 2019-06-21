@@ -38,7 +38,7 @@ class AuthController {
         const token = await auth
         .authenticator('jwtResetPass')
         .generate(user);
-
+        
         //todo : mail token to user
 
         return {success: true};

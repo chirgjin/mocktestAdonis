@@ -23,6 +23,7 @@ class AuthController {
             .authenticator('jwtAdmin')
             .attempt(username, password, true);
 
+            console.log(token)
             const payload = await auth.authenticator('jwtAdmin')._verifyToken(token.token);
             const user = payload.data;
             
