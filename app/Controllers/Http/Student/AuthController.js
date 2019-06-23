@@ -15,14 +15,30 @@ class AuthController {
         };
         const v = validate(request.post(), rules);
         if(v.fails()) {
-            
+            return response.error(v.messages());
         }
 
-        const token = await auth
-        .authenticator('jwtStudent')
-        .attempt(username, password);
+        try {
+            const token = await auth
+            .authenticator('jwtStudent')
+            .attempt(username, password, true);
 
-        return token;
+            console.log(token)
+            const payload = await auth.authenticator('jwtStudent')._verifyToken(token.token);
+            const user = payload.data;
+            
+            if(user.roles.indexOf("student") == -1) {
+                return response.error("You are not allowed to login here", 401);
+            }
+
+            return response.success({
+                token : token.token,
+                user : user
+            });
+        }
+        catch(e) {
+            return response.error("Invalid credentials", 401);
+        }
     }
 
     async forgotPassword({request, response, auth}) {
@@ -37,7 +53,7 @@ class AuthController {
 
         const token = await auth
         .authenticator('jwtResetPass')
-        .generate(user);
+        .generate(user, true);
         
         //todo : mail token to user
 

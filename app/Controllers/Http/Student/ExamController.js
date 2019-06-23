@@ -1,0 +1,36 @@
+'use strict'
+
+/** @typedef {import('@adonisjs/framework/src/Request')} Request */
+/** @typedef {import('@adonisjs/framework/src/Response')} Response */
+/** @typedef {import('@adonisjs/framework/src/View')} View */
+
+/**
+* Resourceful controller for interacting with exams
+*/
+class ExamController {
+    /**
+    * Show a list of all exams.
+    * GET exams
+    *
+    * @param {object} ctx
+    * @param {Request} ctx.request
+    * @param {Response} ctx.response
+    * @param {View} ctx.view
+    */
+    async index ({ request, response, view }) {
+    }
+    
+    /**
+    * Display a single exam.
+    * GET exams/:id
+    *
+    * @param {object} ctx
+    * @param {Request} ctx.request
+    * @param {Response} ctx.response
+    * @param {View} ctx.view
+    */
+    async show ({ params, request, response, view }) {
+    }
+}
+
+module.exports = ExamController
