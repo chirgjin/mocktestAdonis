@@ -48,6 +48,7 @@ class Test extends Model {
         return this.belongsTo('App/Models/ExamSection');
     }
 
+
     createdBy() {
         return this.belongsTo('App/Models/User', 'created_by');
     }

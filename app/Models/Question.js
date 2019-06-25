@@ -9,7 +9,7 @@ class Question extends Model {
         return query
         .with('direction')
         .with('options')
-        .with('images')
+        // .with('images')
     }
 
 

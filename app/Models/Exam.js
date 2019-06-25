@@ -19,6 +19,12 @@ class Exam extends Model {
         return this.hasMany('App/Models/Test')
     }
 
+    users() {
+        return this
+        .belongsToMany('App/Models/User')
+        .pivotTable('user_exams')
+    }
+
 }
 
 module.exports = Exam

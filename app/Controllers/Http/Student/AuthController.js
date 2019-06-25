@@ -24,11 +24,11 @@ class AuthController {
             .authenticator('jwtStudent')
             .attempt(username, password, true);
 
-            console.log(token)
+            // console.log(token)
             const payload = await auth.authenticator('jwtStudent')._verifyToken(token.token);
             const user = payload.data;
             
-            if(user.roles.indexOf("student") == -1) {
+            if(user.roles.indexOf("admin") == -1) {
                 return response.error("You are not allowed to login here", 401);
             }
 
@@ -38,6 +38,7 @@ class AuthController {
             });
         }
         catch(e) {
+            console.log(e);
             return response.error("Invalid credentials", 401);
         }
     }
@@ -90,7 +91,7 @@ class AuthController {
 
             const v = await validate(request.post(), {
                 password : "required|min:6|max:100",
-                confirmPassword : "required|same:password",
+                confirm_password : "required|same:password",
             });
 
             if(v.fails()) {

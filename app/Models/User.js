@@ -103,6 +103,11 @@ class User extends Model {
     }
 
     tests() {
+        return this
+        .manyThrough('App/Models/Exam', 'tests');
+    }
+
+    userTests() {
         return this.hasMany('App/Models/UserTest')
     }
 

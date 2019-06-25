@@ -20,12 +20,14 @@ const Route = use('Route')
 
 Route.group('studentApi', () => {
 
+    Route.resource('exams', 'ExamController').only(['index', 'show']);
+
 
 }).prefix('api/student').namespace('Student').middleware(['auth:jwtStudent'])
 
 Route.group('studentAuth', () => {
 
-    Route.get('login', 'AuthController.login').middleware('guest');
+    Route.post('login', 'AuthController.login').middleware('guest');
     // Route.post('register', 'AuthController.register');
     Route.post('forgotPassword', 'AuthController.forgotPassword').middleware('guest');
 

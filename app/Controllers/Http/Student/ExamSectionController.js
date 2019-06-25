@@ -4,21 +4,13 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+/** @type {typeof import('../../../Models/ExamSection')} */
+const ExamSection = use('App/Models/ExamSection');
+
 /**
 * Resourceful controller for interacting with examsections
 */
 class ExamSectionController {
-    /**
-    * Show a list of all examsections.
-    * GET examsections
-    *
-    * @param {object} ctx
-    * @param {Request} ctx.request
-    * @param {Response} ctx.response
-    * @param {View} ctx.view
-    */
-    async index ({ request, response, view }) {
-    }
     
     /**
     * Display a single examsection.
@@ -30,6 +22,9 @@ class ExamSectionController {
     * @param {View} ctx.view
     */
     async show ({ params, request, response, view }) {
+        const examSection = await ExamSection.findOrFail(params.id);
+
+        return response.success(examSection);
     }
 }
 
