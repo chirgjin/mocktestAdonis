@@ -19,17 +19,7 @@ class QuestionController {
     */
     async index ({ request, response, view }) {
     }
-    
-    /**
-    * Create/save a new question.
-    * POST questions
-    *
-    * @param {object} ctx
-    * @param {Request} ctx.request
-    * @param {Response} ctx.response
-    */
-    async store ({ request, response }) {
-    }
+
     
     /**
     * Display a single question.

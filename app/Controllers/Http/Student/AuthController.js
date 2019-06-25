@@ -2,6 +2,7 @@
 
 const User = use("App/Models/User");
 const { validate } = use('Validator')
+const RESET_TIME = 3600
 
 class AuthController {
 
@@ -13,7 +14,7 @@ class AuthController {
             username: 'required',
             password: 'required'
         };
-        const v = validate(request.post(), rules);
+        const v = await validate(request.post(), rules);
         if(v.fails()) {
             return response.error(v.messages());
         }
@@ -54,10 +55,59 @@ class AuthController {
         const token = await auth
         .authenticator('jwtResetPass')
         .generate(user, true);
+
+        const payload = await auth.authenticator('jwtResetPass')._verifyToken(token.token);
         
+        user.reset_token = payload.iat;
+        await user.save()
+        
+        console.log(token.token);
         //todo : mail token to user
 
-        return {success: true};
+        return response.success(true);
+    }
+
+    async resetPassword({request, response, auth}) {
+
+        try {
+            const user = await auth
+            .authenticator('jwtResetPass')
+            .getUser();
+
+            const payload = auth.authenticator('jwtResetPass').jwtPayload;
+
+            if(user.reset_token != payload.iat) {
+                return response.error("Invalid or expired reset token");
+            }
+            
+            const now = Date.now()/1000;
+
+            if(now > payload.iat + RESET_TIME) {
+                return response.error("Expired reset token");
+            }
+
+            const { password } = request.post();
+
+            const v = await validate(request.post(), {
+                password : "required|min:6|max:100",
+                confirmPassword : "required|same:password",
+            });
+
+            if(v.fails()) {
+                return response.error(v.messages());
+            }
+
+            user.password = password;
+            user.reset_token = null;
+            await user.save();
+
+
+            return response.success(true);
+        }
+        catch(e) {
+            console.error(e);
+            return response.error("Invalid credentials", 401);
+        }
     }
 }
 

@@ -25,12 +25,13 @@ Route.group('studentApi', () => {
 
 Route.group('studentAuth', () => {
 
-    Route.get('login', 'AuthController.login');
-    Route.post('register', 'AuthController.register');
-    Route.post('forgotPassword', 'AuthController.forgotPassword');
-    Route.post('resetPassword', 'AuthControlller.resetPassword');
+    Route.get('login', 'AuthController.login').middleware('guest');
+    // Route.post('register', 'AuthController.register');
+    Route.post('forgotPassword', 'AuthController.forgotPassword').middleware('guest');
 
-}).prefix('api/student').namespace('Student').middleware('guest');
+    Route.post('resetPassword', 'AuthController.resetPassword');
+
+}).prefix('api/student').namespace('Student')
 
 Route.group('adminAuth', () => {
 
