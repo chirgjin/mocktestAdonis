@@ -2,6 +2,9 @@
 
 /** @type {typeof import('./Model')} */
 const Model = use("Model")
+/** @type {typeof import('./Exam')} */
+const Exam = use("App/Models/Exam");
+const ExamSection = use("App/Models/ExamSection");
 
 class Test extends Model {
     static get hidden() {
@@ -14,10 +17,8 @@ class Test extends Model {
 
         this.addHook("beforeCreate", async test => {
 
-            await test.loadMany(['exam', 'examSection']);
-
-            const exam = test.getRelated('exam');
-            const examSection = test.getRelated('examSection');
+            const exam = await Exam.findOrFail(test.exam_id)
+            const examSection = await ExamSection.findOrFail(test.exam_section_id);
 
             const prefix = `${exam.code}-${examSection.code}-`;
 
@@ -26,14 +27,16 @@ class Test extends Model {
             .where("name", "LIKE", `${prefix}%`)
             .orderBy("id", "DESC")
             .limit(1)
-            .fetch())[0];
+            .fetch()).rows[0];
+
+            console.log(last);
             
             let name = prefix;
             if(!last) {
                 name += '1';
             }
             else {
-                name += parseInt(last.name.replace(prefix, ''));
+                name += parseInt(last.name.replace(prefix, '')) + 1;
             }
 
             test.name = name;

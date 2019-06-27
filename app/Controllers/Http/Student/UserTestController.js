@@ -4,6 +4,8 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+/** @type {typeof import('../../../Models')} */
+const {UserTest, Test, TestSection, UserAnswer, Question} = use("App/Models");
 /**
 * Resourceful controller for interacting with usertests
 */
@@ -28,7 +30,12 @@ class UserTestController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async store ({ request, response }) {
+    async store ({ request, response, auth }) {
+        const {test_id} = request.post();
+
+        const userTests = await auth.user.userTests().where('test_id', test_id).fetch();
+
+        // if(userTests && userTests)
     }
     
     /**

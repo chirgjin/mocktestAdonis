@@ -30,7 +30,7 @@ hooks.after.providersBooted(() => {
                 errors = { message: errors };
             }
 
-            errors = [errors];
+            errors = typeof errors == 'boolean' || !errors ? errors : [errors];
         }
 
         return this.status(status).json({

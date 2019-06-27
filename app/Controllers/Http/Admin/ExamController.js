@@ -79,13 +79,13 @@ class ExamController {
     */
     async show ({ params, request, response}) {
 
-        const exam = await Exam.query().where('id', params.id).with('sections').fetch();
+        const exams = (await Exam.query().where('id', params.id).with('sections').fetch()).toJSON();
 
-        if(!exam) {
+        if(!exams || !exams[0]) {
             throw new NotFoundException('Exam');
         }
 
-        return response.success(exam);
+        return response.success(exams[0]);
     }
     
     /**
@@ -141,17 +141,26 @@ class ExamController {
 
         if(action == 'link') {
             //link new sections
-            await exam.sections().attach(sections);
+            await exam.load('sections', builder => {
+                builder.whereIn('exam_section_id', sections);
+            });
+
+            const secs = exam.getRelated("sections").rows
+
+            await exam.sections().attach(sections.filter(section => {
+                let go = 0;
+                secs.forEach(sec => go = go || section == sec.id);
+                return !go;
+            }));
+            delete exam.$relations.sections;
         }
         else if(action == 'unlink') {
             await exam.sections().detach(sections);
         }
 
         await exam.load('sections');
-    
-        return response.success(Object.assign(exam.toJSON(), {
-            sections: exam.getRelated('sections'),
-        }));
+        
+        return response.success(exam);
     }
     
     /**

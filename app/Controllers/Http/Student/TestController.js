@@ -43,7 +43,7 @@ class TestController {
         console.log(exam);
 
         if(!exam || Array.isArray(exam) && !exam[0]) {
-            return response.error({field: "exam_id", message : "You can not access this exam"});
+            return response.error({field: "exam_id", message : "You can not access this exam"}, 403);
         }
 
         const q = Test

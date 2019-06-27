@@ -25,6 +25,8 @@ class QuestionController {
     * @param {View} ctx.view
     */
     async index ({ request, response, view }) {
+
+        return response.success( await Question.query().fetch());
     }
     
     /**
@@ -59,8 +61,11 @@ class QuestionController {
             return response.error(v.messages());
         }
 
-        const { questions, images, directions } = request.post();
-        
+        let { questions, images, directions } = request.post();
+        images = Array.isArray(images) ? images : []
+        directions = Array.isArray(directions) ? directions : []
+
+        console.log(questions);
 
         for(let i=0;i<questions.length;i++) {
             const question = questions[i];
@@ -83,6 +88,8 @@ class QuestionController {
                     if(!option.hasOwnProperty("number")) {
                         option.number = i;
                     }
+
+                    return option;
                 });
             }
             else if(question.options && question.options.length > 0) {
@@ -122,7 +129,7 @@ class QuestionController {
         const transaction = await Database.beginTransaction()
 
         const solutions = [];
-        const options = [];
+        let options = [];
 
         try {
 
@@ -155,11 +162,13 @@ class QuestionController {
 
             questions.forEach( (question,i) => {
                 if(question.options) {
-                    options.concat(question.options.map(option => {
+                    console.log(question.options);
+                    options = options.concat(question.options.map(option => {
                         option.description = Helpers.parseImages(option.description, createdImageUrls);
                         option.question_id = createdQuestions[i].id;
                         return option;
                     }));
+
                 }
 
                 if(question.solution) {
@@ -191,9 +200,12 @@ class QuestionController {
                     })[0];
                 });
 
-                question.answer = options[questions.answer].id;
+                console.log(createdQuestion, optionsCreated);
 
-                updateProms.push(question.save(transaction));
+
+                createdQuestion.answer = options[question.answer].id;
+
+                updateProms.push(createdQuestion.save(transaction));
 
                 if(question.test_section_id) {
                     updateProms.push(question.sections().attach([question.test_section_id]));

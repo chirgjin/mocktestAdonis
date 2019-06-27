@@ -9,8 +9,8 @@ class NotFoundException extends LogicalException {
     // handle () {}
 
     constructor(prop) {
-        this.field = prop;
         super(`${prop} was not found`, 404, 'E_NOT_FOUND');
+        this.field = prop;
     }
 }
 

@@ -47,6 +47,7 @@ Route.group('adminApi', () => {
     Route.resource('difficulties', 'DifficultyController').only(['index', 'store']);
 
     Route.resource('exams', 'ExamController').apiOnly()
+    Route.post('exams/:id/examSections', 'ExamController.updateSections')
 
     Route.resource('examSections', 'ExamSectionController').apiOnly()
 

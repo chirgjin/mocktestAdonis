@@ -116,7 +116,8 @@ class ExamSectionController {
     * @param {Response} ctx.response
     */
     async updateExams({params, request, response}) {
-        
+        return response.error(null, 403);
+
         const v = await validate(request.post(), {
             action : "required|in:link,unlink",
             exams: "required|array",
