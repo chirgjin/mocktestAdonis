@@ -9,7 +9,7 @@ class UserTestSchema extends Schema {
             table.increments()
 
             table.integer('user_id').unsigned().notNullable().references('id').inTable('users').onDelete("CASCADE").onUpdate("NO ACTION")
-            table.integer('exam_id').unsigned().notNullable().references('id').inTable('exams').onDelete("CASCADE").onUpdate("NO ACTION")
+            table.integer('test_id').unsigned().notNullable().references('id').inTable('tests').onDelete("CASCADE").onUpdate("NO ACTION")
             table.integer('exam_section_id').unsigned().references('id').inTable('exam_sections').onDelete("CASCADE").onUpdate("NO ACTION")
 
             table.integer('status').notNullable().defaultTo(0)
@@ -18,6 +18,9 @@ class UserTestSchema extends Schema {
             table.timestamp('completed_at').defaultTo(null)
             
             table.timestamps()
+
+            
+            table.unique(['user_id', 'test_id'])
         })
     }
     

@@ -10,6 +10,9 @@ class UserExamsSchema extends Schema {
             
             table.integer('user_id').unsigned().notNullable().references('id').inTable('users').onDelete("CASCADE").onUpdate("NO ACTION")
             table.integer('exam_id').unsigned().notNullable().references('id').inTable('exams').onDelete("CASCADE").onUpdate("NO ACTION")
+
+            
+            table.unique(['user_id', 'exam_id'])
         })
     }
     

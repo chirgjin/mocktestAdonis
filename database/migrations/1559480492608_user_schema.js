@@ -26,6 +26,7 @@ class UserSchema extends Schema {
             table.integer('login_token')
 
             table.timestamps()
+
         })
     }
     

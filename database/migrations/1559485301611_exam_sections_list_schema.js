@@ -10,6 +10,9 @@ class ExamSectionsListSchema extends Schema {
             
             table.integer('exam_id').unsigned().notNullable().references('id').inTable('exams').onDelete("CASCADE").onUpdate("NO ACTION")
             table.integer('exam_section_id').unsigned().notNullable().references('id').inTable('exam_sections').onDelete("CASCADE").onUpdate("NO ACTION")
+            
+            
+            table.unique(['exam_id', 'exam_section_id'])
         })
     }
     

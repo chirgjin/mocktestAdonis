@@ -15,6 +15,9 @@ class TestSectionSchema extends Schema {
             table.integer('duration').defaultTo(null)
             
             table.timestamps()
+
+            
+            table.unique(['test_id', 'number'])
         })
     }
     

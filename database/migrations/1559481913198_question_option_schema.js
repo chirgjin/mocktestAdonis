@@ -14,6 +14,9 @@ class QuestionOptionSchema extends Schema {
             table.text('description').notNullable()
 
             table.timestamps()
+
+            
+            table.unique(['question_id', 'number']);
         })
     }
     

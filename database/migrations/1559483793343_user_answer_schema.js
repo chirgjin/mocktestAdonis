@@ -17,6 +17,9 @@ class UserAnswerSchema extends Schema {
             table.boolean('flagged').notNullable().defaultTo(false)
 
             table.timestamps()
+
+            
+            table.unique(['user_test_id', 'question_id'])
         })
     }
     

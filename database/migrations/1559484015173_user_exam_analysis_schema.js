@@ -27,6 +27,8 @@ class UserExamAnalysisSchema extends Schema {
             table.float('total_percentage').notNullable().defaultTo(0)
             
             table.timestamps()
+            
+            table.unique(['user_id', 'exam_id'])
         })
     }
     
