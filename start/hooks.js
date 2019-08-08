@@ -1,4 +1,9 @@
 const { hooks } = require('@adonisjs/ignitor')
+const {ioc} = require("@adonisjs/fold");
+const VanillaSerializer = require("@adonisjs/lucid/src/Lucid/Serializers/Vanilla");
+ioc.bind("VanillaSerializer", () => {
+    return VanillaSerializer;
+});
 
 hooks.after.preloading(() => {
 
@@ -43,6 +48,13 @@ hooks.after.providersBooted(() => {
 
     Response.macro('success', function (data) {
 
+        if(data instanceof VanillaSerializer) {
+            removePivot(data);
+        }
+        else if(data instanceof use("Model")){
+            removePivot({rows : [data]})
+        }
+        
         return this.json({
             success: true,
             data: data,
@@ -50,3 +62,22 @@ hooks.after.providersBooted(() => {
 
     });
 });
+
+function removePivot(data) {
+
+    data.rows.forEach(obj => {
+        if(!obj.$relations) {
+            return ;
+        }
+
+        if(obj.$relations.pivot) {
+            delete obj.$relations.pivot;
+        }
+
+        for(let relation in obj.$relations) {
+            if(obj.$relations[relation] instanceof VanillaSerializer) {
+                removePivot(obj.$relations[relation])
+            }
+        }
+    });
+}

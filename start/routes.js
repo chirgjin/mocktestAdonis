@@ -21,6 +21,18 @@ const Route = use('Route')
 Route.group('studentApi', () => {
 
     Route.resource('exams', 'ExamController').only(['index', 'show']);
+    
+    Route.get('exams/:exam_id/examSections', 'ExamSectionController.index');
+    Route.resource('examSections', 'ExamSectionController').only(['show']);
+
+    Route.get('exams/:exam_id/examSections/:exam_section_id/tests', 'TestController.index');
+    Route.resource('tests', 'TestController').only(['show']);
+
+    Route.get('tests/:test_id/testSections', 'TestSectionController.index');
+    Route.resource('testSections', 'TestSectionController').only(['show']);
+
+    Route.resource('testSections/:test_section_id/questions', 'QuestionController').only(['index']);
+    Route.resource('questions', 'QuestionController').only(['show']);
 
 
 }).prefix('api/student').namespace('Student').middleware(['auth:jwtStudent'])

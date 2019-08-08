@@ -10,6 +10,7 @@ const Test = use('App/Models/Test');
 
 
 const { validate } = use('Validator')
+const { NotFoundException } = use("App/Exceptions");
 
 /**
 * Resourceful controller for interacting with tests
@@ -22,44 +23,50 @@ class TestController {
     * @param {object} ctx
     * @param {Request} ctx.request
     * @param {Response} ctx.response
-    * @param {View} ctx.view
+    * @param {Auth} ctx.auth
     */
-    async index ({ request, response, view }) {
+    async index ({ request, response, auth, params }) {
 
-        const v = await validate(request.get(), {
+        const v = await validate(params, {
             exam_id : "required|integer",
-            section_id : "required|integer",
+            exam_section_id : "required|integer",
         });
 
         if(v.fails()) {
             return response.error(v.messages());
         }
 
-        const examId = request.input('exam_id');
-        const sectionId = request.input('section_id');
+        const examId = params.exam_id
+        const sectionId = params.exam_section_id
 
-        const exam = await auth.user.exams().where('exam_id', examId).fetch();
+        const q = auth.user.tests().where('exam_section_id', sectionId).where('user_exams.exam_id', examId)
 
-        console.log(exam);
+        
 
-        if(!exam || Array.isArray(exam) && !exam[0]) {
-            return response.error({field: "exam_id", message : "You can not access this exam"}, 403);
-        }
+        // const exam = await auth.user.exams().where('exam_id', examId).first();
 
-        const q = Test
-        .query()
-        .where("exam_id", examId)
-        .where("exam_section_id", sectionId)
+        // console.log(exam);
 
-        if(request.input("with_sections", 1)) {
+        // if(!exam || Array.isArray(exam) && !exam[0]) {
+        //     return response.error({field: "exam_id", message : "You can not access this exam"}, 403);
+        // }
+
+        // const q = Test
+        // .query()
+        // .where("exam_id", examId)
+        // .where("exam_section_id", sectionId)
+
+        if(request.input("with_sections", 1) == 1) {
             q.with('sections', builder => {
                 builder.orderByNum();
             });
         }
-        if(request.input("with_exam", 1)) {
+
+        if(request.input("with_exam", 1) == 1) {
             q.with('exam');
         }
-        if(request.input('with_exam_section')) {
+
+        if(request.input('with_exam_section', 1) == 1) {
             q.with('examSection');
         }
 
@@ -80,31 +87,38 @@ class TestController {
     */
     async show ({ params, request, response, auth }) {
 
-        const q = await auth
+        const q = auth
         .user
         .tests()
-        .where('id', params.id)
+        .where('tests.id', params.id)
         
-        if(request.input("with_sections", 1)) {
+        if(request.input("with_sections", 1) == 1) {
             q.with("sections", (builder) => {
-                builder.orderByNum();
-                if(request.input("with_questions", 1)) {
-                    builder.with('questions', builder => builder.withAll());
+                builder = builder.orderByNum()
+                if(request.input("with_questions", 1) == 1) {
+                    builder.with('questions', builder => {
+                        builder.withAll()
+                    });
                 }
             });
         }
-        if(request.input("with_exam", 1)) {
+
+        if(request.input("with_exam", 1) == 1) {
             q.with('exam');
         }
-        if(request.input('with_exam_section', 1)) {
+        if(request.input('with_exam_section', 1) == 1) {
             q.with('examSection');
         }
 
         q.setHidden(['created_by']);
 
-        const tests = await q.fetch();
+        const test = await q.first();
 
-        return response.success(tests);
+        if(!test) {
+            throw new NotFoundException('Test')
+        }
+
+        return response.success(test);
     }
 }
 

@@ -22,7 +22,8 @@ class Exam extends Model {
     users() {
         return this
         .belongsToMany('App/Models/User')
-        .pivotTable('user_exams')
+        // .pivotTable('user_exams')
+        .pivotModel('App/Models/UserExam')
     }
 
 }

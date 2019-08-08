@@ -99,12 +99,19 @@ class User extends Model {
     exams() {
         return this
         .belongsToMany('App/Models/Exam')
-        .pivotTable('user_exams')
+        // .pivotTable('user_exams')
+        .pivotModel('App/Models/UserExam')
+        // .pivotAttribute(false)
+    }
+
+    examSections() {
+        return this
+        .manyThrough('App/Models/UserExam', 'sections')
     }
 
     tests() {
         return this
-        .manyThrough('App/Models/Exam', 'tests');
+        .manyThrough('App/Models/UserExam', 'tests');
     }
 
     userTests() {

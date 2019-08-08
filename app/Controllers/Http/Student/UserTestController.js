@@ -35,7 +35,7 @@ class UserTestController {
 
         const userTests = await auth.user.userTests().where('test_id', test_id).fetch();
 
-        // if(userTests && userTests)
+        console.log(userTests);
     }
     
     /**

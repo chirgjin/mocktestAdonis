@@ -14,3 +14,5 @@ exports.TestSection = use("App/Models/TestSection");
 exports.UserAnswer = use("App/Models/UserAnswer");
 exports.UserExamAnalysis = use("App/Models/UserExamAnalysis");
 exports.UserTest = use("App/Models/UserTest");
+exports.UserExam = use("App/Models/UserExam");
+exports.TestSectionQuestion = use("App/Models/TestSectionQuestion");

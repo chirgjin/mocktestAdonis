@@ -21,6 +21,11 @@ class TestSection extends Model {
         return this.belongsTo("App/Models/Test");
     }
 
+    exams() {
+        return this
+        .manyThrough('App/Models/Test', 'exam', 'test_id', 'id')
+    }
+
     questions() {
         return this
         .belongsToMany("App/Models/Question")
@@ -29,7 +34,7 @@ class TestSection extends Model {
 
     getIsLocked({duration}) {
         duration = parseFloat(duration);
-        return duration && duration > 0;
+        return !!(duration && duration > 0);
     }
 }
 

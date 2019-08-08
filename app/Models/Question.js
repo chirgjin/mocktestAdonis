@@ -32,7 +32,18 @@ class Question extends Model {
     sections() {
         return this
         .belongsToMany('App/Models/TestSection')
-        .pivotTable('test_section_questions')
+        // .pivotTable('test_section_questions')
+        .pivotModel('App/Models/TestSectionQuestion')
+    }
+
+    tests() {
+        return this
+        .manyThrough('App/Models/TestSectionQuestion', 'tests', 'id', 'question_id')
+    }
+
+    exams() {
+        return this
+        .manyThrough('App/Models/TestSectionQuestion', 'exams', 'id', 'question_id')
     }
 
     images() {

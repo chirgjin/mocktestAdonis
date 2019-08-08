@@ -28,7 +28,8 @@ class ExamController {
         const user = auth.user;
         const q = user.exams();
 
-        if(request.input("with_sections", 1)) {
+        
+        if(request.input("with_sections", 1) == 1) {
             q.with("sections");
         }
 
@@ -56,11 +57,11 @@ class ExamController {
             builder.where('user_id', user.id);
         });
 
-        if(request.input("with_sections", 1)) {
+        if(request.input("with_sections", 1) == 1) {
             q.with("sections");
         }
 
-        const exam =  await q.fetch();
+        const exam =  await q.first();
 
         if(!exam) {
             throw new NotFoundException('Exam');

@@ -9,6 +9,7 @@ const TestSection = use('App/Models/TestSection');
 
 
 const { validate } = use('Validator')
+const { NotFoundException } = use("App/Exceptions");
 /**
 * Resourceful controller for interacting with testsections
 */
@@ -22,8 +23,8 @@ class TestSectionController {
     * @param {Response} ctx.response
     * @param {View} ctx.view
     */
-    async index ({ request, response, view }) {
-        const v = await validate(request.get(), {
+    async index ({ request, response, params, auth }) {
+        const v = await validate(params, {
             test_id : "required|integer",
         });
 
@@ -34,16 +35,20 @@ class TestSectionController {
         const test = await auth
         .user
         .tests()
-        .where('id', params.id)
+        .where('tests.id', params.test_id)
         .with("sections", (builder) => {
             builder.orderByNum();
-            if(request.input("with_questions", 1)) {
+            if(request.input("with_questions", 1) == 1) {
                 builder.with('questions', builder => builder.withAll());
             }
         })
-        .fetch();
+        .first();
 
-        return response.success(test);
+        if(!test) {
+            throw new NotFoundException("TestSection")
+        }
+
+        return response.success(test.getRelated('sections'));
     }
     
     /**
@@ -56,6 +61,39 @@ class TestSectionController {
     * @param {View} ctx.view
     */
     async show ({ params, request, response, auth}) {
+        const v = await validate(params, {
+            id : "required|integer",
+        });
+
+        if(v.fails()) {
+            return response.error(v.messages());
+        }
+
+        const q = TestSection
+        .query()
+        .where('id', params.id)
+        
+        if(request.input('with_questions', 1) == 1) {
+            q.with('questions', builder => {
+                builder.withAll();
+            })
+        }
+
+        const testSection = await q.first();
+
+        if(!testSection) {
+            throw new NotFoundException('TestSection')
+        }
+
+        const test = await auth.user.tests().where('tests.id', testSection.test_id).first();
+
+        if(!test) {
+            throw new NotFoundException('Test');
+        }
+
+        await testSection.load('exams');
+        
+        return response.success(testSection);
     }
 }
 

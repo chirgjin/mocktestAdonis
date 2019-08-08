@@ -6,7 +6,7 @@ const Model = use("Model")
 class ExamSection extends Model {
 
     static get hidden() {
-        return ['pivot'];
+        return [];
     }
 
     exams() {
