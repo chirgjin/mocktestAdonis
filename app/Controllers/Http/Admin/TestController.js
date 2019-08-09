@@ -36,10 +36,10 @@ class TestController {
             q.where("created_by", parseInt(request.input("created_by")));
         }
 
-        if(request.input("with_sections") === '1') {
+        if(request.input("with_sections", 1) == '1') {
             q.with("sections", (builder) => {
                 builder.orderByNum();
-                if(request.input("with_questions") === '1') {
+                if(request.input("with_questions", 1) == '1') {
                     builder.with('questions', builder => builder.withAll().with('solution'));
                 }
             });
@@ -153,9 +153,9 @@ class TestController {
 
         const q = Test.query().where('id', params.id);
 
-        if(request.input('with_sections') == '1') {
+        if(request.input('with_sections', 1) == '1') {
             q.with('sections', builder => {
-                if(request.input('with_questions') == '1') {
+                if(request.input('with_questions', 1) == '1') {
                     builder.with('questions');
                 }
             });
@@ -166,13 +166,13 @@ class TestController {
         .with('createdBy')
 
 
-        const test = await q.fetch();
+        const test = await q.first();
 
-        if(test.length< 1) {
+        if(!test) {
             throw new NotFoundException('Test');
         }
 
-        return response.success(test[0]);
+        return response.success(test);
     }
     
     /**

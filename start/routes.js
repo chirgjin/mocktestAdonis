@@ -34,6 +34,7 @@ Route.group('studentApi', () => {
     Route.resource('testSections/:test_section_id/questions', 'QuestionController').only(['index']);
     Route.resource('questions', 'QuestionController').only(['show']);
 
+    Route.resource('userTests', 'UserTestController').only(['index', 'store', 'update', 'show']);
 
 }).prefix('api/student').namespace('Student').middleware(['auth:jwtStudent'])
 

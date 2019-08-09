@@ -12,9 +12,27 @@ class Question extends Model {
         // .with('images')
     }
 
+    static get QUESTION_TYPES() {
+        return {
+            "1" : "MCQ",
+            "2" : "Order",
+            MCQ : 1,
+            Order : 2,
+            ORDER : 2,
+        }
+    }
+
+
+    static get computed() {
+        return ['prettyType'];
+    }
 
     static get hidden() {
         return [];
+    }
+
+    getPrettyType({type}) {
+        return Question.QUESTION_TYPES[type];
     }
 
     direction() {
@@ -41,15 +59,15 @@ class Question extends Model {
         .manyThrough('App/Models/TestSectionQuestion', 'tests', 'id', 'question_id')
     }
 
-    exams() {
-        return this
-        .manyThrough('App/Models/TestSectionQuestion', 'exams', 'id', 'question_id')
-    }
+    // exams() {
+    //     return this
+    //     .manyThrough('App/Models/TestSectionQuestion', 'exams', 'id', 'question_id')
+    // }
 
     images() {
         return this
         .hasMany('App/Models/Image', 'id', 'reference_id')
-        .where('type', 'question')
+        .where('images.type', 'question')
     }
 
     createImage(obj) {

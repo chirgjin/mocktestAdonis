@@ -128,7 +128,7 @@ class UserController {
         .query()
         .where("id", params.id)
         .with('exams')
-        .fetch();
+        .first();
 
         if(!user) {
             throw new Error("Not found");

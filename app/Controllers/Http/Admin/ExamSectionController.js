@@ -76,7 +76,7 @@ class ExamSectionController {
     */
     async show ({ params, request, response }) {
 
-        const examSection = await ExamSection.query().where('id', params.id).with('exams').fetch();
+        const examSection = await ExamSection.query().where('id', params.id).with('exams').first();
 
         if(!examSection) {
             throw new NotFoundException('ExamSection');

@@ -26,7 +26,23 @@ class QuestionController {
     */
     async index ({ request, response, view }) {
 
-        return response.success( await Question.query().fetch());
+        const q = Question.query();
+
+        if(request.input("test_section_id")) {
+            q.whereHas('sections', builder => {
+                builder.where('test_section_id', request.input('test_section_id'));
+            })
+        }
+
+        if(request.input('test_id')) {
+            q.whereHas('tests', builder => {
+                builder.where('test_id', request.input('test_id'));
+            })
+        }
+
+        const questions = await q.fetch();
+
+        return response.success( questions );
     }
     
     /**
@@ -265,14 +281,15 @@ class QuestionController {
         const q = Question.query()
         .withAll()
         .with('solution')
+        .with('images')
         .where('id', params.id);
 
-        const question = await q.fetch();
-        if(question.length < 1) {
+        const question = await q.first();
+        if(!question) {
             throw new NotFoundException('Question');
         }
 
-        return response.success(question[0]);
+        return response.success(question);
     }
     
     /**

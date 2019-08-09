@@ -114,13 +114,13 @@ class TestSectionController {
             q.with('questions', builder => builder.withAll().with('solution'));
         }
 
-        const testSections = await q.fetch();
+        const testSection = await q.first();
 
-        if(testSections.length < 1) {
+        if(!testSection) {
             throw new NotFoundException("TestSection");
         }
         
-        return response.success(testSections[0]);
+        return response.success(testSection);
     }
     
     /**

@@ -79,13 +79,13 @@ class ExamController {
     */
     async show ({ params, request, response}) {
 
-        const exams = (await Exam.query().where('id', params.id).with('sections').fetch()).toJSON();
+        const exam = await Exam.query().where('id', params.id).with('sections').first();
 
-        if(!exams || !exams[0]) {
+        if(!exam) {
             throw new NotFoundException('Exam');
         }
 
-        return response.success(exams[0]);
+        return response.success(exam);
     }
     
     /**

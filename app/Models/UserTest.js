@@ -9,12 +9,40 @@ class UserTest extends Model {
         return [];
     }
 
+    static get computed() {
+        return ['prettyStatus']
+    }
+
+    static get ONGOING() {
+        return 0;
+    }
+
+    static get SAVED() {
+        return 1;
+    }
+
+    static get COMPLETED() {
+        return 2;
+    }
+
+    static get statusCodes() {
+        return [
+            'OnGoing',
+            'Saved',
+            'Completed'
+        ];
+    }
+
+    getPrettyStatus({status}) {
+        return UserTest.statusCodes[status];
+    }
+
     user() {
         return this.belongsTo('App/Models/User');
     }
 
-    exam() {
-        return this.belongsTo('App/Models/Exam');
+    test() {
+        return this.belongsTo('App/Models/Test');
     }
 
     examSection() {
