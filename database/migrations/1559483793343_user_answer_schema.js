@@ -12,7 +12,7 @@ class UserAnswerSchema extends Schema {
             table.integer('question_id').unsigned().notNullable().references('id').inTable('questions').onDelete("CASCADE").onUpdate("NO ACTION")
 
             table.integer('answer').defaultTo(null)
-            table.float('time_taken').notNullable().defaultTo(0)
+            table.float('time_taken', 10, 3).notNullable().defaultTo(0)
             table.boolean('correct').defaultTo(null)
             table.boolean('flagged').notNullable().defaultTo(false)
 

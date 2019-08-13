@@ -8,6 +8,14 @@ class UserAnswer extends Model {
     static get hidden() {
         return ['correct'];
     }
+    
+    static get getters() {
+        return ['time_taken']
+    }
+
+    getTimeTaken(time) {
+        return parseFloat(time) || 0;
+    }
 
     question() {
         return this.belongsTo('App/Models/Question');

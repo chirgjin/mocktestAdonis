@@ -123,6 +123,10 @@ class UserTestController {
             q.with('answers');
         }
 
+        if(request.input('with_sections_attempted', 1) == 1) {
+            q.with('sectionsAttempted');
+        }
+
         const userTest = await q.first();
 
         if(!userTest) {

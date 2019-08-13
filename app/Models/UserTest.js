@@ -40,6 +40,10 @@ class UserTest extends Model {
         return ['prettyStatus']
     }
 
+    static get getters() {
+        return ['time_taken']
+    }
+
     static get ONGOING() {
         return 0;
     }
@@ -58,6 +62,10 @@ class UserTest extends Model {
             'Saved',
             'Completed'
         ];
+    }
+
+    getTimeTaken(time) {
+        return parseFloat(time) || 0;
     }
 
     getPrettyStatus({status}) {
@@ -122,7 +130,7 @@ class UserTest extends Model {
         }
 
         if(!hasAttempted) {
-            await userTest.sections().attach(testSection)
+            await userTest.sectionsAttempted().attach([testSection.id])
         }
 
         userTest.test_section_id = testSection.id;

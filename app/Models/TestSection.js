@@ -32,6 +32,11 @@ class TestSection extends Model {
         .pivotTable('test_section_questions')
     }
 
+    answers() {
+        return this
+        .manyThrough('App/Models/TestSectionQuestion', 'answers')
+    }
+
     getIsLocked({duration}) {
         duration = parseFloat(duration);
         return !!(duration && duration > 0);

@@ -37,6 +37,11 @@ class TestSectionQuestion extends Model {
         return this
         .manyThrough('App/Models/TestSection', 'exams', 'test_section_id', 'id')
     }
+
+    answers() {
+        return this
+        .hasMany('App/Models/UserAnswer', 'question_id', 'question_id')
+    }
 }
 
 module.exports = TestSectionQuestion

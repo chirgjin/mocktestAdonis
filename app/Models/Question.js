@@ -62,6 +62,11 @@ class Question extends Model {
         .pivotModel('App/Models/TestSectionQuestion')
     }
 
+    answers() {
+        return this
+        .hasMany('App/Models/UserAnswer')
+    }
+
     tests() {
         return this
         .manyThrough('App/Models/TestSectionQuestion', 'tests', 'id', 'question_id')

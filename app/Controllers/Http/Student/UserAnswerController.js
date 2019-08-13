@@ -28,8 +28,9 @@ class UserAnswerController {
         const q = UserAnswer
         .query()
         .where('user_test_id', params.user_test_id)
-        .has('userTest', builder => {
-            builder.where('user_id', auth.user.id)
+        .whereHas('userTest', builder => {
+            builder
+            .where('user_id', auth.user.id)
         })
 
         const answers = await q.fetch();
@@ -51,7 +52,7 @@ class UserAnswerController {
         const q = UserAnswer
         .query()
         .where('user_test_id', params.user_test_id)
-        .has('userTest', builder => {
+        .whereHas('userTest', builder => {
             builder.where('user_id', auth.user.id)
         })
         .where('question_id', params.question_id)
@@ -82,7 +83,7 @@ class UserAnswerController {
         const testSection = await TestSection
         .query()
         .where('test_id', userTest.test_id)
-        .has('questions', builder => {
+        .whereHas('questions', builder => {
             builder.where('question_id', question.id)
         })
         .first()
@@ -114,10 +115,9 @@ class UserAnswerController {
 
         await userTest.save();
 
-        return response.success({
-            userTest,
-            userAnswer
-        })
+        
+        userTest.$relations.answer = userAnswer;
+        return response.success(userTest)
     }
     
     /**
@@ -134,7 +134,7 @@ class UserAnswerController {
         const answer = await UserAnswer
         .query()
         .where('question_id', params.question_id)
-        .has('userTest', builder => {
+        .whereHas('userTest', builder => {
             builder
             .where('user_id', auth.user.id)
         })
@@ -160,7 +160,7 @@ class UserAnswerController {
         const answer = await UserAnswer
         .query()
         .where('question_id', params.question_id)
-        .has('userTest', builder => {
+        .whereHas('userTest', builder => {
             builder
             .where('user_id', auth.user.id)
         })
@@ -190,7 +190,7 @@ class UserAnswerController {
         const testSection = await TestSection
         .query()
         .where('test_id', userTest.test_id)
-        .has('questions', builder => {
+        .whereHas('questions', builder => {
             builder.where('question_id', question.id)
         })
         .first()
@@ -222,10 +222,9 @@ class UserAnswerController {
 
         await userTest.save();
 
-        return response.success({
-            userTest,
-            userAnswer
-        })
+        userTest.$relations.answer = answer;
+
+        return response.success(userTest)
     }
 }
 

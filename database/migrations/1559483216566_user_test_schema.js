@@ -13,7 +13,7 @@ class UserTestSchema extends Schema {
             table.integer('test_section_id').unsigned().references('id').inTable('test_sections').onDelete("CASCADE").onUpdate("NO ACTION")
 
             table.integer('status').notNullable().defaultTo(0)
-            table.integer('time_taken').notNullable().defaultTo(0)
+            table.float('time_taken', 10, 3).notNullable().defaultTo(0)
             table.float('marks_obtained', 6, 2).defaultTo(null)
             table.timestamp('completed_at').defaultTo(null)
             

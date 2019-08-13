@@ -35,12 +35,14 @@ Route.group('studentApi', () => {
     Route.resource('questions', 'QuestionController').only(['show']);
 
     Route.resource('userTests', 'UserTestController').only(['index', 'store', 'update', 'show']);
-    
+
     Route.get('userTests/:user_test_id/answers', 'UserAnswerController.index')
 
-    Route.get('userTest/:user_test_id/question/:question_id/answer', 'UserAnswerController.show')
-    Route.post('userTest/:user_test_id/question/:question_id/answer', 'UserAnswerController.store')
-    Route.put('userTest/:user_test_id/question/:question_id/answer', 'UserAnswerController.update')
+    Route.get('userTests/:user_test_id/question/:question_id/answer', 'UserAnswerController.show')
+    Route.post('userTests/:user_test_id/question/:question_id/answer', 'UserAnswerController.store')
+    Route.put('userTests/:user_test_id/question/:question_id/answer', 'UserAnswerController.update')
+
+    Route.get('userTests/:user_test_id/analysis', 'AnalysisController.test')
 
 }).prefix('api/student').namespace('Student').middleware(['auth:jwtStudent'])
 

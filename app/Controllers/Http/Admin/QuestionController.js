@@ -107,6 +107,8 @@ class QuestionController {
 
                     return option;
                 });
+
+                question.answer = question.options[question.answer].number
             }
             else if(question.options && question.options.length > 0) {
                 const err = new Error(`questions.${i} can not have options`);
