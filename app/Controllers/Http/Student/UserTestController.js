@@ -119,6 +119,10 @@ class UserTestController {
             });
         }
 
+        if(request.input('with_answers', 1) == 1) {
+            q.with('answers');
+        }
+
         const userTest = await q.first();
 
         if(!userTest) {

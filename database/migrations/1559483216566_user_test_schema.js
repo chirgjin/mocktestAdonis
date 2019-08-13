@@ -10,7 +10,7 @@ class UserTestSchema extends Schema {
 
             table.integer('user_id').unsigned().notNullable().references('id').inTable('users').onDelete("CASCADE").onUpdate("NO ACTION")
             table.integer('test_id').unsigned().notNullable().references('id').inTable('tests').onDelete("CASCADE").onUpdate("NO ACTION")
-            table.integer('exam_section_id').unsigned().references('id').inTable('exam_sections').onDelete("CASCADE").onUpdate("NO ACTION")
+            table.integer('test_section_id').unsigned().references('id').inTable('test_sections').onDelete("CASCADE").onUpdate("NO ACTION")
 
             table.integer('status').notNullable().defaultTo(0)
             table.integer('time_taken').notNullable().defaultTo(0)

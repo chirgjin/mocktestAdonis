@@ -7,4 +7,6 @@ module.exports = {
     IncorrectType : use("App/Exceptions/IncorrectTypeException"),
     MissingValueException : use("App/Exceptions/MissingValueException"),
     MissingValue : use("App/Exceptions/MissingValueException"),
+    BadRequest : use("App/Exceptions/BadRequestException"),
+    BadRequestException : use("App/Exceptions/BadRequestException"),
 }

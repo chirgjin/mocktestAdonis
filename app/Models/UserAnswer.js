@@ -22,7 +22,7 @@ class UserAnswer extends Model {
         .manyThrough('App/Models/UserTest', 'user');
     }
 
-    test() {
+    tests() {
         return this
         .manyThrough('App/Models/UserTest', 'test');
     }

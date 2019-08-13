@@ -22,13 +22,21 @@ class Question extends Model {
         }
     }
 
+    static get MCQ() {
+        return 1
+    }
+
+    static get ORDER() {
+        return 2
+    }
+
 
     static get computed() {
         return ['prettyType'];
     }
 
     static get hidden() {
-        return [];
+        return ['answer'];
     }
 
     getPrettyType({type}) {
@@ -74,6 +82,16 @@ class Question extends Model {
         return this
         .hasMany('App/Models/Image', 'id', 'reference_id')
         .create(Object.assign(obj, {type : 'question'}));
+    }
+
+
+
+    static isCorrectAnswer(question, answer) {
+        if(answer === null || parseInt(answer) != answer) {
+            return false;
+        }
+
+        return question.answer == parseInt(answer)
     }
 }
 

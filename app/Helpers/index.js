@@ -1,4 +1,7 @@
-exports.parseImages = exports.parseHTML = require("./parseImages");
-exports.Permissions = require("./Permissions");
-exports.storeImage = require("./storeImage");
-exports.storeImages = require("./storeImages");
+exports.parseImages = exports.parseHTML = use("App/Helpers/parseImages");
+exports.Permissions = use("App/Helpers/Permissions");
+exports.storeImage = use("App/Helpers/storeImage");
+exports.storeImages = use("App/Helpers/storeImages");
+exports.getTimeTaken = use("App/Helpers/getTimeTaken");
+
+exports.calculateMarks = use("App/Helpers/calculateMarks");
