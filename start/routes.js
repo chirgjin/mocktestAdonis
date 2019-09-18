@@ -60,6 +60,8 @@ Route.group('adminAuth', () => {
 
     Route.post('login', 'AuthController.login');
 
+    Route.resource('settings', 'SettingController').only(['index', 'update'])
+    
 }).prefix('api/admin').namespace('Admin').middleware('guest');
 
 

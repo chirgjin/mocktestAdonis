@@ -8,6 +8,8 @@ const User = use('App/Models/User');
 /** @type {typeof import('../../../Models/Exam')} */
 const Exam = use('App/Models/Exam');
 
+const Setting = use('App/Models/Setting')
+
 const { validate } = use('Validator')
 const { PermissionDeniedException, IncorrectTypeException } = use("App/Exceptions");
 
@@ -68,13 +70,20 @@ class UserController {
         else if(roles){
             throw new IncorrectTypeException('roles', 'Array', typeof roles);
         }
+        else {
+            const setting = await Setting.query().first()
+
+            if(setting && setting.max_users != -1 && setting.max_users <= await User.query().getCount()) {
+                return response.error('Max users achieved', 422)
+            }
+        }
 
         const user = await User.create(request.only(['username', 'password', 'firstname', 'email', 'mobile_number', 'lastname', 'college', 'mobile_verified', 'email_verified', 'roles']));
 
         const exams = request.input("exams");
 
         if(exams && Array.isArray(exams)) {
-            const count = (await Exam.query().whereIn('id', exams).count('* as count'))[0].count;
+            const count = await Exam.query().whereIn('id', exams).getCount();
 
             if(count != exams.length) {
                 return response.error({field: "exams", message: "One or more exams you've selected do not exist!"});
