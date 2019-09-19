@@ -11,7 +11,9 @@ const Exam = use('App/Models/Exam');
 const Setting = use('App/Models/Setting')
 
 const { validate } = use('Validator')
-const { PermissionDeniedException, IncorrectTypeException } = use("App/Exceptions");
+const { PermissionDeniedException, IncorrectTypeException, MissingValueException } = use("App/Exceptions");
+const randomString = use('App/Helpers/randomString')
+
 
 /**
 * Resourceful controller for interacting with users
@@ -101,26 +103,48 @@ class UserController {
 
     /**
      * Allow user to access given exams
-     * PUT users/:id/allowExams
+     * PUT users/:id/exams/allow
      *
      * @param {object} ctx
      * @param {Request} ctx.request
      * @param {Response} ctx.response
      */
     async allowExams ({ params, request, response, auth }) {
+        const user = await User.findOrFail(params.id);
 
-    }
+        if(!auth.user.canEditUser(user)) {
+            throw new PermissionDeniedException();
+        }
 
-    /**
-     * Change user's password
-     * PUT users/:id/changePassword
-     *
-     * @param {object} ctx
-     * @param {Request} ctx.request
-     * @param {Response} ctx.response
-     */
-    async changePassword ({ params, request, response, auth }) {
+        let exams = request.input("exams");
 
+        if(!exams || !Array.isArray(exams)) {
+            throw new IncorrectTypeException('exams', 'Array', typeof exams);
+        }
+
+        const count = await Exam.query().whereIn('id', exams).getCount();
+
+        if(count != exams.length) {
+            return response.error({'exams': 'One or more exam(s) do not exist'}, 400)
+        }
+
+        await user.load('exams', builder => {
+            builder.whereIn('exam_id', exams)
+        });
+        const userExams = user.getRelated('exams')
+
+        if(userExams && Array.isArray(userExams)) {
+            exams = exams.filter(exam => {
+                let go = 0;
+                userExams.forEach(uexam => go = go || uexam.id == exam)
+                return !go
+            })
+        }
+        delete user.$relations.exams;
+
+        await user.load('exams');
+
+        return response.success(user)
     }
     
     /**
@@ -179,7 +203,7 @@ class UserController {
         const exams =  request.input("exams");
 
         if(exams && Array.isArray(exams)) {
-            const count = (await Exam.query().whereIn('id', exams).count('* as count'))[0].count;
+            const count = await Exam.query().whereIn('id', exams).getCount()
 
             if(count != exams.length) {
                 return response.error({field: "exams", message: "One or more exams you've selected do not exist!"});
@@ -190,9 +214,7 @@ class UserController {
 
         await user.load('exams');
 
-        return response.success(Object.assign(user.toJSON(), {
-            exams : user.getRelated("exams")
-        }));
+        return response.success(user);
 
     }
     
@@ -215,6 +237,114 @@ class UserController {
         await user.delete();
 
         return response.success(true);
+    }
+
+
+
+    
+
+    /**
+     * Create users via csv
+     * POST users/upload
+     *
+     * @param {object} ctx
+     * @param {Request} ctx.request
+     * @param {Response} ctx.response
+     */
+    async uploadCSV ({ request, response, auth }) {
+        if(!auth.user.isSuperAdmin) {
+            throw new PermissionDeniedException();
+        }
+        
+        const colMapping = {
+            'first_name' : 'firstname',
+            'firstname' : 'firstname',
+            'first name' : 'firstname',
+            'name' : 'firstname',
+            
+            'last_name' : 'lastname',
+            'lastname' : 'lastname',
+            'last name' : 'lastname',
+
+            'username' : 'username',
+            
+            'email' : 'email',
+            'email id' : 'email',
+            'email_id' : 'email',
+            'email_address' : 'email',
+            'email address' : 'email',
+
+            'password' : 'password',
+            'pwd' : 'password',
+
+            'college' : 'college',
+            
+            'mobile num' : 'mobile_number',
+            'mobile number' : 'mobile_number',
+            'mobile_num' : 'mobile_number',
+            'mobile_number' : 'mobile_number',
+            'phone_num' : 'mobile_number',
+            'phone_number' : 'mobile_number',
+            'phone num' : 'mobile_number',
+            'phone number' : 'mobile_number'
+        }
+
+        const csv = request.file('file', {
+            extnames : ['csv'],
+        })
+        if(!csv) {
+            throw new MissingValueException('file')
+        }
+
+        const data = require("fs").readFileSync(csv.tmpPath).toString().split("\n").map(row => row.split(",").map(item => item.trim()))
+
+        const heads = data[0].map(head => colMapping[ (head||'').toString().toLowerCase().trim() ])
+
+        if(heads.indexOf('firstname') == -1) {
+            throw new MissingValueException('firstname')
+        }
+
+        data.splice(0, 1);
+
+        const users = [];
+
+        data.forEach(row => {
+            const obj = {};
+            row.forEach((item, i) => {
+                if(heads[i]) {
+                    obj[heads[i]] = item
+                }
+            });
+
+            if(!obj.password) {
+                obj.password = randomString(6, 'aA1!')
+            }
+            if(!obj.username) {
+                obj.username = obj.firstname + (obj.lastname||'') + randomString(6, 'aAn')
+            }
+
+            users.push(obj)
+        })
+
+
+        // users.forEach(user => {
+        //     let go = 0;
+        //     users.forEach(u => {
+        //         if(u != user && user.username == u.username) {
+        //             go = 1;
+        //         }
+        //     })
+
+        //     if(go) {
+        //         console.log("Found a match")
+        //     }
+        // })
+
+        const usersCreated = await User.createMany(users);
+
+        return response.success({
+            users,
+        })
     }
 }
 

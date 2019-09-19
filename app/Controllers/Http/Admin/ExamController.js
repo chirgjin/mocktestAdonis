@@ -134,7 +134,7 @@ class ExamController {
         const {action, sections} = request.post();
 
         
-        const count = (await ExamSection.query().whereIn('id', sections).count('* as count'))[0].count;
+        const count = await ExamSection.query().whereIn('id', sections).getCount();
         if(count != sections.length) {
             return response.error({field:"sections", message: "One or more sections do not exist"});
         }

@@ -65,11 +65,11 @@ class User extends Model {
     }
 
     getIsAdmin({roles}) {
-        return roles.indexOf("admin") > -1;
+        return roles && roles.indexOf("admin") > -1;
     }
 
     getIsSuperAdmin({roles}) {
-        return roles.indexOf("superAdmin") > -1;
+        return roles && roles.indexOf("superAdmin") > -1;
     }
 
     getName({ firstname, lastname }) {

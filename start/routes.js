@@ -82,6 +82,8 @@ Route.group('adminApi', () => {
 
     Route.resource('testSections', 'TestSectionController').apiOnly()
 
+    Route.post('users/upload', 'UserController.uploadCSV')
+    
     Route.resource('users', 'UserController').apiOnly()
 
     Route.resource('userTests', 'UserTestController').apiOnly()
