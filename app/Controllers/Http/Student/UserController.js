@@ -31,7 +31,7 @@ class UserController {
             return response.error({'email' : 'User doesn\'t have email'}, 422)
         }
 
-        const now = Date.now();
+        const now = Date.now()/1000;
         user.activation_token = parseInt(user.activation_token) || 0
         
         if(user.activation_token && user.activation_token + EMAIL_TIMER > now) {

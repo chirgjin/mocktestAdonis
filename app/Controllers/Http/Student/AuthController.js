@@ -3,6 +3,7 @@
 const User = use("App/Models/User");
 const { validate } = use('Validator')
 const RESET_TIME = 3600
+const Mail = use("Mail")
 
 class AuthController {
 
@@ -46,11 +47,14 @@ class AuthController {
     async forgotPassword({request, response, auth}) {
 
         const { email } = request.post();
-
+        if(!email) {
+            return response.error({'email' : 'This field is required'})
+        }
+        
         const user = await User.findBy('email', email);
 
         if(!user) {
-            return [{field: "email", message : "Cannot find user with provided email"}];
+            return response.error({"email" : "Cannot find user with provided email"});
         }
 
         const token = await auth
@@ -63,7 +67,14 @@ class AuthController {
         await user.save()
         
         console.log(token.token);
+        console.log(payload)
         //todo : mail token to user
+        await Mail.raw(`Reset pwd token = ${token.token}`, message => {
+            message
+            .from('admin@mocktestindia.com', 'no-reply')
+            .to(email, user.firstname)
+            .subject('Reset Password')
+        })
 
         return response.success(true);
     }
