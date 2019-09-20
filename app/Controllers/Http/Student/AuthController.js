@@ -28,7 +28,7 @@ class AuthController {
             const payload = await auth.authenticator('jwtStudent')._verifyToken(token.token);
             const user = payload.data;
             
-            if(user.roles.indexOf("admin") == -1) {
+            if(user.roles.indexOf("student") == -1) {
                 return response.error("You are not allowed to login here", 401);
             }
 

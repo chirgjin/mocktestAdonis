@@ -15,7 +15,7 @@ const { PermissionDeniedException, NotFoundException } = use("App/Exceptions");
 class AnalysisController {
     
     /**
-    * Display a single analysis.
+    * Display a single test analysis.
     * GET userTest/:user_test_id/analysis
     *
     * @param {object} ctx
@@ -63,9 +63,9 @@ class AnalysisController {
 
             const stats = {
                 answers : {
-                    incorrect : (await baseQuery().where('user_answers.correct', false).whereNot('user_answers.answer', null).count('* as total'))[0].total,
-                    correct : (await baseQuery().where('user_answers.correct', true).count('* as total'))[0].total,
-                    unattempted : (await baseQuery().where('user_answers.answer', null).count('* as total'))[0].total,
+                    incorrect : await baseQuery().where('user_answers.correct', false).whereNot('user_answers.answer', null).getCount(),
+                    correct : await baseQuery().where('user_answers.correct', true).getCount(),
+                    unattempted : await baseQuery().where('user_answers.answer', null).getCount(),
                 },
                 average_time : {
                     incorrect : (await baseQuery().where('user_answers.correct', false).whereNot('user_answers.answer', null).avg('time_taken as avg_time'))[0].avg_time,
@@ -79,9 +79,9 @@ class AnalysisController {
         }
 
 
-        const rankQuery = await UserTest.query().where('test_id', test.id).where('marks_obtained', '>', userTest.marks_obtained).count('* as rank')
+        const rankQuery = await UserTest.query().where('test_id', test.id).where('marks_obtained', '>', userTest.marks_obtained).getCount()
 
-        userTest.rank = rankQuery[0].rank + 1
+        userTest.rank = rankQuery + 1
 
         response.success(userTest)
     }
