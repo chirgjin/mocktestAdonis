@@ -8,7 +8,7 @@ const {UserTest, Test, TestSection, UserAnswer, Question} = use("App/Models");
 
 const { validate } = use('Validator')
 
-const { PermissionDeniedException, IncorrectTypeException, BadRequestException, NotFoundException } = use("App/Exceptions");
+const { PermissionDeniedException, IncorrectTypeException, BadRequestException, NotFoundException, FieldException } = use("App/Exceptions");
 const getTimeTaken = use("App/Helpers/getTimeTaken")
 /**
 * Resourceful controller for interacting with useranswers
@@ -61,7 +61,7 @@ class UserAnswerController {
         const answer = await q.first();
 
         if(answer) {
-            throw new BadRequestException('question_id', `This question has already been answered once.`)
+            throw new FieldException('question_id', `This question has already been answered once.`)
         }
 
         const _answer = request.post().answer;
@@ -77,7 +77,7 @@ class UserAnswerController {
             throw new PermissionDeniedException()
         }
         else if(userTest.status != UserTest.ONGOING) {
-            throw new BadRequestException('user_test', `This test has been marked as paused/completed`)
+            throw new FieldException('user_test', `This test has been marked as paused/completed`)
         }
 
         const testSection = await TestSection
@@ -184,7 +184,7 @@ class UserAnswerController {
             throw new PermissionDeniedException()
         }
         else if(userTest.status != UserTest.ONGOING) {
-            throw new BadRequestException('user_test', `This test has been marked as paused/completed`)
+            throw new FieldException('user_test', `This test has been marked as paused/completed`)
         }
 
         const testSection = await TestSection

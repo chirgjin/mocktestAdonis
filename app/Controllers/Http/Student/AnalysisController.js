@@ -7,7 +7,7 @@
 
 const {UserTest, Test, TestSection, UserAnswer, Question} = use("App/Models");
 
-const { PermissionDeniedException, NotFoundException } = use("App/Exceptions");
+const { PermissionDeniedException, NotFoundException, FieldException } = use("App/Exceptions");
 
 /**
 * Resourceful controller for interacting with analyses

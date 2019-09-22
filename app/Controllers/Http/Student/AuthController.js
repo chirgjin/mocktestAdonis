@@ -1,9 +1,16 @@
 'use strict'
 
+/** @type {import('@adonisjs/framework/src/Env')} */
+const Env = use('Env')
+
 const User = use("App/Models/User");
 const { validate } = use('Validator')
 const RESET_TIME = 3600
+const RESET_WAIT = 30
 const Mail = use("Mail")
+
+const FieldException = use("App/Exceptions/FieldException")
+const WaitTimeException = use("App/Exceptions/WaitTimeException")
 
 class AuthController {
 
@@ -48,13 +55,16 @@ class AuthController {
 
         const { email } = request.post();
         if(!email) {
-            return response.error({'email' : 'This field is required'})
+            throw new FieldException('email', 'This field is required')
         }
         
         const user = await User.findBy('email', email);
-
+        const now = Date.now()/1000
         if(!user) {
-            return response.error({"email" : "Cannot find user with provided email"});
+            throw new FieldException("email", "Cannot find user with provided email");
+        }
+        else if(user.reset_token && user.reset_token + RESET_WAIT > now) {
+            throw new WaitTimeException(user.reset_token + RESET_WAIT - now)
         }
 
         const token = await auth
@@ -66,12 +76,10 @@ class AuthController {
         user.reset_token = payload.iat;
         await user.save()
         
-        console.log(token.token);
-        console.log(payload)
         //todo : mail token to user
         await Mail.raw(`Reset pwd token = ${token.token}`, message => {
             message
-            .from('admin@mocktestindia.com', 'no-reply')
+            .from( Env.get('MAIL_USERNAME', `no-reply@${Env.get('HOST', 'localhost')}`), 'no-reply')
             .to(email, user.firstname)
             .subject('Reset Password')
         })
