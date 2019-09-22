@@ -110,10 +110,10 @@ class UserController {
      * @param {Response} ctx.response
      */
     async update ({ request, response, auth }) {
-        const {email} = request.post();
+        const {email, mobile_number} = request.post();
         const user = auth.user;
 
-        if(!user.email && user.email) {
+        if(!user.email) {
             const v = await validate({email}, {
                 email : "required|email|unique:users,email",
             })
@@ -126,8 +126,14 @@ class UserController {
             user.email_verified = false
         }
 
+        // const data = request.post()
+
+        // if(data.mobile_number && data.mobile_number == user.mobile_number) {
+        //     delete data.mobile_number;
+        // }
+
         const v = await validate(request.post(), {
-            mobile_number : "number|unique:users,mobile_number",
+            mobile_number : "number|unique:users,mobile_number,id," + user.id,
             firstname : 'string',
             lastname : 'string',
             college : 'string',
@@ -137,7 +143,8 @@ class UserController {
             return response.error(v.messages())
         }
 
-        if(mobile_number) {
+        if(mobile_number && user.mobile_number != mobile_number) {
+
             user.mobile_number = mobile_number
             user.mobile_verified = false
         }
