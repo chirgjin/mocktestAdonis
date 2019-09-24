@@ -6,7 +6,7 @@
 
 const {Setting, User} = use("App/Models")
 const Helpers = use("Helpers")
-const { PermissionDeniedException, NotFoundException } = use("App/Exceptions");
+const { PermissionDeniedException, NotFoundException, FieldException } = use("App/Exceptions");
 
 /**
 * Resourceful controller for interacting with settings
@@ -42,9 +42,9 @@ class SettingController {
     async update ({ params, request, response, auth }) {
         const setting = await Setting.findOrFail(params.id)
 
-        // if(!auth.user.canAccessSettings()) {
-        //     throw new PermissionDeniedException()
-        // }
+        if(!auth.user.canAccessSettings()) {
+            throw new PermissionDeniedException()
+        }
 
         // image will be file
 
@@ -83,7 +83,7 @@ class SettingController {
                 const currentUsers = await User.query().getCount();
 
                 if(currentUsers > max_users) {
-                    return response.error({'max_users' : 'Max users must be more than ' + currentUsers}, 400)
+                    throw new FieldException('max_users', 'Max users must be more than ' + currentUsers)
                 }
 
                 setting.max_users = max_users
@@ -95,7 +95,7 @@ class SettingController {
         if(active_from && active_from != 'null') {
             const d = new Date(active_from)
             if(isNaN(d)) {
-                return response.error({'active_from' : 'Active from is an invalid date'}, 400)
+                throw new FieldException('active_from', 'Active from is an invalid date')
             }
             setting.active_from = d
         }
@@ -107,7 +107,7 @@ class SettingController {
         if(active_to && active_to != 'null') {
             const d = new Date(active_to)
             if(isNaN(d)) {
-                return response.error({'active_to' : 'Active To is an invalid date'}, 400)
+                throw new FieldException('active_to', 'Active To is an invalid date')
             }
             setting.active_to = d
         }
@@ -117,7 +117,7 @@ class SettingController {
 
 
         if(setting.active_from && setting.active_to && setting.active_from > setting.active_to) {
-            return response.error({'active_from' : 'Active from can\'t be smaller than active to'}, 400)
+            throw new FieldException('active_from', 'Active from can\'t be smaller than active to')
         }
 
 

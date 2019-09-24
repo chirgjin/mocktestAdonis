@@ -13,7 +13,7 @@ const ExamSection = use('App/Models/ExamSection');
 
 
 const { validate } = use('Validator')
-const { NotFoundException } = use("App/Exceptions");
+const { NotFoundException, FieldException } = use("App/Exceptions");
 
 /**
 * Resourceful controller for interacting with exams
@@ -136,7 +136,7 @@ class ExamController {
         
         const count = await ExamSection.query().whereIn('id', sections).getCount();
         if(count != sections.length) {
-            return response.error({field:"sections", message: "One or more sections do not exist"});
+            throw new FieldException("sections","One or more sections do not exist");
         }
 
         if(action == 'link') {

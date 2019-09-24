@@ -7,6 +7,7 @@
 const {Test, TestSection, Difficulty, Question, QuestionDirection, QuestionOption, QuestionSolution} = use("App/Models");
 const MissingValueException = use("App/Exceptions/MissingValueException");
 const NotFoundException = use("App/Exceptions/NotFoundException");
+const FieldException = use("App/Exceptions/FieldException")
 const { validate } = use('Validator')
 const Helpers = use("App/Helpers")
 const Database = use('Database')
@@ -91,9 +92,10 @@ class QuestionController {
                     throw new MissingValueException(`questions.${i}.options`);
                 }
                 else if(!question.options[question.answer]) {
-                    const err = new Error(`questions.${i}.answer is incorrect`);
-                    err.field = `questions.${i}.answer`;
-                    throw err;
+                    // const err = new Error(`questions.${i}.answer is incorrect`);
+                    // err.field = `questions.${i}.answer`;
+                    // throw err;
+                    throw new FieldException(`questions.${i}.answer`, `questions.${i}.answer is incorrect`)
                 }
 
                 question.options = question.options.map( (option,i) => {
@@ -111,18 +113,19 @@ class QuestionController {
                 question.answer = question.options[question.answer].number
             }
             else if(question.options && question.options.length > 0) {
-                const err = new Error(`questions.${i} can not have options`);
-                err.field = `questions.${i}.options`;
-                throw err;
+                // const err = new Error(`questions.${i} can not have options`);
+                // err.field = `questions.${i}.options`;
+                // throw err;
+                throw new FieldException(`questions.${i}.options`, `questions.${i} can not have options`)
             }
 
             if(typeof question.direction == 'number' && !directions[question.direction]) {
-                throw new Error(`questions.${i}.direction doesn't exist in directions array!`)
+                throw new FieldException(`questions.${i}.direction`, `questions.${i}.direction doesn't exist in directions array!`)
             }
             else if(question.direction && question.direction.id > 0) {
                 const direction = await QuestionDirection.find(question.direction.id);
                 if(!direction) {
-                    throw new Error(`questions.${i}.direction doesn't exist in db`);
+                    throw new FieldException(`questions.${i}.direction`, `questions.${i}.direction doesn't exist in db`);
                 }
             }
 
@@ -130,14 +133,14 @@ class QuestionController {
             const diff = await Difficulty.find(question.difficulty);
 
             if(!diff) {
-                throw new Error(`questions.${i}.difficulty doesn't exist in db`);
+                throw new FieldException(`questions.${i}.difficulty`, `questions.${i}.difficulty doesn't exist in db`);
             }
 
             if(question.test_section_id) {
                 const section = await TestSection.find(question.test_section_id);
 
                 if(!section) {
-                    throw new Error(`questions.${i}.test_section doesn't exist in db`);
+                    throw new FieldException(`questions.${i}.test_section`, `questions.${i}.test_section doesn't exist in db`);
                 }
             }
 

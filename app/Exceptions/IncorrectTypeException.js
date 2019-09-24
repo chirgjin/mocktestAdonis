@@ -14,8 +14,9 @@ class IncorrectTypeException extends LogicalException {
             msg += ` but got ${gotType}`;
         }
 
-        this.field = prop;
         super(msg, 400, 'E_INCORRECT_TYPE');
+        
+        this.field = prop;
     }
 }
 
