@@ -79,7 +79,8 @@ class AuthController {
         //todo : mail token to user
         await Mail.raw(`Reset pwd token = ${token.token}`, message => {
             message
-            .from( Env.get('MAIL_USERNAME', `no-reply@${Env.get('HOST', 'localhost')}`), 'no-reply')
+            // .from( Env.get('MAIL_USERNAME', `no-reply@${Env.get('HOST', 'localhost')}`), 'no-reply')
+            .from(Env.get('DEFAULT_MAIL_ADDRESS'), 'no-reply')
             .to(email, user.firstname)
             .subject('Reset Password')
         })
