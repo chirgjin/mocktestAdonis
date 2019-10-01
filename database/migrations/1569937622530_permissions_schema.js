@@ -8,7 +8,7 @@ class PermissionsSchema extends Schema {
         this.create('permissions', (table) => {
             table.increments()
             table.string('model_name')
-            table.string('model_permission') //edit,create,delete,view
+            table.string('action') //edit,create,delete,view
             // table.boolean('default_provided')
 
             table.timestamps()

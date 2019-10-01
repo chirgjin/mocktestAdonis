@@ -57,7 +57,7 @@ class PermissionController {
 
             for(let permission of permissions) {
                     
-                const p = existingPermissions.filter(per => per.model_name == permission.model && per.model_permission == permission.permission)[0]
+                const p = existingPermissions.filter(per => per.model_name == permission.model && per.action == permission.permission)[0]
                 if(!p) {
                     //permission doesn't exist in db...
                     throw new Error('Permission ' + permission.model + '.' + permission.permission + ' Not found in db')

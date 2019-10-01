@@ -93,6 +93,14 @@ class User extends Model {
         return this.getRoles(this.$attributes.roles);
     }*/
 
+    copy() {
+        const u = new User;
+        u.fill(this.$attributes)
+        u.$primaryKeyValue = this.$primaryKeyValue
+        u.$parent = this.$parent
+        u.$persisted = this.$persisted
+        return u;
+    }
 
     
 
@@ -135,11 +143,15 @@ class User extends Model {
     }
 
     canEditUser(user) {
-        return Permissions.canEditUser(this, user);
+        return Permissions.canEditUser( this.copy(), user);
     }
 
     canAccessSettings() {
-        return Permissions.canAccessSettings(this);
+        return Permissions.canAccessSettings( this.copy() );
+    }
+
+    hasPermission(model, action) {
+        return Permissions.canPerformAction( this.copy(), model, action)
     }
 
 }
