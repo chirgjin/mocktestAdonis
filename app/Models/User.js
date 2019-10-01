@@ -103,6 +103,14 @@ class User extends Model {
         .pivotModel('App/Models/UserExam')
         // .pivotAttribute(false)
     }
+    
+    permissions() {
+        return this
+        .belongsToMany('App/Models/Permission')
+        .pivotTable('user_permissions')
+        // .pivotModel('App/Models/UserExam')
+        // .pivotAttribute(false)
+    }
 
     examSections() {
         return this

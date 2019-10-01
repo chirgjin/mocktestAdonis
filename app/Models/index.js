@@ -4,6 +4,7 @@ exports.Difficulty = use("App/Models/Difficulty");
 exports.Exam = use("App/Models/Exam");
 exports.ExamSection = use("App/Models/ExamSection");
 exports.Image = use("App/Models/Image");
+exports.Permission = use("App/Models/Permission");
 exports.Question = use("App/Models/Question");
 exports.QuestionDirection = use("App/Models/QuestionDirection");
 exports.QuestionOption = use("App/Models/QuestionOption");
