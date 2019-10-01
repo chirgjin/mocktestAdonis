@@ -6,8 +6,9 @@
 
 /** @type {typeof import('../../../Models')} */
 const {Test, TestSection, Exam, Difficulty, ExamSection} = use("App/Models");
-const MissingValueException = use("App/Exceptions/MissingValueException");
-const NotFoundException = use("App/Exceptions/NotFoundException");
+// const MissingValueException = use("App/Exceptions/MissingValueException");
+// const NotFoundException = use("App/Exceptions/NotFoundException");
+const {NotFoundException, MissingValueException, PermissionDeniedException } = use("App/Exceptions")
 const { validate } = use('Validator')
 const Helpers = use("App/Helpers")
 
@@ -23,7 +24,12 @@ class TestController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async index ({ request, response}) {
+    async index ({ request, response, auth}) {
+
+        if(!await auth.user.canPerformAction('test', 'read')) {
+            throw new PermissionDeniedException();
+        }
+
         const q = Test.query();
 
         if(request.input("name")) {
@@ -59,6 +65,10 @@ class TestController {
     * @param {Response} ctx.response
     */
     async store ({ request, response, auth }) {
+
+        if(!await auth.user.canPerformAction('test', 'create')) {
+            throw new PermissionDeniedException();
+        }
 
         const v = await validate(request.post(), {
             exam_id : "required|integer",
@@ -149,7 +159,11 @@ class TestController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async show ({ params, request, response}) {
+    async show ({ params, request, response, auth}) {
+
+        if(!await auth.user.canPerformAction('test', 'read')) {
+            throw new PermissionDeniedException();
+        }
 
         const q = Test.query().where('id', params.id);
 
@@ -183,7 +197,11 @@ class TestController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async update ({ params, request, response }) {
+    async update ({ params, request, response, auth }) {
+
+        if(!await auth.user.canPerformAction('test', 'update')) {
+            throw new PermissionDeniedException();
+        }
     }
     
     /**
@@ -194,7 +212,11 @@ class TestController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async destroy ({ params, request, response }) {
+    async destroy ({ params, request, response, auth }) {
+
+        if(!await auth.user.canPerformAction('test', 'delete')) {
+            throw new PermissionDeniedException();
+        }
     }
 }
 

@@ -5,9 +5,10 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const {Test, TestSection, Difficulty, Question, QuestionDirection, QuestionOption, QuestionSolution} = use("App/Models");
-const MissingValueException = use("App/Exceptions/MissingValueException");
-const NotFoundException = use("App/Exceptions/NotFoundException");
-const FieldException = use("App/Exceptions/FieldException")
+// const MissingValueException = use("App/Exceptions/MissingValueException");
+// const NotFoundException = use("App/Exceptions/NotFoundException");
+// const FieldException = use("App/Exceptions/FieldException")
+const { FieldException, NotFoundException, MissingValueException, PermissionDeniedException } = use("App/Exceptions")
 const { validate } = use('Validator')
 const Helpers = use("App/Helpers")
 const Database = use('Database')
@@ -25,7 +26,10 @@ class QuestionController {
     * @param {Response} ctx.response
     * @param {View} ctx.view
     */
-    async index ({ request, response, view }) {
+    async index ({ request, response, view, auth }) {
+        if(!await auth.user.canPerformAction('test', 'read')) {
+            throw new PermissionDeniedException();
+        }
 
         const q = Question.query();
 
@@ -54,7 +58,11 @@ class QuestionController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async store ({ request, response }) {
+    async store ({ request, response, auth }) {
+        if(!await auth.user.canPerformAction('test', 'create')) {
+            throw new PermissionDeniedException();
+        }
+
         const v = await validate(request.post(), {
             questions : "required|array",
             "questions.*.difficulty" : "required|alphaNumeric",
@@ -281,7 +289,10 @@ class QuestionController {
     * @param {Response} ctx.response
     * @param {View} ctx.view
     */
-    async show ({ params, request, response, view }) {
+    async show ({ params, request, response, view, auth }) {
+        if(!await auth.user.canPerformAction('test', 'read')) {
+            throw new PermissionDeniedException();
+        }
 
         const q = Question.query()
         .withAll()
@@ -305,7 +316,10 @@ class QuestionController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async update ({ params, request, response }) {
+    async update ({ params, request, response, auth }) {
+        if(!await auth.user.canPerformAction('test', 'update')) {
+            throw new PermissionDeniedException();
+        }
     }
     
     /**
@@ -316,7 +330,10 @@ class QuestionController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async destroy ({ params, request, response }) {
+    async destroy ({ params, request, response, auth }) {
+        if(!await auth.user.canPerformAction('test', 'delete')) {
+            throw new PermissionDeniedException();
+        }
     }
 }
 

@@ -154,6 +154,10 @@ class User extends Model {
         return Permissions.canPerformAction( this.copy(), model, action)
     }
 
+    canPerformAction() {
+        return this.hasPermission.apply(this, arguments)
+    }
+
 }
 
 module.exports = User

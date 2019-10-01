@@ -5,7 +5,7 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const {Test, TestSection, Exam, Difficulty, ExamSection} = use("App/Models");
-const NotFoundException = use("App/Exceptions/NotFoundException");
+const {NotFoundException, PermissionDeniedException} = use("App/Exceptions");
 
 /**
 * Resourceful controller for interacting with testsections
@@ -20,7 +20,11 @@ class TestSectionController {
     * @param {Response} ctx.response
     * @param {View} ctx.view
     */
-    async index ({ request, response, view }) {
+    async index ({ request, response, auth }) {
+
+        if(!await auth.user.canPerformAction('test', 'read')) {
+            throw new PermissionDeniedException();
+        }
 
         const q = TestSection.query();
 
@@ -48,7 +52,11 @@ class TestSectionController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async store ({ request, response }) {
+    async store ({ request, response, auth }) {
+
+        if(!await auth.user.canPerformAction('test', 'create')) {
+            throw new PermissionDeniedException();
+        }
 
         const v = await validate(request.post(), {
             test_id : "required|integer",
@@ -104,7 +112,11 @@ class TestSectionController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async show ({ params, request, response}) {
+    async show ({ params, request, response, auth}) {
+
+        if(!await auth.user.canPerformAction('test', 'read')) {
+            throw new PermissionDeniedException();
+        }
 
         const q = TestSection.query();
 
@@ -131,7 +143,11 @@ class TestSectionController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async update ({ params, request, response }) {
+    async update ({ params, request, response, auth }) {
+
+        if(!await auth.user.canPerformAction('test', 'update')) {
+            throw new PermissionDeniedException();
+        }
     }
     
     /**
@@ -142,7 +158,11 @@ class TestSectionController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async destroy ({ params, request, response }) {
+    async destroy ({ params, request, response, auth }) {
+
+        if(!await auth.user.canPerformAction('test', 'delete')) {
+            throw new PermissionDeniedException();
+        }
     }
 }
 

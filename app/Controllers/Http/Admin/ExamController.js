@@ -13,7 +13,7 @@ const ExamSection = use('App/Models/ExamSection');
 
 
 const { validate } = use('Validator')
-const { NotFoundException, FieldException } = use("App/Exceptions");
+const { NotFoundException, FieldException, PermissionDeniedException } = use("App/Exceptions");
 
 /**
 * Resourceful controller for interacting with exams
@@ -27,7 +27,12 @@ class ExamController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async index ({ request, response }) {
+    async index ({ request, response, auth }) {
+        const user = auth.user
+
+        if(!await user.canPerformAction('exam', 'read')) {
+            throw new PermissionDeniedException();
+        }
 
         const q = Exam.query();
 
@@ -51,7 +56,12 @@ class ExamController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async store ({ request, response }) {
+    async store ({ request, response, auth }) {
+
+        if(!await auth.user.canPerformAction('exam', 'create')) {
+            throw new PermissionDeniedException();
+        }
+        
 
         const v = await validate(request.post(), {
             name : 'required|unique:exams',
@@ -77,7 +87,11 @@ class ExamController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async show ({ params, request, response}) {
+    async show ({ params, request, response, auth}) {
+
+        if(!await auth.user.canPerformAction('exam', 'read')) {
+            throw new PermissionDeniedException();
+        }
 
         const exam = await Exam.query().where('id', params.id).with('sections').first();
 
@@ -96,7 +110,11 @@ class ExamController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async update ({ params, request, response }) {
+    async update ({ params, request, response, auth }) {
+
+        if(!await auth.user.canPerformAction('exam', 'update')) {
+            throw new PermissionDeniedException();
+        }
 
         const exam = await Exam.findOrFail(params.id);
 
@@ -119,8 +137,12 @@ class ExamController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async updateSections({params, request, response}) {
-        
+    async updateSections({params, request, response, auth}) {
+
+        if(!await auth.user.canPerformAction('exam', 'update')) {
+            throw new PermissionDeniedException();
+        }
+
         const v = await validate(request.post(), {
             action : "required|in:link,unlink",
             sections: "required|array",
@@ -171,7 +193,12 @@ class ExamController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async destroy ({ params, request, response }) {
+    async destroy ({ params, request, response, auth }) {
+        
+        if(!await auth.user.canPerformAction('exam', 'delete')) {
+            throw new PermissionDeniedException();
+        }
+
         const exam = await Exam.findOrFail(params.id);
 
         await exam.delete();

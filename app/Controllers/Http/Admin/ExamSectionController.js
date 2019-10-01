@@ -12,7 +12,7 @@ const Exam = use('App/Models/Exam');
 const ExamSection = use('App/Models/ExamSection');
 
 const { validate } = use('Validator')
-const { NotFoundException } = use("App/Exceptions");
+const { NotFoundException, PermissionDeniedException } = use("App/Exceptions");
 /**
 * Resourceful controller for interacting with examsections
 */
@@ -26,7 +26,12 @@ class ExamSectionController {
     * @param {Response} ctx.response
     * @param {View} ctx.view
     */
-    async index ({ request, response, view }) {
+    async index ({ request, response, view, auth }) {
+
+        if(!await auth.user.canPerformAction('examSection', 'read')) {
+            throw new PermissionDeniedException();
+        }
+
         const q = ExamSection.query();
 
         if(request.input("name")) {
@@ -49,7 +54,11 @@ class ExamSectionController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async store ({ request, response }) {
+    async store ({ request, response, auth }) {
+        if(!await auth.user.canPerformAction('examSection', 'create')) {
+            throw new PermissionDeniedException();
+        }
+
         const v = await validate(request.post(), {
             name : 'required|unique:exam_sections',
             code : 'required|unique:exam_sections',
@@ -74,7 +83,10 @@ class ExamSectionController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async show ({ params, request, response }) {
+    async show ({ params, request, response, auth }) {
+        if(!await auth.user.canPerformAction('examSection', 'read')) {
+            throw new PermissionDeniedException();
+        }
 
         const examSection = await ExamSection.query().where('id', params.id).with('exams').first();
 
@@ -93,7 +105,10 @@ class ExamSectionController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async update ({ params, request, response }) {
+    async update ({ params, request, response, auth }) {
+        if(!await auth.user.canPerformAction('examSection', 'update')) {
+            throw new PermissionDeniedException();
+        }
 
         const examSection = await ExamSection.findOrFail(params.id);
 
@@ -159,7 +174,11 @@ class ExamSectionController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async destroy ({ params, request, response }) {
+    async destroy ({ params, request, response, auth }) {
+        if(!await auth.user.canPerformAction('examSection', 'delete')) {
+            throw new PermissionDeniedException();
+        }
+
         const examSection = await ExamSection.findOrFail(params.id);
         await examSection.delete();
 

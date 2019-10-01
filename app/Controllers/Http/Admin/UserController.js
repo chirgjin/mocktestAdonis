@@ -28,7 +28,11 @@ class UserController {
     * @param {Response} ctx.response
     * @param {View} ctx.view
     */
-    async index ({ request, response }) {
+    async index ({ request, response, auth }) {
+
+        if(!await auth.user.canPerformAction('user', 'read')) {
+            throw new PermissionDeniedException();
+        }
         
         const q = User.query();
         if(request.input("firstname", null)) {
@@ -49,6 +53,10 @@ class UserController {
     * @param {Response} ctx.response
     */
     async store ({ request, response, auth }) {
+
+        if(!await auth.user.canPerformAction('user', 'create')) {
+            throw new PermissionDeniedException();
+        }
 
         //required data - firstname, username, password
 
@@ -110,6 +118,11 @@ class UserController {
      * @param {Response} ctx.response
      */
     async allowExams ({ params, request, response, auth }) {
+
+        if(!await auth.user.canPerformAction('user', 'update')) {
+            throw new PermissionDeniedException();
+        }
+
         const user = await User.findOrFail(params.id);
 
         if(!auth.user.canEditUser(user)) {
@@ -157,6 +170,10 @@ class UserController {
     */
     async show ({ params, request, response, auth }) {
 
+        if(!await auth.user.canPerformAction('user', 'read')) {
+            throw new PermissionDeniedException();
+        }
+
         const user = await User
         .query()
         .where("id", params.id)
@@ -183,6 +200,10 @@ class UserController {
     * @param {Response} ctx.response
     */
     async update ({ params, request, response, auth }) {
+
+        if(!await auth.user.canPerformAction('user', 'update')) {
+            throw new PermissionDeniedException();
+        }
 
         const user = await User.findOrFail(params.id);
 
@@ -227,6 +248,11 @@ class UserController {
     * @param {Response} ctx.response
     */
     async destroy ({ params, request, response, auth}) {
+
+        if(!await auth.user.canPerformAction('user', 'delete')) {
+            throw new PermissionDeniedException();
+        }
+
         const user = await User.findOrFail(params.id);
 
         if(!auth.user.canEditUser(user)) {
