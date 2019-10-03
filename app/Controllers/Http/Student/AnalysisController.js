@@ -9,8 +9,10 @@ const {UserTest, Test, TestSection, UserAnswer, Question} = use("App/Models");
 
 const { PermissionDeniedException, NotFoundException, FieldException } = use("App/Exceptions");
 
+const analysis = use("App/Helpers/analysis")
+
 /**
-* Resourceful controller for interacting with analyses
+* Resourceful controller for interacting with analysis
 */
 class AnalysisController {
     
@@ -59,23 +61,9 @@ class AnalysisController {
         for(let section of sections) {
 
             //now calculate marks, incorrect, correct stats etc
-            const baseQuery = () => section.answers().where('user_answers.user_test_id', params.user_test_id);
+            
 
-            const stats = {
-                answers : {
-                    incorrect : await baseQuery().where('user_answers.correct', false).whereNot('user_answers.answer', null).getCount(),
-                    correct : await baseQuery().where('user_answers.correct', true).getCount(),
-                    unattempted : await baseQuery().where('user_answers.answer', null).getCount(),
-                },
-                average_time : {
-                    incorrect : (await baseQuery().where('user_answers.correct', false).whereNot('user_answers.answer', null).avg('time_taken as avg_time'))[0].avg_time,
-                    correct : (await baseQuery().where('user_answers.correct', true).avg('time_taken as avg_time'))[0].avg_time,
-                    unattempted : (await baseQuery().where('user_answers.answer', null).avg('time_taken as avg_time'))[0].avg_time,
-                },
-                total_time : (await baseQuery().sum('time_taken as total_time'))[0].total_time,
-            }
-
-            section.$relations.stats = stats;
+            section.$relations.stats = await analysis(section, params.user_test_id)
         }
 
 

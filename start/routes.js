@@ -61,6 +61,7 @@ Route.group('adminAuth', () => {
     Route.post('login', 'AuthController.login');
 
     Route.resource('settings', 'SettingController').only(['index', 'update'])
+    Route.get('users/export', 'ExportController.users')
     
 }).prefix('api/admin').namespace('Admin').middleware('guest');
 
@@ -87,6 +88,7 @@ Route.group('adminApi', () => {
     Route.resource('users', 'UserController').apiOnly()
 
     Route.resource('userTests', 'UserTestController').apiOnly()
+
 
 
 }).prefix('api/admin').namespace('Admin').middleware('auth:jwtAdmin');

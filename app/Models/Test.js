@@ -64,6 +64,10 @@ class Test extends Model {
         return this
         .manyThrough('App/Models/TestSection', 'questions')
     }
+
+    userTests() {
+        return this.hasMany('App/Models/UserTest')
+    }
 }
 
 module.exports = Test

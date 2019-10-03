@@ -1,5 +1,4 @@
 
-exports.User = use("App/Models/User");
 exports.Difficulty = use("App/Models/Difficulty");
 exports.Exam = use("App/Models/Exam");
 exports.ExamSection = use("App/Models/ExamSection");
@@ -17,3 +16,6 @@ exports.UserExamAnalysis = use("App/Models/UserExamAnalysis");
 exports.UserTest = use("App/Models/UserTest");
 exports.UserExam = use("App/Models/UserExam");
 exports.TestSectionQuestion = use("App/Models/TestSectionQuestion");
+exports.User = use("App/Models/User");
+console.log(exports.User)
+console.log(use("App/Models/User"))

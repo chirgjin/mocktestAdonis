@@ -61,6 +61,41 @@ hooks.after.providersBooted(() => {
         });
 
     });
+
+    const _ = require("lodash")
+
+    const Worksheet = require("excel4node/distribution/lib/worksheet/worksheet")
+
+    Worksheet.prototype.addFromKeys = function (obj, keys, {rowOff=0, colOff=0}) {
+        // if(Array.isArray(obj)) {
+        //     return obj.forEach( (ob,i) => {
+        //         this.addFromKeys(ob, keys, rowOff+i, colOff)
+        //     })
+        // }
+
+        keys.forEach( (key, col) => {
+            const val = _.get(obj, key)
+            const type = typeof val == 'number' ? 'number' : 'string'
+            this
+            .cell(rowOff+1, col+1+colOff)[type](typeof val == 'number' ? val : (val || ''))
+        })
+    }
+
+    const xl = require("excel4node")
+
+    xl.Workbook.prototype.send = async function (fileName, response) {
+        const buff = await this.writeToBuffer()
+
+        if(!fileName.match(/\.xlsx$/i)) {
+            fileName += ".xlsx";
+        }
+        
+        response.header('Content-Disposition', 'attachment; filename="' + encodeURIComponent(fileName) + '"; filename*=utf-8\'\'' + encodeURIComponent(fileName) + ';')
+        response.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        // response.header('Content-Length', buff)
+
+        response.send(buff)
+    }
 });
 
 function removePivot(data) {
