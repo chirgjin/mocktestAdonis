@@ -5,24 +5,51 @@ ioc.bind("VanillaSerializer", () => {
     return VanillaSerializer;
 });
 
+// hooks.after.preloading(() => {
+
+//     const proxy = require("@adonisjs/lucid/src/Lucid/Model/proxyHandler");
+//     const get = proxy.get;
+//     const Model = use("Model");
+
+//     proxy.get = function (target, name) {
+        
+//         if(target && target instanceof Model && typeof name == 'string' && name !== 'inspect') {
+
+//             const fn = 'get' + name.substr(0,1).toUpperCase() + name.substr(1);
+//             if(typeof target[fn] == 'function') {
+//                 return target[fn]( Array.isArray(target.constructor.computed) && target.constructor.computed.indexOf(name) != -1 ? target.$attributes : get(target, name));
+//             }
+//         }
+
+//         return get(target, name);
+//     };
+// });
+
 hooks.after.preloading(() => {
+    // return 
+    const _ = require("lodash")
 
     const proxy = require("@adonisjs/lucid/src/Lucid/Model/proxyHandler");
-    const get = proxy.get;
-    const Model = use("Model");
+    const proxyGet = require("@adonisjs/lucid/lib/proxyGet")
 
-    proxy.get = function (target, name) {
-        
-        if(target && target instanceof Model && typeof name == 'string' && name !== 'inspect') {
-
-            const fn = 'get' + name.substr(0,1).toUpperCase() + name.substr(1);
-            if(typeof target[fn] == 'function') {
-                return target[fn]( Array.isArray(target.constructor.computed) && target.constructor.computed.indexOf(name) != -1 ? target.$attributes : get(target, name));
-            }
+    proxy.get = proxyGet('$attributes', false, function (target, name) {
+        if (typeof (target.$sideLoaded[name]) !== 'undefined') {
+          return target.$sideLoaded[name]
+        } else if (typeof (target.constructor.computed) === 'object' && Array.isArray(target.constructor.computed) && target.constructor.computed.indexOf(name) > -1) {
+          /**
+         * Check if name exists in computed properties
+         * if it does then convert it to camelCase & call the getName($attributes) function
+         */
+          return target[_.camelCase('get_' + name)](target.$attributes)
+        } else if (typeof (target.$attributes[name]) !== 'undefined' && typeof (target[_.camelCase('get_' + name)]) === 'function') {
+          /**
+           * Check if name exists in $attribute and function getName() exists
+           * If it does then convert it to camelCase & call the getName(attributeValue) function
+           */
+          return target[_.camelCase('get_' + name)](target.$attributes[name])
         }
-
-        return get(target, name);
-    };
+      })
+      
 });
 
 hooks.after.providersBooted(() => {

@@ -88,7 +88,7 @@ class UserController {
             }
         }
 
-        const user = await User.create(request.only(['username', 'password', 'firstname', 'email', 'mobile_number', 'lastname', 'college', 'mobile_verified', 'email_verified', 'roles']));
+        const user = await User.create(request.only(['username', 'password', 'firstname', 'email', 'mobile_number', 'lastname', 'college', 'mobile_verified', 'email_verified', 'roles', 'rollnum', 'branch', 'degree', 'section', 'batch',]));
 
         const exams = request.input("exams");
 
@@ -211,7 +211,7 @@ class UserController {
             throw new PermissionDeniedException();
         }
 
-        const editableFields = ['firstname', 'lastname', 'roles', 'email', 'password', 'email_verified', 'mobile_number', 'mobile_verified', 'college'];
+        const editableFields = ['firstname', 'lastname', 'roles', 'email', 'password', 'email_verified', 'mobile_number', 'mobile_verified', 'college', 'rollnum', 'branch', 'degree', 'section', 'batch', ];
 
         user.merge(request.only(editableFields));
 
