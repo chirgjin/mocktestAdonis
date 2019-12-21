@@ -6,7 +6,7 @@
 
 const {User, Permission} = use("App/Models")
 const { PermissionDeniedException, IncorrectTypeException, MissingValueException } = use("App/Exceptions");
-const { validate } = use('Validator')
+const validate = use("App/Helpers/validate")
 const Database = use('Database')
 
 /**

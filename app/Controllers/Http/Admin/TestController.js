@@ -9,7 +9,7 @@ const {Test, TestSection, Exam, Difficulty, ExamSection} = use("App/Models");
 // const MissingValueException = use("App/Exceptions/MissingValueException");
 // const NotFoundException = use("App/Exceptions/NotFoundException");
 const {NotFoundException, MissingValueException, PermissionDeniedException } = use("App/Exceptions")
-const { validate } = use('Validator')
+const validate = use("App/Helpers/validate")
 const Helpers = use("App/Helpers")
 
 /**
@@ -76,10 +76,10 @@ class TestController {
             difficulty : "required",
             description : "required",
             instructions: "required",
-            negative_marks : "integer|max:10|min:0",
-            duration : "required|integer|min:1|max:36000",
-            marks : "required|integer|min:1|max:50",
-            options : "required|integer|min:0|max:10",
+            negative_marks : "integer|range:0,10",
+            duration : "required|integer|range:1,36000",
+            marks : "required|integer|range:1,50",
+            options : "required|integer|range:0,10",
         });
 
         if(v.fails()) {

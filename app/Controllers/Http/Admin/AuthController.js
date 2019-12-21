@@ -1,7 +1,7 @@
 'use strict'
 
 const User = use("App/Models/User");
-const { validate } = use('Validator')
+const validate = use("App/Helpers/validate")
 
 class AuthController {
     async login({request, response, auth}) {

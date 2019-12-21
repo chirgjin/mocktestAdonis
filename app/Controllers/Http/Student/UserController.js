@@ -9,7 +9,7 @@ const Env = use('Env')
 
 const {User} = use("App/Models")
 const Mail = use("Mail")
-const { validate } = use('Validator')
+const validate = use("App/Helpers/validate")
 
 const {WaitTimeException, FieldException } = use("App/Exceptions")
 

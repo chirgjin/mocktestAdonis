@@ -7,7 +7,7 @@
 /** @type {typeof import('../../../Models')} */
 const {UserTest, Test, TestSection, UserAnswer, Question} = use("App/Models");
 
-const { validate } = use('Validator')
+const validate = use("App/Helpers/validate")
 
 const { PermissionDeniedException, NotFoundException } = use("App/Exceptions");
 

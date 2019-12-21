@@ -4,7 +4,7 @@
 const Env = use('Env')
 
 const User = use("App/Models/User");
-const { validate } = use('Validator')
+const validate = use("App/Helpers/validate")
 const RESET_TIME = 3600
 const RESET_WAIT = 30
 const Mail = use("Mail")

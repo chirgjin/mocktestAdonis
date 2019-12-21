@@ -8,7 +8,7 @@
 const TestSection = use('App/Models/TestSection');
 
 
-const { validate } = use('Validator')
+const validate = use("App/Helpers/validate")
 const { NotFoundException } = use("App/Exceptions");
 /**
 * Resourceful controller for interacting with testsections

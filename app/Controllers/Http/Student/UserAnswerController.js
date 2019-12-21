@@ -6,7 +6,7 @@
 
 const {UserTest, Test, TestSection, UserAnswer, Question} = use("App/Models");
 
-const { validate } = use('Validator')
+const validate = use("App/Helpers/validate")
 
 const { PermissionDeniedException, IncorrectTypeException, BadRequestException, NotFoundException, FieldException } = use("App/Exceptions");
 const getTimeTaken = use("App/Helpers/getTimeTaken")

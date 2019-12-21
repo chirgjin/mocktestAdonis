@@ -10,7 +10,7 @@ const Exam = use('App/Models/Exam');
 
 const Setting = use('App/Models/Setting')
 
-const { validate } = use('Validator')
+const validate = use("App/Helpers/validate")
 const { PermissionDeniedException, IncorrectTypeException, MissingValueException } = use("App/Exceptions");
 const randomString = use('App/Helpers/randomString')
 

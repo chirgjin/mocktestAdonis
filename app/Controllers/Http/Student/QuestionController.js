@@ -8,7 +8,7 @@
 const { TestSection, Question } = use('App/Models');
 
 
-const { validate } = use('Validator')
+const validate = use("App/Helpers/validate")
 const { NotFoundException } = use("App/Exceptions");
 
 /**

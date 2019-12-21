@@ -7,7 +7,7 @@
 /** @type {typeof import('../../../Models/ExamSection')} */
 const ExamSection = use('App/Models/ExamSection');
 
-const { validate } = use('Validator')
+const validate = use("App/Helpers/validate")
 
 const { NotFoundException } = use("App/Exceptions");
 

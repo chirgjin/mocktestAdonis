@@ -11,7 +11,7 @@ const Exam = use('App/Models/Exam');
 /** @type {typeof import('../../../Models/ExamSection')} */
 const ExamSection = use('App/Models/ExamSection');
 
-const { validate } = use('Validator')
+const validate = use("App/Helpers/validate")
 const { NotFoundException, PermissionDeniedException } = use("App/Exceptions");
 /**
 * Resourceful controller for interacting with examsections

@@ -9,7 +9,7 @@ const {Test, TestSection, Difficulty, Question, QuestionDirection, QuestionOptio
 // const NotFoundException = use("App/Exceptions/NotFoundException");
 // const FieldException = use("App/Exceptions/FieldException")
 const { FieldException, NotFoundException, MissingValueException, PermissionDeniedException } = use("App/Exceptions")
-const { validate } = use('Validator')
+const validate = use("App/Helpers/validate")
 const Helpers = use("App/Helpers")
 const Database = use('Database')
 
@@ -67,7 +67,7 @@ class QuestionController {
             questions : "required|array",
             "questions.*.difficulty" : "required|alphaNumeric",
             "questions.*.description" : "required",
-            "questions.*.type" : "required|integer|min:1|max:2",
+            "questions.*.type" : "required|integer|range:1,2",
             "questions.*.answer" : "required|integer",
             "questions.*.avg_time" : "number",
             "questions.*.direction" : "integer",

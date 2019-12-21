@@ -12,7 +12,7 @@ const Exam = use('App/Models/Exam');
 const ExamSection = use('App/Models/ExamSection');
 
 
-const { validate } = use('Validator')
+const validate = use("App/Helpers/validate")
 const { NotFoundException, FieldException, PermissionDeniedException } = use("App/Exceptions");
 
 /**

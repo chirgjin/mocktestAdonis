@@ -6,7 +6,7 @@
 
 const Difficulty = use("App/Models/Difficulty");
 
-const { validate } = use('Validator')
+const validate = use("App/Helpers/validate")
 
 /**
 * Resourceful controller for interacting with difficulties

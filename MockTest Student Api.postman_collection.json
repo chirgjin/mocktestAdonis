@@ -1,0 +1,931 @@
+{
+	"info": {
+		"_postman_id": "e83cad9a-8882-4d9f-9aa8-efdfe9baa10b",
+		"name": "MockTest Student Api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "chirgjin",
+							"description": "Username of student",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123456789",
+							"description": "Password of student",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/login",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"login"
+					]
+				},
+				"description": "Student login using email & pwd"
+			},
+			"response": []
+		},
+		{
+			"name": "Exams",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/exams?with_sections=1",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"exams"
+					],
+					"query": [
+						{
+							"key": "with_sections",
+							"value": "1",
+							"description": "include sections data or not, defaults to 1"
+						}
+					]
+				},
+				"description": "Get list of exams which user can access"
+			},
+			"response": []
+		},
+		{
+			"name": "Exam",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/exams/:id?with_sections=0",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"exams",
+						":id"
+					],
+					"query": [
+						{
+							"key": "with_sections",
+							"value": "0",
+							"description": "include sections data or not, defaults to 1"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "Id of exam"
+						}
+					]
+				},
+				"description": "Get data of a single exam"
+			},
+			"response": []
+		},
+		{
+			"name": "ExamSection",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/examSections/:id",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"examSections",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Get data of a single ExamSection"
+			},
+			"response": []
+		},
+		{
+			"name": "ExamSections",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/exams/:exam_id/examSections",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"exams",
+						":exam_id",
+						"examSections"
+					],
+					"variable": [
+						{
+							"key": "exam_id",
+							"value": "1",
+							"description": "Exam id to load sections of"
+						}
+					]
+				},
+				"description": "Get list of examsections for a given exam"
+			},
+			"response": []
+		},
+		{
+			"name": "Tests",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/exams/:exam_id/examSections/:exam_section_id/tests?with_sections=1&with_exam=1&with_exam_section=1",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"exams",
+						":exam_id",
+						"examSections",
+						":exam_section_id",
+						"tests"
+					],
+					"query": [
+						{
+							"key": "with_sections",
+							"value": "1",
+							"description": "Load Test Sections or not, defaults to 1"
+						},
+						{
+							"key": "with_exam",
+							"value": "1",
+							"description": "Load Exam data or not, defaults to 1"
+						},
+						{
+							"key": "with_exam_section",
+							"value": "1",
+							"description": "Load exam section data or not, defaults to 1"
+						}
+					],
+					"variable": [
+						{
+							"key": "exam_id",
+							"value": "1",
+							"description": "Exam Id "
+						},
+						{
+							"key": "exam_section_id",
+							"value": "1",
+							"description": "Exam Section id"
+						}
+					]
+				},
+				"description": "Get list of tests for given exam & section"
+			},
+			"response": []
+		},
+		{
+			"name": "Test",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/tests/:id?with_sections=1&with_exam=1&with_exam_section=1&with_questions=1",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"tests",
+						":id"
+					],
+					"query": [
+						{
+							"key": "with_sections",
+							"value": "1",
+							"description": "Load test sections data or not, defaults to 1"
+						},
+						{
+							"key": "with_exam",
+							"value": "1",
+							"description": "Load exam data or not, defaults to 1"
+						},
+						{
+							"key": "with_exam_section",
+							"value": "1",
+							"description": "Load exam section data or not, defaults to 1"
+						},
+						{
+							"key": "with_questions",
+							"value": "1",
+							"description": "Load questions data or not, defaults to 1, Ignored if with_sections is not 1"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "3"
+						}
+					]
+				},
+				"description": "Get data of a single test"
+			},
+			"response": []
+		},
+		{
+			"name": "TestSections",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/tests/:test_id/testSections?with_questions=1",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"tests",
+						":test_id",
+						"testSections"
+					],
+					"query": [
+						{
+							"key": "with_questions",
+							"value": "1",
+							"description": "Load questions or not, defaults to 1"
+						}
+					],
+					"variable": [
+						{
+							"key": "test_id",
+							"value": "4",
+							"description": "Test id"
+						}
+					]
+				},
+				"description": "get list of test sections belonging to a given test id"
+			},
+			"response": []
+		},
+		{
+			"name": "TestSection",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/testSections/:id?with_questions=1",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"testSections",
+						":id"
+					],
+					"query": [
+						{
+							"key": "with_questions",
+							"value": "1",
+							"description": "Include questions data or not, defaults to 1"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Get Details of a single test section"
+			},
+			"response": []
+		},
+		{
+			"name": "Questions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/testSections/:test_section_id/questions",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"testSections",
+						":test_section_id",
+						"questions"
+					],
+					"variable": [
+						{
+							"key": "test_section_id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Get list of questions for a given test sections"
+			},
+			"response": []
+		},
+		{
+			"name": "Question",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/questions/:id",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"questions",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Get data of a single question"
+			},
+			"response": []
+		},
+		{
+			"name": "Create UserTest",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "test_id",
+							"value": "3",
+							"description": "Id of test to create",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/userTests",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"userTests"
+					]
+				},
+				"description": "Create user test"
+			},
+			"response": []
+		},
+		{
+			"name": "UserTests",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/userTests?with_test=1&with_exam=1&with_exam_section=1",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"userTests"
+					],
+					"query": [
+						{
+							"key": "with_test",
+							"value": "1",
+							"description": "Include test details or not, defaults to 1"
+						},
+						{
+							"key": "with_exam",
+							"value": "1",
+							"description": "Include exam details or not, defaults to 1, ignored if with_test is not 1"
+						},
+						{
+							"key": "with_exam_section",
+							"value": "1",
+							"description": "Include exam section details or not, defaults to 1, ignored if with_test is not 1"
+						}
+					]
+				},
+				"description": "Get list of tests given by user"
+			},
+			"response": []
+		},
+		{
+			"name": "User Test",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/userTests/:id?with_test=1&with_exam=1&with_exam_section=1",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"userTests",
+						":id"
+					],
+					"query": [
+						{
+							"key": "with_test",
+							"value": "1",
+							"description": "Include test details or not, defaults to 1"
+						},
+						{
+							"key": "with_exam",
+							"value": "1",
+							"description": "Include exam details or not, defaults to 1, ignored if with_test is not 1"
+						},
+						{
+							"key": "with_exam_section",
+							"value": "1",
+							"description": "Include exam section details or not, defaults to 1, ignored if with_test is not 1"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Get details of a single user test"
+			},
+			"response": []
+		},
+		{
+			"name": "User Test Copy",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/userTests/:id/analysis",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"userTests",
+						":id",
+						"analysis"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "2"
+						}
+					]
+				},
+				"description": "Get details of a single user test"
+			},
+			"response": []
+		},
+		{
+			"name": "Update user Test",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "status",
+							"value": "1",
+							"description": "Status code of test. Options: 0,1,2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/userTests/:id",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"userTests",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "User test id"
+						}
+					]
+				},
+				"description": "Update status of user test"
+			},
+			"response": []
+		},
+		{
+			"name": "UserAnswers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/userTests/:user_test_id/answers",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"userTests",
+						":user_test_id",
+						"answers"
+					],
+					"variable": [
+						{
+							"key": "user_test_id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Get list of user answers on a test"
+			},
+			"response": []
+		},
+		{
+			"name": "User Answer",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/userTests/:user_test_id/question/:question_id/answer",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"userTests",
+						":user_test_id",
+						"question",
+						":question_id",
+						"answer"
+					],
+					"variable": [
+						{
+							"key": "user_test_id",
+							"value": "2"
+						},
+						{
+							"key": "question_id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Get answer made by user on a given test's question"
+			},
+			"response": []
+		},
+		{
+			"name": "Answer Question",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "answer",
+							"value": "2",
+							"description": "Required. answer must be an integer or null",
+							"type": "text"
+						},
+						{
+							"key": "flagged",
+							"value": "0",
+							"description": "Whether to flag answer or not, defauls to false",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/userTests/:user_test_id/question/:question_id/answer",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"userTests",
+						":user_test_id",
+						"question",
+						":question_id",
+						"answer"
+					],
+					"variable": [
+						{
+							"key": "user_test_id",
+							"value": "2",
+							"description": "User Test id"
+						},
+						{
+							"key": "question_id",
+							"value": "1",
+							"description": "Question Id"
+						}
+					]
+				},
+				"description": "Answer a question of a test that is in ongoing state"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Answer",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "answer",
+							"value": "2",
+							"description": "Required. answer must be an integer or null",
+							"type": "text"
+						},
+						{
+							"key": "flagged",
+							"value": "0",
+							"description": "Whether to flag answer or not, defauls to false",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/userTests/:user_test_id/question/:question_id/answer",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"userTests",
+						":user_test_id",
+						"question",
+						":question_id",
+						"answer"
+					],
+					"variable": [
+						{
+							"description": "User Test id",
+							"key": "user_test_id",
+							"value": "2"
+						},
+						{
+							"description": "Question Id",
+							"key": "question_id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Update user answer.\nMark it as flagged or change the answer or both"
+			},
+			"response": []
+		},
+		{
+			"name": "SendEmail",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/me/send_verification_mail",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"me",
+						"send_verification_mail"
+					]
+				},
+				"description": "send activation email"
+			},
+			"response": []
+		},
+		{
+			"name": "ConfirmEmail",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "token",
+							"value": "",
+							"description": "Activation jwt",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/me/confirm_email",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"me",
+						"confirm_email"
+					]
+				},
+				"description": "Confirm email via token"
+			},
+			"response": []
+		},
+		{
+			"name": "ForgotPassword",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "chirgjin@gmail.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/forgotPassword",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"forgotPassword"
+					]
+				},
+				"description": "Request forgot password email"
+			},
+			"response": []
+		},
+		{
+			"name": "ResetPassword",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImRhdGEiOnsidXNlcm5hbWUiOiJjaGlyZ2ppbiIsImVtYWlsIjoiY2hpcmdqaW5AZ21haWwuY29tIiwibW9iaWxlX251bWJlciI6bnVsbCwicm9sZXMiOlsic3R1ZGVudCIsImFkbWluIiwic3VwZXJBZG1pbiJdLCJmaXJzdG5hbWUiOiJjaGlyYWciLCJsYXN0bmFtZSI6IkphaW4iLCJjb2xsZWdlIjpudWxsLCJlbWFpbF92ZXJpZmllZCI6MCwibW9iaWxlX3ZlcmlmaWVkIjowLCJjcmVhdGVkX2F0IjoiMjAxOS0wNi0yNyAyMzoyMjoyNSIsInVwZGF0ZWRfYXQiOiIyMDE5LTA5LTE4IDIzOjQyOjMxIiwibmFtZSI6ImNoaXJhZyBKYWluIn0sImlhdCI6MTU2OTAwMTUyMCwiZXhwIjoxNTY5MDg3OTIwLCJhdWQiOiJzdHVkZW50IiwiaXNzIjoiTW9ja1Rlc3RJbmRpYSIsInN1YiI6InJlc2V0UGFzc3dvcmQifQ.bRcTVKTxS3mu_yKKA6GoTH5byjGbEk0tkdY2Kvx1UG8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "text/plain",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "password",
+							"value": "none",
+							"type": "text"
+						},
+						{
+							"key": "confirm_password",
+							"value": "none1",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/resetPassword",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"resetPassword"
+					]
+				},
+				"description": "Provide token & new password to reset the password"
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{AUTH_TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "eaefa95c-82f1-44ca-bae3-e10795857cb5",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "dc2c9298-8312-4e10-ad69-7ca4ca5124db",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "915058b4-909c-48c4-88b9-005113dfbaa0",
+			"key": "API_URL",
+			"value": "http://127.0.0.1:3333/api/student",
+			"type": "string"
+		},
+		{
+			"id": "215655e8-68c1-43f4-b78e-3c22cb50aaa9",
+			"key": "AUTH_TOKEN",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImRhdGEiOnsidXNlcm5hbWUiOiJjaGlyZ2ppbiIsImVtYWlsIjoiY2hpcmdqaW5AZ21haWwuY29tIiwibW9iaWxlX251bWJlciI6bnVsbCwicm9sZXMiOlsic3R1ZGVudCIsImFkbWluIiwic3VwZXJBZG1pbiJdLCJmaXJzdG5hbWUiOiJDaGlyYWciLCJsYXN0bmFtZSI6IkphaW4iLCJjb2xsZWdlIjpudWxsLCJlbWFpbF92ZXJpZmllZCI6MCwibW9iaWxlX3ZlcmlmaWVkIjowLCJjcmVhdGVkX2F0IjoiMjAxOS0wNi0yNyAyMzoyMjoyNSIsInVwZGF0ZWRfYXQiOiIyMDE5LTA4LTA4IDE2OjM4OjE1IiwibmFtZSI6IkNoaXJhZyBKYWluIn0sImlhdCI6MTU2NTI2MjUzMiwiZXhwIjoxNTY1MzQ4OTMyLCJhdWQiOiJzdHVkZW50IiwiaXNzIjoiTW9ja1Rlc3RJbmRpYSIsInN1YiI6ImxvZ2luIn0.VoKa_OvVhC7DoB3R09jQ5LflJk9hVdAjO31Zdse6dKU",
+			"type": "string"
+		}
+	]
+}
