@@ -1,12 +1,10 @@
-const validate = use("App/Helpers/validate")
+const { validate } = use("Validator")
 const globalMessages = {
     required : "{{ field }} is required",
     string : "{{ field }} must be of type string",
     integer : "{{ field }} must be an integer",
     unique : "{{ field }} must be unique in {{ argument.0 }}",
     in(field, validation, args) {
-        console.log(field, validation, args);
-
         return `${field} must have one of the following values : ${args.join(",")}`
     },
     array : "{{ field }} must be an array",
