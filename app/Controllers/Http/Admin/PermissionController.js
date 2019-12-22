@@ -73,8 +73,8 @@ class PermissionController {
                 }
             }
 
-            await user.permissions().attach(add)
-            await user.permissions().detach(del)
+            await user.permissions().attach(add, null, transaction)
+            await user.permissions().detach(del, null, transaction)
 
             delete user.$relations.permissions;
             await user.load('permissions')
