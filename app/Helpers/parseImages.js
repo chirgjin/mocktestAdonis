@@ -14,5 +14,5 @@ module.exports = function parseImages(html, images) {
         }
     });
 
-    return $.html();
+    return $("body").html()
 }
