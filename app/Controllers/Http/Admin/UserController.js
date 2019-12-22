@@ -216,6 +216,15 @@ class UserController {
 
         const editableFields = ['firstname', 'lastname', 'roles', 'email', 'password', 'email_verified', 'mobile_number', 'mobile_verified', 'college', 'rollnum', 'branch', 'degree', 'section', 'batch', ];
 
+
+        if(user.email != request.input('email', null) && request.input('email_verified', null) === null) {
+            user.email_verified = false
+        }
+
+        if(user.mobile_number != request.input('mobile_number', null) && request.input("mobile_verified", null) === null) {
+            user.mobile_verified = false
+        }
+
         user.merge(request.only(editableFields));
 
         if(!auth.user.canEditUser(user)) {
@@ -315,7 +324,16 @@ class UserController {
             'phone_num' : 'mobile_number',
             'phone_number' : 'mobile_number',
             'phone num' : 'mobile_number',
-            'phone number' : 'mobile_number'
+            'phone number' : 'mobile_number',
+
+            'rollnum' : 'rollnum',
+            'enrollnum' : 'rollnum',
+
+            'branch' : "branch",
+            'degree' : 'degree',
+            'section' : 'section',
+            'batch' : 'batch',
+
         }
 
         const csv = request.file('file', {
@@ -331,6 +349,16 @@ class UserController {
 
         if(heads.indexOf('firstname') == -1) {
             throw new MissingValueException('firstname')
+        }
+
+        const setting = await Setting.query().first()
+
+        if(setting && setting.max_users != -1) {
+            const totalUsers = await User.query().getCount()
+
+            if(setting.max_users < totalUsers + data.length) {
+                return response.error(`You are trying to create ${data.length} users but can only create ${totalUsers + data.length - setting.max_users} more users!`, 422)
+            }
         }
 
         data.splice(0, 1);
