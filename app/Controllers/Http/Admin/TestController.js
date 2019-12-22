@@ -80,6 +80,8 @@ class TestController {
             duration : "required|integer|range:1,36000",
             marks : "required|integer|range:1,50",
             options : "required|integer|range:0,10",
+            slab_good : "number|range:0,100",
+            slab_fail : "number|range:0,100"
         });
 
         if(v.fails()) {
@@ -104,15 +106,13 @@ class TestController {
 
 
         //verify exam, examSection & difficulty are valid
-        const testData = request.only(['exam_id', 'exam_section_id', 'difficulty', 'description', 'instructions', 'negative_marks', 'duration', 'enabled', 'review_enabled', 'marks', 'options']);
+        const testData = request.only(['exam_id', 'exam_section_id', 'difficulty', 'description', 'instructions', 'negative_marks', 'duration', 'enabled', 'review_enabled', 'marks', 'options', 'slab_good', 'slab_fail']);
 
         const exam = await Exam.findOrFail(testData.exam_id);
         const examSection = await ExamSection.findOrFail(testData.exam_section_id);
         const difficulty = await Difficulty.findOrFail(testData.difficulty);
 
         testData.created_by = auth.user.id;
-
-
         
 
         if(Array.isArray(images)) {
