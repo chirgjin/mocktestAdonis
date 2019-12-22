@@ -5,11 +5,11 @@ const Schema = use('Schema')
 
 class TestAddSlabsSchema extends Schema {
     up () {
-        this.table('test_add_slabs', (table) => {
+        this.table('tests', (table) => {
             // alter table
 
-            table.float("slab_good", 6, 3).defaultTo(null)
-            table.float("slab_fail", 6, 3).defaultTo(null)
+            table.float("slab_good", 7, 3).defaultTo(null)
+            table.float("slab_fail", 7, 3).defaultTo(null)
 
         })
     }

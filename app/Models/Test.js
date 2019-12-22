@@ -68,6 +68,63 @@ class Test extends Model {
     userTests() {
         return this.hasMany('App/Models/UserTest')
     }
+
+    getStyle(marks) {
+
+        if(typeof marks == 'object') {
+            return undefined
+        }
+
+        let { slab_good, slab_fail } = this.$attributes
+
+        marks = parseFloat(marks)
+
+        slab_good = parseFloat(slab_good)
+        slab_fail = parseFloat(slab_fail)
+
+        if(slab_fail && marks <= slab_fail) {
+            return {
+                font : {
+                    color : "white"
+                },
+                fill : {
+                    type : "pattern",
+                    patternType: 'solid',
+                    bgColor : "#ef5350",
+                    fgColor : "#ef5350",
+                }
+            }
+        }
+        else if(slab_good && marks >= slab_good) {
+            return {
+                font : {
+                    color : "white"
+                },
+                fill : {
+                    type : "pattern",
+                    patternType: 'solid',
+                    bgColor : "#66bb6a",
+                    fgColor : "#66bb6a"
+                }
+            }
+        }
+        else if(slab_fail && slab_good) {
+            return {
+                font : {
+                    color : "white"
+                },
+                // fillColor : "#fb8c00"
+                fill : {
+                    type : "pattern",
+                    patternType: 'solid',
+                    bgColor : "#fb8c00",
+                    fgColor : "#fb8c00"
+                }
+            }
+        }
+
+        return null
+    }
 }
 
 module.exports = Test

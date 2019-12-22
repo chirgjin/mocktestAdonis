@@ -100,6 +100,7 @@ hooks.after.providersBooted(() => {
         //     })
         // }
 
+        console.log(obj, keys, rowOff, colOff)
         keys.forEach( (key, col) => {
             const val = _.get(obj, key)
             const type = typeof val == 'number' ? 'number' : 'string'

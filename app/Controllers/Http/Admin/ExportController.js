@@ -53,6 +53,16 @@ class ExportController {
                 //     .with('examSection')
                 // })
                 // .where('status', UserTest.COMPLETED)
+
+                if(request.input("completed_tests_only")) {
+                    builder
+                    .where("status", UserTest.COMPLETED)
+                }
+
+                if(Array.isArray(request.input("test_ids"))) {
+                    builder
+                    .whereIn("test_id", request.input("test_ids"))
+                }
             })
         }
 
@@ -74,14 +84,25 @@ class ExportController {
             //get list of tests first
             const tests = await Test.query()
             .whereHas('userTests', builder => {
-                builder.whereIn('user_id', users.map(user => user.id))
+                // builder.whereIn('user_id', users.map(user => user.id))
+                const ids = []
+                users.forEach(user => {
+                    user.getRelated('userTests').rows.forEach(test => {
+                        if(ids.indexOf(test.test_id) == -1) {
+                            ids.push(test.test_id)
+                        }
+                    })
+                })
+
+                builder.whereIn('test_id', ids)
             })
             .fetch()
 
             tests.rows.forEach( (test,i) => {
                 testIndex[test.id] = {
                     index : i,
-                    name : test.name
+                    name : test.name,
+                    test : test
                 }
 
                 testKeys.forEach( (key, j) => {
@@ -109,12 +130,17 @@ class ExportController {
 
                     stats.marks_obtained = test.marks_obtained
                     stats.name = testIndex[test.test_id].name
+                    stats.status = test.status
                     
                     const offset = testIndex[test.test_id].index * testKeys.length
                     
-                    // ws
-                    // .cell(i+2, keys.length + testIndex[test.test_id] + 1)
-                    // .number(test.marks_obtained || 0)
+                    const style = testIndex[test.test_id].test.getStyle(test.marks_obtained)
+
+                    if(style) {
+                        ws
+                        .cell(i+2, keys.length+offset+1, i+2, keys.length+offset+testKeys.length)
+                        .style(style)
+                    }
 
                     ws
                     .addFromKeys(stats, testKeys, {

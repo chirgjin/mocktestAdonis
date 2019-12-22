@@ -34,7 +34,7 @@ class UserController {
             throw new PermissionDeniedException();
         }
         
-        const q = User.query();
+        const q = User.query().setVisible(['id'])
         if(request.input("firstname", null)) {
             q.where('firstname', 'like', `%${request.input("firstname")}%`);
         }
@@ -177,8 +177,10 @@ class UserController {
 
         const user = await User
         .query()
+        .setVisible(['id'])
         .where("id", params.id)
         .with('exams')
+        .with('permissions')
         .first();
 
         if(!user) {
