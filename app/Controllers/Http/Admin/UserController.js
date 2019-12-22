@@ -39,7 +39,8 @@ class UserController {
             q.where('firstname', 'like', `%${request.input("firstname")}%`);
         }
         
-        const users = await q.fetch();
+        const page = parseInt(request.input("page", 1)) || 1
+        const users = await q.paginate(page);
 
         return response.success(users);
     }

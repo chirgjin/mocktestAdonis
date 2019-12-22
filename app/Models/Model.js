@@ -1,56 +1,65 @@
 'use strict';
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model');
+const _Model = use('Model');
+
+const _ = require("lodash")
 
 const getName = prop => prop.substr(0,1).toUpperCase() + prop.substr(1);
 
-// class Model extends _Model {
+class Model extends _Model {
 
-//     constructor() {
+    /**
+     * @returns {Object} Key => value pair of datatypes
+     */
+    static get dataTypes() {
+        return {}
+    }
 
-//         const ret = super(...arguments);
+    static boot() {
+        super.boot()
 
-//         const computed = this.constructor.computed;
-//         const getters = this.constructor.getters;
+        
+        if(this.dataTypes) {
+            
+            for(let key in this.dataTypes) {
+                const camelCaseName = _.camelCase("get_" + key)
 
-//         if(Array.isArray(computed)) {
-//             computed.forEach(prop => {
-//                 delete this[prop];
-//                 Object.defineProperty(this, prop, {
-//                     get() {
-//                         return this["get" + getName(prop)](this.$attributes);
-//                     },
-//                     set(value) {
-//                         return typeof this["set" + getName(prop)] == 'function' ? this["set" + getName(prop)](this.$attributes, value) : null;
-//                     }
-//                 });
-//             });
-//         }
+                const originalFn = this[camelCaseName]
 
-//         if(Array.isArray(getters)) {
-//             getters.forEach(prop => {
+                this[camelCaseName] = data => {
+                    if(typeof(this.dataTypes[key]) === 'function') {
+                        this.dataTypes[key].call(this, data)
+                    }
+                    else {
+                        switch(this.dataTypes[key].toLowerCase()) {
+                            case "string":
+                            case "str":
+                                data = _.toString(data)
+                                break;
+                            case "int":
+                            case "integer":
+                                data = _.toInteger(data)
+                                break;
+                            case "float":
+                            case "double":
+                            case "number":
+                                data = _.toNumber(data)
+                                break;
+                            case "bool":
+                            case "boolean":
+                                data = !!data
+                                break;
+                            // case "parsejson":
+                            //     data = data && typeof data == 'object' ? data : JSON.parse(data)
+                        }
+                    }
 
-//                 delete this[prop];
-
-//                 Object.defineProperty(this, prop, {
-//                     get() {
-//                         return this[`get${getName(prop)}`](this.$attributes[prop]);
-//                     },
-//                     set(value) {
-//                         if(typeof this[`set${getName(prop)}`] == 'function') {
-//                             value = this[`set${getName(prop)}`](value);
-//                         }
-
-//                         this.dirty[prop] = value;
-//                     }
-//                 });
-//             });
-//         }
-
-
-//         return ret;
-//     }
-// }
+                    return typeof originalFn === 'function' ? originalFn.call(this, data) : data
+                }
+            }
+        }
+    }
+}
 
 module.exports = Model;

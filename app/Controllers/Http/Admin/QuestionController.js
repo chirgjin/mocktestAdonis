@@ -45,7 +45,9 @@ class QuestionController {
             })
         }
 
-        const questions = await q.fetch();
+        const page = parseInt(request.input("page", 1)) || 1
+
+        const questions = await q.paginate(page);
 
         return response.success( questions );
     }
