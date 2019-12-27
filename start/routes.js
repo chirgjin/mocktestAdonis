@@ -61,7 +61,6 @@ Route.group('adminAuth', () => {
     Route.post('login', 'AuthController.login');
 
     Route.resource('settings', 'SettingController').only(['index', 'update'])
-    Route.get('users/export', 'ExportController.users')
     
 }).prefix('api/admin').namespace('Admin').middleware('guest');
 
@@ -75,6 +74,8 @@ Route.group('adminApi', () => {
 
     Route.resource('examSections', 'ExamSectionController').apiOnly()
 
+    Route.post("questions/upload", 'QuestionController.upload')
+    
     Route.resource('questions', 'QuestionController').apiOnly()
 
     Route.resource('settings', 'SettingController').only(['index', 'update'])
@@ -84,11 +85,14 @@ Route.group('adminApi', () => {
     Route.resource('testSections', 'TestSectionController').apiOnly()
 
     Route.post('users/upload', 'UserController.uploadCSV')
+    Route.get('users/export', 'ExportController.users')
+    Route.put('users/:user_id/permissions', 'PermissionController.manage')
     
     Route.resource('users', 'UserController').apiOnly()
 
     Route.resource('userTests', 'UserTestController').apiOnly()
 
+    
 
 
 }).prefix('api/admin').namespace('Admin').middleware('auth:jwtAdmin');

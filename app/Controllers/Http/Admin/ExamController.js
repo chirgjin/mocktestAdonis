@@ -146,6 +146,7 @@ class ExamController {
         const v = await validate(request.post(), {
             action : "required|in:link,unlink",
             sections: "required|array",
+            "sections.*" : "number",
         });
 
         if(v.fails()){

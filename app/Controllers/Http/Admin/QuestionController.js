@@ -13,6 +13,8 @@ const validate = use("App/Helpers/validate")
 const Helpers = use("App/Helpers")
 const Database = use('Database')
 
+const WordParser = use("App/Helpers/WordParser")
+
 /**
 * Resourceful controller for interacting with questions
 */
@@ -336,6 +338,41 @@ class QuestionController {
         if(!await auth.user.canPerformAction('test', 'delete')) {
             throw new PermissionDeniedException();
         }
+    }
+
+
+
+    
+    
+    /**
+    * Upload Questions via Word Zip File
+    * POST questions/upload
+    *
+    * @param {object} ctx
+    * @param {Request} ctx.request
+    * @param {Response} ctx.response
+    */
+    async upload ({ params, request, response, auth }) {
+        if(!await auth.user.canPerformAction('test', 'create')) {
+            throw new PermissionDeniedException();
+        }
+
+        const zipFile = request.file('file', {
+            extnames : ['zip'],
+        })
+        if(!zipFile) {
+            throw new MissingValueException('file')
+        }
+
+        const parser = new WordParser()
+
+        await parser.extractZip(zipFile.tmpPath)
+
+        const data = await parser.parse()
+
+        await parser.cleanup()
+
+        return response.success(data)
     }
 }
 

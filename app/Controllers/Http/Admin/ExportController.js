@@ -35,9 +35,6 @@ class ExportController {
 
         const ws = wb.addWorksheet("Users")
 
-        // console.log(User)
-        // console.log(use("App/Models"))
-
         const q = User.query();
 
         if(request.input("user_id")) {
@@ -46,22 +43,15 @@ class ExportController {
 
         if(request.input('with_tests')) {
             q.with('userTests', builder => {
-                // builder
-                // .with('test', builder => {
-                //     builder
-                //     .with('exam')
-                //     .with('examSection')
-                // })
-                // .where('status', UserTest.COMPLETED)
 
                 if(request.input("completed_tests_only")) {
                     builder
                     .where("status", UserTest.COMPLETED)
                 }
 
-                if(Array.isArray(request.input("test_ids"))) {
+                if(Array.isArray(request.input("test_id"))) {
                     builder
-                    .whereIn("test_id", request.input("test_ids"))
+                    .whereIn("test_id", request.input("test_id"))
                 }
             })
         }
@@ -122,6 +112,12 @@ class ExportController {
 
             if(request.input('with_tests')) {
                 const tests = user.getRelated('userTests').rows;
+
+                if(request.input("completed_tests_only") || Array.isArray(request.input("test_id"))) {
+                    if(tests.length < 1) {
+                        continue
+                    }
+                }
 
                 for(let j=0;j<tests.length;j++) {
                     const test = tests[j]

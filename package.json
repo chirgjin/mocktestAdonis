@@ -32,11 +32,15 @@
         "@sendgrid/mail": "^6.4.0",
         "cheerio": "^1.0.0-rc.3",
         "excel4node": "^1.7.2",
+        "html-entities": "^1.2.1",
         "lodash": "^4.17.15",
+        "mkdirp": "^0.5.1",
         "pg": "^7.12.1",
         "promise-parallel-throttle": "^3.3.0",
+        "rimraf": "^3.0.0",
         "sqlite3": "^4.0.8",
-        "uuid": "^3.3.2"
+        "unzip": "^0.1.11",
+        "uuid": "^3.3.3"
     },
     "devDependencies": {},
     "autoload": {
