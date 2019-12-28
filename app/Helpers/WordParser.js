@@ -14,6 +14,8 @@ const {Difficulty, Question, QuestionDirection, QuestionOption, QuestionSolution
 const { FieldException, NotFoundException, MissingValueException, PermissionDeniedException } = use("App/Exceptions")
 
 const rimraf = require("rimraf")
+const Config = use('Config')
+
 
 class WordParser {
 
@@ -49,7 +51,7 @@ class WordParser {
      * @returns {HtmlParser}
      */
     setOptions(options={}) {
-        let keys = ['tempFolder','tempGenerator','zip', 'tags', ];
+        let keys = ['tempFolder','tempGenerator','zip', 'tags', 'inlineImages'];
 
         for(let i=0;i<keys.length;i++) {
             let key = keys[i];
@@ -65,6 +67,7 @@ class WordParser {
             tempFolder : Helpers.tmpPath(),
             tempGenerator : parser => path.join(parser.tempFolder,uuid()),
             tags : [ 'img', 'sup', 'sub', 'b', 'i', 'strong', 'em', 'u', 'strike' ],
+            inlineImages : Config.get('app.inlineImages', true),
         }
     }
 
@@ -104,10 +107,24 @@ class WordParser {
     }
 
     updateImageType(val) {
+
+        if(this.inlineImages) {
+            return ;
+        }
+
         this.images = this.images.map(img => {
             img.type = img.type || val
             return img
         })
+    }
+
+    getBase64(src) {
+
+        return fs.readFileSync(
+            path.join(this.tempLoc, src),
+            { encoding: 'base64' }
+        ).toString()
+        
     }
 
     get lastProp() {
@@ -135,7 +152,7 @@ class WordParser {
         let tag;
 
         if(el.get(0) && el.get(0).tagName && (tag = el.get(0).tagName.toLowerCase()) && this.tags.indexOf(tag) > -1) {
-            return tag == 'img' ? `<img data-index=${this.getImageIndex(el.attr('src'))} />` : `<${tag}>${el.text()}</${tag}>`;
+            return tag == 'img' ? `<img ${!this.inlineImages ? `data-index=${this.getImageIndex(el.attr('src'))}` : `src="data:image/png;base64,${this.getBase64(el.attr('src'))}"`} />` : `<${tag}>${el.text()}</${tag}>`;
         }
         else if(el.has( this.tags.join(",") ).length > 0) {
     
@@ -477,12 +494,9 @@ class WordParser {
                 resolve({
                     questions : this.questions,
                     directions : this.directions,
-                    images : this.images.map(({src,type}) => {
+                    images : this.inlineImages ? [] : this.images.map(({src,type}) => {
                         return {
-                            base64 : fs.readFileSync(
-                                path.join(this.tempLoc, src),
-                                { encoding: 'base64' }
-                            ).toString(),
+                            base64 : this.getBase64(src),
                             type
                         }
                     })

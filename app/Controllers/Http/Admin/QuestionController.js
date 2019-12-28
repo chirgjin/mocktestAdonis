@@ -71,7 +71,7 @@ class QuestionController {
             questions : "required|array",
             "questions.*.difficulty" : "required|alphaNumeric",
             "questions.*.description" : "required",
-            "questions.*.type" : "required|integer|range:1,2",
+            "questions.*.type" : "required|integer|range:0,3",
             "questions.*.answer" : "required|integer",
             "questions.*.avg_time" : "number",
             "questions.*.direction" : "integer",
@@ -94,7 +94,7 @@ class QuestionController {
         images = Array.isArray(images) ? images : []
         directions = Array.isArray(directions) ? directions : []
 
-        console.log(questions);
+        // console.log(questions);
 
         for(let i=0;i<questions.length;i++) {
             const question = questions[i];
@@ -195,7 +195,7 @@ class QuestionController {
 
             questions.forEach( (question,i) => {
                 if(question.options) {
-                    console.log(question.options);
+                    
                     options = options.concat(question.options.map(option => {
                         option.description = Helpers.parseImages(option.description, createdImageUrls);
                         option.question_id = createdQuestions[i].id;
@@ -233,7 +233,7 @@ class QuestionController {
                     })[0];
                 });
 
-                console.log(createdQuestion, optionsCreated);
+                // console.log(createdQuestion, optionsCreated);
 
 
                 createdQuestion.answer = options[question.answer].id;

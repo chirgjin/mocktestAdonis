@@ -239,5 +239,8 @@ module.exports = {
         sameSite: true,
         path: '/',
         maxAge: 7200
-    }
+    },
+
+
+    inlineImages : true
 }

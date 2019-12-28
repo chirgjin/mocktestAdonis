@@ -61,8 +61,8 @@ class TestSectionController {
         const v = await validate(request.post(), {
             test_id : "required|integer",
             name : "required",
-            duration : "integer|range:0,36000",
-            number : "integer|range:-99999,9999",
+            duration : "integer|range:-1,36001",
+            number : "integer|range:-999999,99999",
         });
 
         if(v.fails()) {

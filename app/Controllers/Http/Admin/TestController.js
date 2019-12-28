@@ -76,12 +76,12 @@ class TestController {
             difficulty : "required",
             description : "required",
             instructions: "required",
-            negative_marks : "integer|range:0,10",
-            duration : "required|integer|range:1,36000",
-            marks : "required|integer|range:1,50",
-            options : "required|integer|range:0,10",
-            slab_good : "number|range:0,100",
-            slab_fail : "number|range:0,100"
+            negative_marks : "integer|range:-1,11",
+            duration : "required|integer|range:0,36001",
+            marks : "required|integer|range:0,51",
+            options : "required|integer|range:-1,11",
+            slab_good : "number|range:-1,101",
+            slab_fail : "number|range:-1,101"
         });
 
         if(v.fails()) {
