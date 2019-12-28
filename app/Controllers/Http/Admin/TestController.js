@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -8,9 +8,9 @@
 const {Test, TestSection, Exam, Difficulty, ExamSection} = use("App/Models");
 // const MissingValueException = use("App/Exceptions/MissingValueException");
 // const NotFoundException = use("App/Exceptions/NotFoundException");
-const {NotFoundException, MissingValueException, PermissionDeniedException } = use("App/Exceptions")
-const validate = use("App/Helpers/validate")
-const Helpers = use("App/Helpers")
+const {NotFoundException, MissingValueException, PermissionDeniedException } = use("App/Exceptions");
+const validate = use("App/Helpers/validate");
+const Helpers = use("App/Helpers");
 
 /**
 * Resourceful controller for interacting with tests
@@ -108,9 +108,9 @@ class TestController {
         //verify exam, examSection & difficulty are valid
         const testData = request.only(['exam_id', 'exam_section_id', 'difficulty', 'description', 'instructions', 'negative_marks', 'duration', 'enabled', 'review_enabled', 'marks', 'options', 'slab_good', 'slab_fail']);
 
-        const exam = await Exam.findOrFail(testData.exam_id);
-        const examSection = await ExamSection.findOrFail(testData.exam_section_id);
-        const difficulty = await Difficulty.findOrFail(testData.difficulty);
+        await Exam.findOrFail(testData.exam_id);
+        await ExamSection.findOrFail(testData.exam_section_id);
+        await Difficulty.findOrFail(testData.difficulty);
 
         testData.created_by = auth.user.id;
         
@@ -140,7 +140,7 @@ class TestController {
                     number : section.number || i,
                     duration : section.duration || null,
                     test_id : test.id
-                }
+                };
             });
 
             await TestSection.createMany(sections);//create dem sections
@@ -176,8 +176,8 @@ class TestController {
         }
 
         q.with('exam')
-        .with('examSection')
-        .with('createdBy')
+            .with('examSection')
+            .with('createdBy');
 
 
         const test = await q.first();
@@ -197,6 +197,7 @@ class TestController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
+    // eslint-disable-next-line no-unused-vars
     async update ({ params, request, response, auth }) {
 
         if(!await auth.user.canPerformAction('test', 'update')) {
@@ -212,12 +213,16 @@ class TestController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async destroy ({ params, request, response, auth }) {
+    async destroy ({ params, response, auth }) {
 
         if(!await auth.user.canPerformAction('test', 'delete')) {
             throw new PermissionDeniedException();
         }
+
+        params;
+
+        return response.error("duh");
     }
 }
 
-module.exports = TestController
+module.exports = TestController;

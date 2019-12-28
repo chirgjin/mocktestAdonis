@@ -1,9 +1,9 @@
-'use strict'
+'use strict';
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 
-const Difficulty = use("App/Models/Difficulty");
+// const Difficulty = use("App/Models/Difficulty");
 class MiscController {
 
     /**
@@ -14,11 +14,11 @@ class MiscController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async home ({ request, response }) {
+    async home ({ response }) {
         return response.success({
             stats : "to be added",
         });
     }
 }
 
-module.exports = MiscController
+module.exports = MiscController;

@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -6,7 +6,7 @@
 
 const Difficulty = use("App/Models/Difficulty");
 
-const validate = use("App/Helpers/validate")
+const validate = use("App/Helpers/validate");
 
 /**
 * Resourceful controller for interacting with difficulties
@@ -20,9 +20,9 @@ class DifficultyController {
      * @param {Request} ctx.request
      * @param {Response} ctx.response
      */
-    async index ({ request, response}) {
+    async index ({ response }) {
 
-        const difficulties = await Difficulty.all()
+        const difficulties = await Difficulty.all();
 
         return response.success(difficulties);
     }
@@ -53,4 +53,4 @@ class DifficultyController {
     }
 }
 
-module.exports = DifficultyController
+module.exports = DifficultyController;

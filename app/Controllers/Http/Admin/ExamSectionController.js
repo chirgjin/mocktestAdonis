@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -11,7 +11,7 @@ const Exam = use('App/Models/Exam');
 /** @type {typeof import('../../../Models/ExamSection')} */
 const ExamSection = use('App/Models/ExamSection');
 
-const validate = use("App/Helpers/validate")
+const validate = use("App/Helpers/validate");
 const { NotFoundException, PermissionDeniedException } = use("App/Exceptions");
 /**
 * Resourceful controller for interacting with examsections
@@ -26,7 +26,7 @@ class ExamSectionController {
     * @param {Response} ctx.response
     * @param {View} ctx.view
     */
-    async index ({ request, response, view, auth }) {
+    async index ({ request, response, auth }) {
 
         if(!await auth.user.canPerformAction('examSection', 'read')) {
             throw new PermissionDeniedException();
@@ -83,7 +83,7 @@ class ExamSectionController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async show ({ params, request, response, auth }) {
+    async show ({ params, response, auth }) {
         if(!await auth.user.canPerformAction('examSection', 'read')) {
             throw new PermissionDeniedException();
         }
@@ -174,7 +174,7 @@ class ExamSectionController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async destroy ({ params, request, response, auth }) {
+    async destroy ({ params, response, auth }) {
         if(!await auth.user.canPerformAction('examSection', 'delete')) {
             throw new PermissionDeniedException();
         }
@@ -186,4 +186,4 @@ class ExamSectionController {
     }
 }
 
-module.exports = ExamSectionController
+module.exports = ExamSectionController;

@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 const User = use("App/Models/User");
-const validate = use("App/Helpers/validate")
+const validate = use("App/Helpers/validate");
 
 class AuthController {
     async login({request, response, auth}) {
@@ -20,18 +20,20 @@ class AuthController {
 
         try {
             const token = await auth
-            .authenticator('jwtAdmin')
-            .attempt(username, password, true);
+                .authenticator('jwtAdmin')
+                .attempt(username, password, true);
 
             const payload = await auth.authenticator('jwtAdmin')._verifyToken(token.token);
-            console.log(payload)
-            const user = await User.find(payload.uid)
+
+            // console.log(payload)
+
+            const user = await User.find(payload.uid);
             
             if(user.roles.indexOf("admin") == -1 && user.roles.indexOf("superAdmin") == -1) {
                 return response.error("Invalid Credentials", 401);
             }
 
-            await user.load('permissions')
+            await user.load('permissions');
 
             return response.success({
                 token : token.token,
@@ -45,4 +47,4 @@ class AuthController {
     }
 }
 
-module.exports = AuthController
+module.exports = AuthController;
