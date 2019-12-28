@@ -1,19 +1,19 @@
-'use strict'
+'use strict';
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
-const {Test, TestSection, Difficulty, Question, QuestionDirection, QuestionOption, QuestionSolution} = use("App/Models");
+const {TestSection, Difficulty, Question, QuestionDirection, QuestionOption, QuestionSolution} = use("App/Models");
 // const MissingValueException = use("App/Exceptions/MissingValueException");
 // const NotFoundException = use("App/Exceptions/NotFoundException");
 // const FieldException = use("App/Exceptions/FieldException")
-const { FieldException, NotFoundException, MissingValueException, PermissionDeniedException } = use("App/Exceptions")
-const validate = use("App/Helpers/validate")
-const Helpers = use("App/Helpers")
-const Database = use('Database')
+const { FieldException, NotFoundException, MissingValueException, PermissionDeniedException } = use("App/Exceptions");
+const validate = use("App/Helpers/validate");
+const Helpers = use("App/Helpers");
+const Database = use('Database');
 
-const WordParser = use("App/Helpers/WordParser")
+const WordParser = use("App/Helpers/WordParser");
 
 /**
 * Resourceful controller for interacting with questions
@@ -28,7 +28,7 @@ class QuestionController {
     * @param {Response} ctx.response
     * @param {View} ctx.view
     */
-    async index ({ request, response, view, auth }) {
+    async index ({ request, response, auth }) {
         if(!await auth.user.canPerformAction('test', 'read')) {
             throw new PermissionDeniedException();
         }
@@ -38,16 +38,16 @@ class QuestionController {
         if(request.input("test_section_id")) {
             q.whereHas('sections', builder => {
                 builder.where('test_section_id', request.input('test_section_id'));
-            })
+            });
         }
 
         if(request.input('test_id')) {
             q.whereHas('tests', builder => {
                 builder.where('test_id', request.input('test_id'));
-            })
+            });
         }
 
-        const page = parseInt(request.input("page", 1)) || 1
+        const page = parseInt(request.input("page", 1)) || 1;
 
         const questions = await q.paginate(page);
 
@@ -91,8 +91,8 @@ class QuestionController {
         }
 
         let { questions, images, directions } = request.post();
-        images = Array.isArray(images) ? images : []
-        directions = Array.isArray(directions) ? directions : []
+        images = Array.isArray(images) ? images : [];
+        directions = Array.isArray(directions) ? directions : [];
 
         // console.log(questions);
 
@@ -107,7 +107,7 @@ class QuestionController {
                     // const err = new Error(`questions.${i}.answer is incorrect`);
                     // err.field = `questions.${i}.answer`;
                     // throw err;
-                    throw new FieldException(`questions.${i}.answer`, `questions.${i}.answer is incorrect`)
+                    throw new FieldException(`questions.${i}.answer`, `questions.${i}.answer is incorrect`);
                 }
 
                 question.options = question.options.map( (option,i) => {
@@ -122,17 +122,17 @@ class QuestionController {
                     return option;
                 });
 
-                question.answer = question.options[question.answer].number
+                question.answer = question.options[question.answer].number;
             }
             else if(question.options && question.options.length > 0) {
                 // const err = new Error(`questions.${i} can not have options`);
                 // err.field = `questions.${i}.options`;
                 // throw err;
-                throw new FieldException(`questions.${i}.options`, `questions.${i} can not have options`)
+                throw new FieldException(`questions.${i}.options`, `questions.${i} can not have options`);
             }
 
             if(typeof question.direction == 'number' && !directions[question.direction]) {
-                throw new FieldException(`questions.${i}.direction`, `questions.${i}.direction doesn't exist in directions array!`)
+                throw new FieldException(`questions.${i}.direction`, `questions.${i}.direction doesn't exist in directions array!`);
             }
             else if(question.direction && question.direction.id > 0) {
                 const direction = await QuestionDirection.find(question.direction.id);
@@ -159,7 +159,7 @@ class QuestionController {
         }
 
         
-        const transaction = await Database.beginTransaction()
+        const transaction = await Database.beginTransaction();
 
         const solutions = [];
         let options = [];
@@ -172,7 +172,7 @@ class QuestionController {
             const createdDirections = await QuestionDirection.createMany(directions.map(direction => {
                 return {
                     description : Helpers.parseImages(direction, createdImageUrls),
-                }
+                };
             }), transaction);
             const createdQuestions = await Question.createMany(questions.map(question => {
                 let dirId;
@@ -190,7 +190,7 @@ class QuestionController {
                     type : question.type,
                     avg_time : question.avg_time,
                     answer : question.answer,
-                }
+                };
             }), transaction);
 
             questions.forEach( (question,i) => {
@@ -293,16 +293,17 @@ class QuestionController {
     * @param {Response} ctx.response
     * @param {View} ctx.view
     */
-    async show ({ params, request, response, view, auth }) {
+    async show ({ params, response, auth }) {
         if(!await auth.user.canPerformAction('test', 'read')) {
             throw new PermissionDeniedException();
         }
 
         const q = Question.query()
-        .withAll()
-        .with('solution')
-        .with('images')
-        .where('id', params.id);
+            .withAll()
+            .with('solution')
+            .with('images')
+            .setHidden([])
+            .where('id', params.id);
 
         const question = await q.first();
         if(!question) {
@@ -321,9 +322,182 @@ class QuestionController {
     * @param {Response} ctx.response
     */
     async update ({ params, request, response, auth }) {
+
         if(!await auth.user.canPerformAction('test', 'update')) {
             throw new PermissionDeniedException();
         }
+
+        const question = await Question.findOrFail(params.id);
+
+        const v = await validate(request.post(), {
+            "difficulty" : "alphaNumeric",
+            "description" : "string",
+            "type" : "integer|range:0,3",
+            "answer" : "integer",
+            "avg_time" : "number",
+            "direction" : "integer",
+            "options" : "array",
+            "options.*.id" : "integer",
+            "options.*.number" : "integer",
+            "options.*.description" : "string",
+            "solution" : "string",
+        });
+
+        if(v.fails()) {
+            return response.error(v.messages());
+        }
+
+        const editableFields = ['difficulty', 'description', 'type', 'answer', 'avg_time', ];
+
+        question.merge(request.only(editableFields));
+
+        const diff = await Difficulty.find(question.difficulty);
+
+        if(!diff) {
+            throw new FieldException(`difficulty`, `difficulty doesn't exist in db`);
+        }
+
+        await question.loadMany(['options', 'solution']);
+
+        await Database.transaction(async (transaction) => {
+        
+            const {options} = request.post();
+
+            if(question.type == Question.ORDER) {
+                //delete all the options from db
+
+                await question
+                    .options()
+                    .transacting(transaction)
+                    .delete();
+            }
+            else if(options && Array.isArray(options)) {
+
+                const existingOptions = question.getRelated('options').rows;
+
+                const deleteOptions = [];
+                const tasks = [];
+
+                question.answer = null;
+
+                existingOptions.forEach(eOpt => {
+                    let flag = 0;
+                    options.forEach( (opt) => {
+                        if(opt.id == eOpt.id) {
+                            flag = 1;
+
+                            eOpt.number = opt.number;
+                            eOpt.description = opt.description;
+
+                            tasks.push(
+                                () => eOpt.save(transaction)
+                            );
+
+                            if(opt.isAnswer) {
+                                question.answer = eOpt.id;
+                            }
+
+                            opt.handled = true;
+                        }
+                    });
+
+                    if(!flag) {
+                        deleteOptions.push(eOpt.id);
+                    }
+                });
+
+                options.forEach((opt, i) => {
+                    if(!opt.handled) {
+                        //need to create this option in db
+
+                        tasks.push(() => {
+                            question
+                                .options()
+                                .create({
+                                    number : opt.hasOwnProperty('number') ? opt.number : i,
+                                    description : opt.description,
+                                }, transaction)
+                                .then(option => {
+                                    if(opt.isAnswer) {
+                                        question.answer = option.id;
+                                    }
+                                });
+                        });
+                    }
+                });
+
+
+                if(deleteOptions.length > 0) {
+                    await QuestionOption
+                        .query()
+                        .transacting(transaction)
+                        .whereIn('id', deleteOptions)
+                        .delete();
+                }
+
+                await Promise.all(tasks.map(task => task()));
+
+                delete question.$relations.options;
+            }
+
+            const solution = request.input("solution");
+
+            if(solution !== undefined) {
+
+                if(!solution) {
+                    await question
+                        .solution()
+                        .transacting(transaction)
+                        .delete();
+                }
+                else {
+                    const sol = question.getRelated('solution');
+
+                    if(sol) {
+                        sol.description = solution;
+                        await sol.save(transaction);
+                    }
+                    else {
+                        await question
+                            .solution()
+                            .create({
+                                description : solution
+                            }, transaction);
+                    }
+
+                    // throw new FieldException("solution", "Dont know shit to do rn");
+                }
+            }
+            
+            question.$relations = {}; //delete loaded relations
+
+            question.$relations.solution = await question.solution().transacting(transaction).first();
+            question.$relations.direction = await question.direction().transacting(transaction).first();
+            question.$relations.options = await question.options().transacting(transaction).fetch();
+            
+
+            if(question.getRelated("options").rows.length < 1 && question.type == Question.MCQ) {
+                throw new FieldException("options", "MCQ question must have at least 1 option");
+            } 
+            else if(!question.answer) {
+                throw new FieldException("answer", "Question must have at least one answer");
+            }
+            
+            await question.save(transaction);
+        });
+
+
+        question.setHidden([]);
+        
+        return response.success(question);
+        // catch (e) {
+
+        //     console.log(e);
+
+        //     await transaction.rollback();
+
+        //     throw e;
+        // }
     }
     
     /**
@@ -334,10 +508,14 @@ class QuestionController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async destroy ({ params, request, response, auth }) {
+    async destroy ({ params, response, auth }) {
         if(!await auth.user.canPerformAction('test', 'delete')) {
             throw new PermissionDeniedException();
         }
+
+        params;
+        
+        return response.error("duh");
     }
 
 
@@ -352,28 +530,28 @@ class QuestionController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async upload ({ params, request, response, auth }) {
+    async upload ({ request, response, auth }) {
         if(!await auth.user.canPerformAction('test', 'create')) {
             throw new PermissionDeniedException();
         }
 
         const zipFile = request.file('file', {
             extnames : ['zip'],
-        })
+        });
         if(!zipFile) {
-            throw new MissingValueException('file')
+            throw new MissingValueException('file');
         }
 
-        const parser = new WordParser()
+        const parser = new WordParser();
 
-        await parser.extractZip(zipFile.tmpPath)
+        await parser.extractZip(zipFile.tmpPath);
 
-        const data = await parser.parse()
+        const data = await parser.parse();
 
-        await parser.cleanup()
+        await parser.cleanup();
 
-        return response.success(data)
+        return response.success(data);
     }
 }
 
-module.exports = QuestionController
+module.exports = QuestionController;
