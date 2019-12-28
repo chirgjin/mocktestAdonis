@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -51,11 +51,11 @@ class ExamController {
 
         const user = auth.user;
         const q = Exam
-        .query()
-        .where("id", params.id)
-        .whereHas('users', builder => {
-            builder.where('user_id', user.id);
-        });
+            .query()
+            .where("id", params.id)
+            .whereHas('users', builder => {
+                builder.where('user_id', user.id);
+            });
 
         if(request.input("with_sections", 1) == 1) {
             q.with("sections");
@@ -71,4 +71,4 @@ class ExamController {
     }
 }
 
-module.exports = ExamController
+module.exports = ExamController;

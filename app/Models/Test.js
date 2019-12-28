@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('./Model')} */
-const Model = use("Model")
+const Model = use("Model");
 /** @type {typeof import('./Exam')} */
 const Exam = use("App/Models/Exam");
 const ExamSection = use("App/Models/ExamSection");
@@ -17,19 +17,17 @@ class Test extends Model {
 
         this.addHook("beforeCreate", async test => {
 
-            const exam = await Exam.findOrFail(test.exam_id)
+            const exam = await Exam.findOrFail(test.exam_id);
             const examSection = await ExamSection.findOrFail(test.exam_section_id);
 
             const prefix = `${exam.code}-${examSection.code}-`;
 
             const last = (await Test
-            .query()
-            .where("name", "LIKE", `${prefix}%`)
-            .orderBy("id", "DESC")
-            .limit(1)
-            .fetch()).rows[0];
-
-            console.log(last);
+                .query()
+                .where("name", "LIKE", `${prefix}%`)
+                .orderBy("id", "DESC")
+                .limit(1)
+                .fetch()).rows[0];
             
             let name = prefix;
             if(!last) {
@@ -62,25 +60,25 @@ class Test extends Model {
 
     questions() {
         return this
-        .manyThrough('App/Models/TestSection', 'questions')
+            .manyThrough('App/Models/TestSection', 'questions');
     }
 
     userTests() {
-        return this.hasMany('App/Models/UserTest')
+        return this.hasMany('App/Models/UserTest');
     }
 
     getStyle(marks) {
 
         if(typeof marks == 'object') {
-            return undefined
+            return undefined;
         }
 
-        let { slab_good, slab_fail } = this.$attributes
+        let { slab_good, slab_fail } = this.$attributes;
 
-        marks = parseFloat(marks)
+        marks = parseFloat(marks);
 
-        slab_good = parseFloat(slab_good)
-        slab_fail = parseFloat(slab_fail)
+        slab_good = parseFloat(slab_good);
+        slab_fail = parseFloat(slab_fail);
 
         if(slab_fail && marks <= slab_fail) {
             return {
@@ -93,7 +91,7 @@ class Test extends Model {
                     bgColor : "#ef5350",
                     fgColor : "#ef5350",
                 }
-            }
+            };
         }
         else if(slab_good && marks >= slab_good) {
             return {
@@ -106,7 +104,7 @@ class Test extends Model {
                     bgColor : "#66bb6a",
                     fgColor : "#66bb6a"
                 }
-            }
+            };
         }
         else if(slab_fail && slab_good) {
             return {
@@ -120,11 +118,11 @@ class Test extends Model {
                     bgColor : "#fb8c00",
                     fgColor : "#fb8c00"
                 }
-            }
+            };
         }
 
-        return null
+        return null;
     }
 }
 
-module.exports = Test
+module.exports = Test;

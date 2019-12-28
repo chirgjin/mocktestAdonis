@@ -1,17 +1,17 @@
-'use strict'
+'use strict';
 
 /** @type {import('@adonisjs/framework/src/Hash')} */
-const Hash = use('Hash')
+const Hash = use('Hash');
 
 /** @type {typeof import('./Model')} */
-const Model = use("Model")
+const Model = use("Model");
 
 /** @type {typeof import('../Helpers/Permissions')} */
 const Permissions = use("App/Helpers/Permissions");
 
 class User extends Model {
     static boot () {
-        super.boot()
+        super.boot();
         
         /**
         * A hook to hash the user password before saving
@@ -22,9 +22,9 @@ class User extends Model {
 
             if (userInstance.dirty.password) {
                 
-                userInstance.password = await Hash.make(userInstance.password)
+                userInstance.password = await Hash.make(userInstance.password);
             }
-        })
+        });
     }
 
     static get hidden() {
@@ -95,10 +95,10 @@ class User extends Model {
 
     copy() {
         const u = new User;
-        u.fill(this.$attributes)
-        u.$primaryKeyValue = this.$primaryKeyValue
-        u.$parent = this.$parent
-        u.$persisted = this.$persisted
+        u.fill(this.$attributes);
+        u.$primaryKeyValue = this.$primaryKeyValue;
+        u.$parent = this.$parent;
+        u.$persisted = this.$persisted;
         return u;
     }
 
@@ -106,36 +106,36 @@ class User extends Model {
 
     exams() {
         return this
-        .belongsToMany('App/Models/Exam')
+            .belongsToMany('App/Models/Exam')
         // .pivotTable('user_exams')
-        .pivotModel('App/Models/UserExam')
+            .pivotModel('App/Models/UserExam');
         // .pivotAttribute(false)
     }
     
     permissions() {
         return this
-        .belongsToMany('App/Models/Permission')
-        .pivotTable('user_permissions')
+            .belongsToMany('App/Models/Permission')
+            .pivotTable('user_permissions');
         // .pivotModel('App/Models/UserExam')
         // .pivotAttribute(false)
     }
 
     examSections() {
         return this
-        .manyThrough('App/Models/UserExam', 'sections')
+            .manyThrough('App/Models/UserExam', 'sections');
     }
 
     tests() {
         return this
-        .manyThrough('App/Models/UserExam', 'tests');
+            .manyThrough('App/Models/UserExam', 'tests');
     }
 
     userTests() {
-        return this.hasMany('App/Models/UserTest')
+        return this.hasMany('App/Models/UserTest');
     }
 
     examAnalysis() {
-        return this.hasMany('App/Models/UserExamAnalysis')
+        return this.hasMany('App/Models/UserExamAnalysis');
     }
 
     answers() {
@@ -151,13 +151,13 @@ class User extends Model {
     }
 
     hasPermission(model, action) {
-        return Permissions.canPerformAction( this.copy(), model, action)
+        return Permissions.canPerformAction( this.copy(), model, action);
     }
 
     canPerformAction() {
-        return this.hasPermission.apply(this, arguments)
+        return this.hasPermission.apply(this, arguments);
     }
 
 }
 
-module.exports = User
+module.exports = User;

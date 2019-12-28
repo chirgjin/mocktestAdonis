@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-const { LogicalException } = require('@adonisjs/generic-exceptions')
+const { LogicalException } = require('@adonisjs/generic-exceptions');
 
 class IncorrectTypeException extends LogicalException {
     /**
@@ -20,4 +20,4 @@ class IncorrectTypeException extends LogicalException {
     }
 }
 
-module.exports = IncorrectTypeException
+module.exports = IncorrectTypeException;

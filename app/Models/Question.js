@@ -1,14 +1,14 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('./Model')} */
-const Model = use("Model")
+const Model = use("Model");
 
 class Question extends Model {
 
     static scopeWithAll(query, ) {
         return query
-        .with('direction')
-        .with('options')
+            .with('direction')
+            .with('options');
         // .with('images')
     }
 
@@ -19,15 +19,15 @@ class Question extends Model {
             MCQ : 1,
             Order : 2,
             ORDER : 2,
-        }
+        };
     }
 
     static get MCQ() {
-        return 1
+        return 1;
     }
 
     static get ORDER() {
-        return 2
+        return 2;
     }
 
 
@@ -57,19 +57,19 @@ class Question extends Model {
 
     sections() {
         return this
-        .belongsToMany('App/Models/TestSection')
-        // .pivotTable('test_section_questions')
-        .pivotModel('App/Models/TestSectionQuestion')
+            .belongsToMany('App/Models/TestSection')
+            // .pivotTable('test_section_questions')
+            .pivotModel('App/Models/TestSectionQuestion');
     }
 
     answers() {
         return this
-        .hasMany('App/Models/UserAnswer')
+            .hasMany('App/Models/UserAnswer');
     }
 
     tests() {
         return this
-        .manyThrough('App/Models/TestSectionQuestion', 'tests', 'id', 'question_id')
+            .manyThrough('App/Models/TestSectionQuestion', 'tests', 'id', 'question_id');
     }
 
     // exams() {
@@ -79,14 +79,14 @@ class Question extends Model {
 
     images() {
         return this
-        .hasMany('App/Models/Image', 'id', 'reference_id')
-        .where('images.type', 'question')
+            .hasMany('App/Models/Image', 'id', 'reference_id')
+            .where('images.type', 'question');
     }
 
     createImage(obj) {
         return this
-        .hasMany('App/Models/Image', 'id', 'reference_id')
-        .create(Object.assign(obj, {type : 'question'}));
+            .hasMany('App/Models/Image', 'id', 'reference_id')
+            .create(Object.assign(obj, {type : 'question'}));
     }
 
 
@@ -96,8 +96,8 @@ class Question extends Model {
             return false;
         }
 
-        return question.answer == parseInt(answer)
+        return question.answer == parseInt(answer);
     }
 }
 
-module.exports = Question
+module.exports = Question;

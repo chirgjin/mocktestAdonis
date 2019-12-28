@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('./Model')} */
-const Model = use("Model")
+const Model = use("Model");
 
 class QuestionSolution extends Model {
 
@@ -21,16 +21,16 @@ class QuestionSolution extends Model {
 
     images() {
         return this
-        .hasMany('App/Models/Image', 'id', 'reference_id')
-        .where('type', 'questionSolution')
+            .hasMany('App/Models/Image', 'id', 'reference_id')
+            .where('type', 'questionSolution');
     }
 
     createImage(obj) {
         return this
-        .hasMany('App/Models/Image', 'id', 'reference_id')
-        .create(Object.assign(obj, {type : 'questionSolution'}));
+            .hasMany('App/Models/Image', 'id', 'reference_id')
+            .create(Object.assign(obj, {type : 'questionSolution'}));
     }
 
 }
 
-module.exports = QuestionSolution
+module.exports = QuestionSolution;

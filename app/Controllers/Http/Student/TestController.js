@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -9,7 +9,7 @@
 const Test = use('App/Models/Test');
 
 
-const validate = use("App/Helpers/validate")
+const validate = use("App/Helpers/validate");
 const { NotFoundException } = use("App/Exceptions");
 
 /**
@@ -36,10 +36,10 @@ class TestController {
             return response.error(v.messages());
         }
 
-        const examId = params.exam_id
-        const sectionId = params.exam_section_id
+        const examId = params.exam_id;
+        const sectionId = params.exam_section_id;
 
-        const q = auth.user.tests().where('exam_section_id', sectionId).where('user_exams.exam_id', examId)
+        const q = auth.user.tests().where('exam_section_id', sectionId).where('user_exams.exam_id', examId);
 
         
 
@@ -88,16 +88,16 @@ class TestController {
     async show ({ params, request, response, auth }) {
 
         const q = auth
-        .user
-        .tests()
-        .where('tests.id', params.id)
+            .user
+            .tests()
+            .where('tests.id', params.id);
         
         if(request.input("with_sections", 1) == 1) {
             q.with("sections", (builder) => {
-                builder = builder.orderByNum()
+                builder = builder.orderByNum();
                 if(request.input("with_questions", 1) == 1) {
                     builder.with('questions', builder => {
-                        builder.withAll()
+                        builder.withAll();
                     });
                 }
             });
@@ -115,11 +115,11 @@ class TestController {
         const test = await q.first();
 
         if(!test) {
-            throw new NotFoundException('Test')
+            throw new NotFoundException('Test');
         }
 
         return response.success(test);
     }
 }
 
-module.exports = TestController
+module.exports = TestController;

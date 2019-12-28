@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-const BaseExceptionHandler = use('BaseExceptionHandler')
+const BaseExceptionHandler = use('BaseExceptionHandler');
 
 /**
 * This class handles all exceptions thrown during
@@ -22,7 +22,7 @@ class ExceptionHandler extends BaseExceptionHandler {
     */
     async handle (error, { request, response }) {
         if(error.code == 'E_ROUTE_NOT_FOUND') {
-            return super.handle(error, {request, response})
+            return super.handle(error, {request, response});
         }
         else if(error.code == 'E_PASSWORD_MISMATCH' || error.code == 'E_USER_NOT_FOUND') {
             return super.handle.apply(this, arguments);
@@ -55,4 +55,4 @@ class ExceptionHandler extends BaseExceptionHandler {
     }
 }
 
-module.exports = ExceptionHandler
+module.exports = ExceptionHandler;

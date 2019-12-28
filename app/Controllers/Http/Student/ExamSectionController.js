@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -7,7 +7,7 @@
 /** @type {typeof import('../../../Models/ExamSection')} */
 const ExamSection = use('App/Models/ExamSection');
 
-const validate = use("App/Helpers/validate")
+const validate = use("App/Helpers/validate");
 
 const { NotFoundException } = use("App/Exceptions");
 
@@ -24,7 +24,7 @@ class ExamSectionController {
      * @param {Request} ctx.request
      * @param {Response} ctx.response
      */
-    async index ({ params, request, response, auth }) {
+    async index ({ params, response, auth }) {
 
         const v = await validate(params, {
             exam_id : 'required|number',
@@ -50,8 +50,8 @@ class ExamSectionController {
     * @param {Response} ctx.response
     * @param {View} ctx.view
     */
-    async show ({ params, request, response, auth }) {
-        const user = auth.user
+    async show ({ params, response, auth }) {
+        const user = auth.user;
 
         const section = await user.examSections().where('exam_section_id', params.id).first();
 
@@ -63,4 +63,4 @@ class ExamSectionController {
     }
 }
 
-module.exports = ExamSectionController
+module.exports = ExamSectionController;

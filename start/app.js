@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ const providers = [
     '@adonisjs/validator/providers/ValidatorProvider',
     '@adonisjs/drive/providers/DriveProvider',
     '@adonisjs/mail/providers/MailProvider',
-]
+];
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +35,7 @@ const providers = [
 */
 const aceProviders = [
     '@adonisjs/lucid/providers/MigrationsProvider'
-]
+];
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +49,7 @@ const aceProviders = [
 |   { Route: 'Adonis/Src/Route' }
 |
 */
-const aliases = {}
+const aliases = {};
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +61,6 @@ const aliases = {}
 */
 const commands = [
     'App/Commands/ParseWordZip'
-]
+];
 
-module.exports = { providers, aceProviders, aliases, commands }
+module.exports = { providers, aceProviders, aliases, commands };

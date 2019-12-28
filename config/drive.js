@@ -1,11 +1,11 @@
-'use strict'
+'use strict';
 
-const Helpers = use('Helpers')
-const path = require("path")
-const Env = use('Env')
+const Helpers = use('Helpers');
+const path = require("path");
+const Env = use('Env');
 
 module.exports = {
-  /*
+    /*
   |--------------------------------------------------------------------------
   | Default disk
   |--------------------------------------------------------------------------
@@ -14,9 +14,9 @@ module.exports = {
   | defining a disk name
   |
   */
-  default: 'local',
+    default: 'local',
 
-  disks: {
+    disks: {
     /*
     |--------------------------------------------------------------------------
     | Local
@@ -25,12 +25,12 @@ module.exports = {
     | Local disk interacts with the a local folder inside your application
     |
     */
-    local: {
-      root: path.join(Helpers.resourcesPath(), Env.get('LOCAL_STORAGE_PATH', 'files')),
-      driver: 'local'
-    },
+        local: {
+            root: path.join(Helpers.resourcesPath(), Env.get('LOCAL_STORAGE_PATH', 'files')),
+            driver: 'local'
+        },
 
-    /*
+        /*
     |--------------------------------------------------------------------------
     | S3
     |--------------------------------------------------------------------------
@@ -38,12 +38,12 @@ module.exports = {
     | S3 disk interacts with a bucket on aws s3
     |
     */
-    s3: {
-      driver: 's3',
-      key: Env.get('S3_KEY'),
-      secret: Env.get('S3_SECRET'),
-      bucket: Env.get('S3_BUCKET'),
-      region: Env.get('S3_REGION')
+        s3: {
+            driver: 's3',
+            key: Env.get('S3_KEY'),
+            secret: Env.get('S3_SECRET'),
+            bucket: Env.get('S3_BUCKET'),
+            region: Env.get('S3_REGION')
+        }
     }
-  }
-}
+};

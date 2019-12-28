@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('./Model')} */
-const Model = use("Model")
+const Model = use("Model");
 
 class TestSectionQuestion extends Model {
     // static get primaryKey() {
@@ -19,29 +19,29 @@ class TestSectionQuestion extends Model {
 
     question() {
         return this
-        .belongsTo('App/Models/Question')
+            .belongsTo('App/Models/Question');
     }
 
     section() {
         return this
-        .belongsTo('App/Models/TestSection')
+            .belongsTo('App/Models/TestSection');
     }
 
     tests() {
         return this
-        .belongsToMany('App/Models/Test', 'id', 'test_id', 'test_section_id', 'id')
-        .pivotTable('test_sections')
+            .belongsToMany('App/Models/Test', 'id', 'test_id', 'test_section_id', 'id')
+            .pivotTable('test_sections');
     }
 
     exams() {
         return this
-        .manyThrough('App/Models/TestSection', 'exams', 'test_section_id', 'id')
+            .manyThrough('App/Models/TestSection', 'exams', 'test_section_id', 'id');
     }
 
     answers() {
         return this
-        .hasMany('App/Models/UserAnswer', 'question_id', 'question_id')
+            .hasMany('App/Models/UserAnswer', 'question_id', 'question_id');
     }
 }
 
-module.exports = TestSectionQuestion
+module.exports = TestSectionQuestion;

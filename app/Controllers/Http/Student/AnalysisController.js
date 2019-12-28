@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -9,7 +9,7 @@ const {UserTest, Test, TestSection, UserAnswer, Question} = use("App/Models");
 
 const { PermissionDeniedException, NotFoundException, FieldException } = use("App/Exceptions");
 
-const analysis = use("App/Helpers/analysis")
+const analysis = use("App/Helpers/analysis");
 
 /**
 * Resourceful controller for interacting with analysis
@@ -25,54 +25,54 @@ class AnalysisController {
     * @param {Response} ctx.response
     * @param {View} ctx.view
     */
-    async test ({ params, request, response, auth }) {
+    async test ({ params, response, auth }) {
         //
 
         const userTest = await auth.user
-        .userTests()
-        .where('user_tests.id', params.user_test_id)
-        .with('test', builder => {
-            builder.with('sections', builder => {
-                builder
-                .with('questions', builder => {
+            .userTests()
+            .where('user_tests.id', params.user_test_id)
+            .with('test', builder => {
+                builder.with('sections', builder => {
                     builder
-                    .withAll()
-                    .with('solution')
-                })
+                        .with('questions', builder => {
+                            builder
+                                .withAll()
+                                .with('solution');
+                        });
                 // .with('answers', builder => {
                 //     builder
                 //     .where('user_answers.user_test_id', params.user_test_id)
                 // })
+                });
             })
-        })
-        .first();
+            .first();
 
         if(!userTest) {
-            throw new NotFoundException('UserTest')
+            throw new NotFoundException('UserTest');
         }
         else if(userTest.status != UserTest.COMPLETED) {
-            throw new PermissionDeniedException(`Test must first be marked as completed!`)
+            throw new PermissionDeniedException(`Test must first be marked as completed!`);
         }
 
-        const test = userTest.getRelated('test')
+        const test = userTest.getRelated('test');
 
-        const sections = test.getRelated('sections').rows
+        const sections = test.getRelated('sections').rows;
 
         for(let section of sections) {
 
             //now calculate marks, incorrect, correct stats etc
             
 
-            section.$relations.stats = await analysis(section, params.user_test_id)
+            section.$relations.stats = await analysis(section, params.user_test_id);
         }
 
 
-        const rankQuery = await UserTest.query().where('test_id', test.id).where('marks_obtained', '>', userTest.marks_obtained).getCount()
+        const rankQuery = await UserTest.query().where('test_id', test.id).where('marks_obtained', '>', userTest.marks_obtained).getCount();
 
-        userTest.rank = rankQuery + 1
+        userTest.rank = rankQuery + 1;
 
-        response.success(userTest)
+        response.success(userTest);
     }
 }
 
-module.exports = AnalysisController
+module.exports = AnalysisController;

@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-const { LogicalException } = require('@adonisjs/generic-exceptions')
+const { LogicalException } = require('@adonisjs/generic-exceptions');
 
 class WaitTimeException extends LogicalException {
     /**
@@ -9,12 +9,12 @@ class WaitTimeException extends LogicalException {
     // handle () {}
     
     constructor(timeLeft=-1) {
-        super(null, 400, 'E_WAIT_TIME')
+        super(null, 400, 'E_WAIT_TIME');
         this.message = {
             message : `You must wait for ${timeLeft} seconds`,
             waitTime : timeLeft,
-        }
+        };
     }
 }
 
-module.exports = WaitTimeException
+module.exports = WaitTimeException;

@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('./Model')} */
-const Model = use("Model")
+const Model = use("Model");
 
 class UserExam extends Model {
     // static get primaryKey() {
@@ -19,24 +19,24 @@ class UserExam extends Model {
 
     exam() {
         return this
-        .belongsTo('App/Models/Exam')
+            .belongsTo('App/Models/Exam');
     }
 
     user() {
         return this
-        .belongsTo('App/Models/User')
+            .belongsTo('App/Models/User');
     }
 
     tests() {
         return this
-        .hasMany('App/Models/Test', 'exam_id', 'exam_id')
+            .hasMany('App/Models/Test', 'exam_id', 'exam_id');
     }
 
     sections() {
         return this
-        .belongsToMany('App/Models/ExamSection', 'exam_id', 'exam_section_id', 'exam_id', 'id')
-        .pivotTable('exam_section_list')
+            .belongsToMany('App/Models/ExamSection', 'exam_id', 'exam_section_id', 'exam_id', 'id')
+            .pivotTable('exam_section_list');
     }
 }
 
-module.exports = UserExam
+module.exports = UserExam;

@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -7,7 +7,7 @@
 /** @type {typeof import('../../../Models')} */
 const {UserTest, Test, TestSection, UserAnswer, Question} = use("App/Models");
 
-const validate = use("App/Helpers/validate")
+const validate = use("App/Helpers/validate");
 
 const { PermissionDeniedException, NotFoundException } = use("App/Exceptions");
 
@@ -66,10 +66,10 @@ class UserTestController {
         }
 
         const userTest = await UserTest
-        .query()
-        .where('user_id', auth.user.id)
-        .where('test_id', test_id)
-        .first();
+            .query()
+            .where('user_id', auth.user.id)
+            .where('test_id', test_id)
+            .first();
 
         if(userTest) {
             return response.success(userTest);
@@ -102,8 +102,8 @@ class UserTestController {
     async show ({ params, request, response, auth }) {
 
         const q = auth.user
-        .userTests()
-        .where('user_tests.id', params.id)
+            .userTests()
+            .where('user_tests.id', params.id);
         // .first();
 
         if(request.input('with_test', 1) == 1) {
@@ -154,10 +154,10 @@ class UserTestController {
         }
 
         const userTest = await UserTest
-        .query()
-        .where('user_id', auth.user.id)
-        .where('id', params.id)
-        .first();
+            .query()
+            .where('user_id', auth.user.id)
+            .where('id', params.id)
+            .first();
 
         if(!userTest) {
             throw new NotFoundException('UserTest');
@@ -175,4 +175,4 @@ class UserTestController {
     }
 }
 
-module.exports = UserTestController
+module.exports = UserTestController;

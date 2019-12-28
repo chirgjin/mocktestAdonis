@@ -15,10 +15,10 @@ module.exports = (len=5, type=5) => {
         'aA1!' : 6,
         'n!' : 7,
         'N!' : 7,
-    }
+    };
 
     if(types.hasOwnProperty(type)) {
-        type = types[type]
+        type = types[type];
     }
     
     const clists = [
@@ -30,15 +30,15 @@ module.exports = (len=5, type=5) => {
         'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890',
         'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890!@#$%^&*()_+-=',
         '1234567890!@#$%^&*()_+-=',
-    ]
+    ];
 
-    const clist = clists[type] || clists[5]
+    const clist = clists[type] || clists[5];
 
-    let str = ''
+    let str = '';
 
     while(str.length < len) {
-        str += clist[Math.floor(Math.random() * clist.length)] || ''
+        str += clist[Math.floor(Math.random() * clist.length)] || '';
     }
 
     return str;
-}
+};

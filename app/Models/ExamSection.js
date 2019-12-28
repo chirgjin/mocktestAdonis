@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('./Model')} */
-const Model = use("Model")
+const Model = use("Model");
 
 class ExamSection extends Model {
 
@@ -11,9 +11,9 @@ class ExamSection extends Model {
 
     exams() {
         return this
-        .belongsToMany('App/Models/Exam')
-        .pivotTable('exam_section_list')
+            .belongsToMany('App/Models/Exam')
+            .pivotTable('exam_section_list');
     }
 }
 
-module.exports = ExamSection
+module.exports = ExamSection;

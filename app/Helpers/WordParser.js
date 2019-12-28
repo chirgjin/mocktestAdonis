@@ -8,13 +8,13 @@ const cheerio = require('cheerio');
 const entities = new require('html-entities').AllHtmlEntities;
 const _ = require("lodash");
 
-const Helpers = use("Helpers")
+const Helpers = use("Helpers");
 
-const {Difficulty, Question, QuestionDirection, QuestionOption, QuestionSolution} = use("App/Models");
-const { FieldException, NotFoundException, MissingValueException, PermissionDeniedException } = use("App/Exceptions")
+const {Difficulty, Question} = use("App/Models");
+const { FieldException, MissingValueException } = use("App/Exceptions");
 
-const rimraf = require("rimraf")
-const Config = use('Config')
+const rimraf = require("rimraf");
+const Config = use('Config');
 
 
 class WordParser {
@@ -28,18 +28,18 @@ class WordParser {
      * @param {Array} options.tags List of tags to convert into bbcode
      */
     constructor(options={}) {
-        this.images = []
+        this.images = [];
 
-        this.logs = []
+        this.logs = [];
 
-        this.setOptions(options)
+        this.setOptions(options);
     }
 
     log(fn, ...data) {
         this.logs.push({
             fn,
             data
-        })
+        });
     }
     /**
      * 
@@ -58,7 +58,7 @@ class WordParser {
             this[key] = options.hasOwnProperty(key) ? options[key] : (this.hasOwnProperty(key) ? this[key] : this.defaults[key]);
         }
 
-        return this
+        return this;
     }
 
 
@@ -68,7 +68,7 @@ class WordParser {
             tempGenerator : parser => path.join(parser.tempFolder,uuid()),
             tags : [ 'img', 'sup', 'sub', 'b', 'i', 'strong', 'em', 'u', 'strike' ],
             inlineImages : Config.get('app.inlineImages', true),
-        }
+        };
     }
 
     
@@ -90,7 +90,7 @@ class WordParser {
     fixLineBreaks(html) {
         var breakToken = '__break__';
         var lineBreakedHtml = html.replace(/<br\s?\/?>/gi, breakToken).replace(/<p\.?>(.?)<\/p>/gi, breakToken + '$1' + breakToken);
-        return this.$('<div>').html(lineBreakedHtml).text().replace(new RegExp(breakToken, 'g'), '\n').replace(/([^\n])\n([^\n])/g,"$1 $2").replace(/\n\n/g,"\n");;
+        return this.$('<div>').html(lineBreakedHtml).text().replace(new RegExp(breakToken, 'g'), '\n').replace(/([^\n])\n([^\n])/g,"$1 $2").replace(/\n\n/g,"\n");
     }
 
     /**
@@ -103,7 +103,7 @@ class WordParser {
         return this.images.push({
             src,
             type : null
-        }) - 1
+        }) - 1;
     }
 
     updateImageType(val) {
@@ -113,9 +113,9 @@ class WordParser {
         }
 
         this.images = this.images.map(img => {
-            img.type = img.type || val
-            return img
-        })
+            img.type = img.type || val;
+            return img;
+        });
     }
 
     getBase64(src) {
@@ -123,19 +123,19 @@ class WordParser {
         return fs.readFileSync(
             path.join(this.tempLoc, src),
             { encoding: 'base64' }
-        ).toString()
+        ).toString();
         
     }
 
     get lastProp() {
-        return this._lastProp
+        return this._lastProp;
     }
 
     set lastProp(val) {
         
-        this._lastProp = val
+        this._lastProp = val;
 
-        this.updateImageType(val)
+        this.updateImageType(val);
     }
 
     /**
@@ -189,31 +189,34 @@ class WordParser {
             this.zip = zip;
 
             (typeof this.zip == 'string' ? fs.createReadStream(this.zip) : this.zip)
-            .pipe(unzip.Parse())
-            .on("entry", (entry) => {
-                let name = entry.path;
+                .pipe(unzip.Parse())
+                .on("entry", (entry) => {
+                    let name = entry.path;
     
-                if(entry.type == 'File' && name.match(/\.html?$/)) {
-                    filename = path.join(this.tempLoc, name);
-                }
+                    if(entry.type == 'File' && name.match(/\.html?$/)) {
+                        filename = path.join(this.tempLoc, name);
+                    }
     
-                if(entry.type == 'Directory') {
-                    mkdirp(path.join(this.tempLoc, name));
-                }
-                else if(entry.type == 'File' && !fs.existsSync(path.join(this.tempLoc, path.dirname(name)))) {
-                    mkdirp(path.join(this.tempLoc, path.dirname(name)));
-                }
+                    if(entry.type == 'Directory') {
+                        mkdirp(path.join(this.tempLoc, name));
+                    }
+                    else if(entry.type == 'File' && !fs.existsSync(path.join(this.tempLoc, path.dirname(name)))) {
+                        mkdirp(path.join(this.tempLoc, path.dirname(name)));
+                    }
     
-                if(entry.type == 'File') {
-                    entry.pipe(
-                        fs.createWriteStream( path.join(this.tempLoc, name) )
-                    );
-                }
-            })
-            .on("close", (data) => {
-                this.htmlfile = filename;
-                resolve(filename);
-            });
+                    if(entry.type == 'File') {
+                        entry.pipe(
+                            fs.createWriteStream( path.join(this.tempLoc, name) )
+                        );
+                    }
+                })
+                .on("close", () => {
+                    this.htmlfile = filename;
+                    resolve(filename);
+                })
+                .on("error", err => {
+                    reject(err);
+                });
         });
     }
 
@@ -222,12 +225,7 @@ class WordParser {
      * @param {String} dir directory to create
      */
     mkdir(dir) {
-        try {
-            mkdirp(dir);
-        }
-        catch (e) {
-            console.error(e);
-        }
+        mkdirp(dir);
     }
 
 
@@ -248,13 +246,13 @@ class WordParser {
             data.options = [];
 
             if(this.lastDirection) {
-                data.direction = this.lastDirection - 1
+                data.direction = this.lastDirection - 1;
             }
             
         }
         else if(type == 'direction') {
-            this.lastDirection = (parseInt(this.lastDirection) || 0) + 1
-            data.index = this.lastDirection - 1
+            this.lastDirection = (parseInt(this.lastDirection) || 0) + 1;
+            data.index = this.lastDirection - 1;
         }
 
         return {
@@ -277,7 +275,7 @@ class WordParser {
             type : type,
             prop : prop,
             marksStarting :  marksStarting
-        }
+        };
     }
 
     parse() {
@@ -293,7 +291,7 @@ class WordParser {
             // this.regex(/^questiondirection\s*:/i, 'question', 'direction'),
             // this.regex(/^passagenumber\s*:/i, 'question', 'direction'),
             this.regex(/^type\s*:/i, 'question', 'type'),
-            this.regex(/^option(\#|\s)?\d+\s*:/i, 'question', 'options'),
+            this.regex(/^option(#|\s)?\d+\s*:/i, 'question', 'options'),
             this.regex(/^option\s*:/i, 'question', 'options'),
             this.regex(/^difficulty\s*:/i, 'question', 'difficulty'),
             this.regex(/^(average\s*time|avg(_|\s)time)\s*:/i, 'question', 'avg_time'),
@@ -338,7 +336,7 @@ class WordParser {
 
             if(!assigned && lastData) {
                 lastStr += "\n" + text;
-                this.updateImageType(this.lastProp)
+                this.updateImageType(this.lastProp);
             }
             else {
 
@@ -346,7 +344,7 @@ class WordParser {
                     lastData = this.createDataNode(lastProp.type, lastProp.prop, '');
                     data.push(lastData);
                     
-                    this.lastProp = lastProp.type
+                    this.lastProp = lastProp.type;
                 }
                 else {
                     const a = _.at(lastData.data, pLast.prop)[0];
@@ -355,14 +353,14 @@ class WordParser {
                     _.set(lastData.data, prop, lastStr.trim().replace(/\n/g, "<br>"));
                     if(lastProp.prop.match(/option|solution/)) {
                         
-                        this.lastProp = lastProp.prop.match(/option|solution/)[0]
+                        this.lastProp = lastProp.prop.match(/option|solution/)[0];
                     }
 
                     if(lastProp.marksStarting) {
                         lastData = this.createDataNode(lastProp.type, lastProp.prop, '');
                         data.push(lastData);
                         
-                        this.lastProp = lastProp.type
+                        this.lastProp = lastProp.type;
                     }
                 }
                 
@@ -389,35 +387,35 @@ class WordParser {
             q.type = Question.QUESTION_TYPES[ _.toUpper(node.data.type).trim() ];
         }
 
-        q.answer = parseInt( _.toString( q.answer ).trim() )
+        q.answer = parseInt( _.toString( q.answer ).trim() );
         if(!node.data.difficulty) {
-            throw new MissingValueException("difficulty")
+            throw new MissingValueException("difficulty");
         }
         else if(!q.type) {
-            throw new MissingValueException("type")
+            throw new MissingValueException("type");
         }
         else if(isNaN(q.answer)) {
-            throw new FieldException('answer', `Question[${q.description}] must have an integer answer`)
+            throw new FieldException('answer', `Question[${q.description}] must have an integer answer`);
         }
         
-        q.avg_time = parseFloat(q.avg_time)
+        q.avg_time = parseFloat(q.avg_time);
 
         if(isNaN(q.avg_time)) {
-            delete q.avg_time
+            delete q.avg_time;
         }
 
 
         proms.push(
             Difficulty
-            .find( _.toString(node.data.difficulty).trim() )
-            .then(diff => {
+                .find( _.toString(node.data.difficulty).trim() )
+                .then(diff => {
 
-                if(!diff) {
-                    throw new Error(`Difficulty provided for Question[${q.description}] doesn't exist`);
-                }
+                    if(!diff) {
+                        throw new Error(`Difficulty provided for Question[${q.description}] doesn't exist`);
+                    }
 
                 // q.difficulty = diff.name;
-            })
+                })
         );
 
         q.options = [];
@@ -425,7 +423,7 @@ class WordParser {
             q.options.push({
                 description : option,
                 number : i
-            })
+            });
         });
 
         if(q.type == 1 && !q.options[q.answer-1]) {
@@ -437,14 +435,14 @@ class WordParser {
         }
         
         if(q.type == 1 && q.options.length < 1) {
-            throw new FieldException("options", "Question must have at least 1 option")
+            throw new FieldException("options", "Question must have at least 1 option");
         }
         else if(q.type != 1 && q.type != 2) {
-            throw new FieldException("type", "Question Type must be either MCQ or ORDER")
+            throw new FieldException("type", "Question Type must be either MCQ or ORDER");
         }
         
         if(node.data.solution && node.data.solution.text) {
-            q.solution = node.data.solution.text
+            q.solution = node.data.solution.text;
         }
 
         // if(node.data.direction) {
@@ -462,9 +460,9 @@ class WordParser {
         return q;
     }
 
-    parseDirection(node, proms) {
+    parseDirection(node) {
         // const direction = new QuestionDirection(node.data);
-        const direction = node.data.description
+        const direction = node.data.description;
 
         return direction;
     }
@@ -489,7 +487,7 @@ class WordParser {
                 }
             });
 
-            return Promise.all(proms).then(results => {
+            return Promise.all(proms).then(() => {
 
                 resolve({
                     questions : this.questions,
@@ -498,7 +496,7 @@ class WordParser {
                         return {
                             base64 : this.getBase64(src),
                             type
-                        }
+                        };
                     })
                 });
 
@@ -515,20 +513,20 @@ class WordParser {
         return new Promise((resolve, reject) => {
             
             if(!this._temp) {
-                resolve()
+                resolve();
             }
             else {
                 rimraf(this.tempLoc, err => {
                     if(err) {
-                        reject(err)
+                        reject(err);
                     }
                     else {
-                        resolve()
+                        resolve();
                     }
-                })
+                });
             }
-        })
+        });
     }
 }
 
-module.exports = WordParser
+module.exports = WordParser;

@@ -16,4 +16,4 @@ module.exports = async function (images, transaction) {
 
     return results;
 
-}
+};

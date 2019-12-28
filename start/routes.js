@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +14,7 @@
 */
 
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
-const Route = use('Route')
+const Route = use('Route');
 
 // Route.on('/').render('welcome')
 
@@ -36,15 +36,15 @@ Route.group('studentApi', () => {
 
     Route.resource('userTests', 'UserTestController').only(['index', 'store', 'update', 'show']);
 
-    Route.get('userTests/:user_test_id/answers', 'UserAnswerController.index')
+    Route.get('userTests/:user_test_id/answers', 'UserAnswerController.index');
 
-    Route.get('userTests/:user_test_id/question/:question_id/answer', 'UserAnswerController.show')
-    Route.post('userTests/:user_test_id/question/:question_id/answer', 'UserAnswerController.store')
-    Route.put('userTests/:user_test_id/question/:question_id/answer', 'UserAnswerController.update')
+    Route.get('userTests/:user_test_id/question/:question_id/answer', 'UserAnswerController.show');
+    Route.post('userTests/:user_test_id/question/:question_id/answer', 'UserAnswerController.store');
+    Route.put('userTests/:user_test_id/question/:question_id/answer', 'UserAnswerController.update');
 
-    Route.get('userTests/:user_test_id/analysis', 'AnalysisController.test')
+    Route.get('userTests/:user_test_id/analysis', 'AnalysisController.test');
 
-}).prefix('api/student').namespace('Student').middleware(['auth:jwtStudent'])
+}).prefix('api/student').namespace('Student').middleware(['auth:jwtStudent']);
 
 Route.group('studentAuth', () => {
 
@@ -54,13 +54,13 @@ Route.group('studentAuth', () => {
 
     Route.post('resetPassword', 'AuthController.resetPassword');
 
-}).prefix('api/student').namespace('Student')
+}).prefix('api/student').namespace('Student');
 
 Route.group('adminAuth', () => {
 
     Route.post('login', 'AuthController.login');
 
-    Route.resource('settings', 'SettingController').only(['index', 'update'])
+    Route.resource('settings', 'SettingController').only(['index', 'update']);
     
 }).prefix('api/admin').namespace('Admin').middleware('guest');
 
@@ -69,28 +69,28 @@ Route.group('adminApi', () => {
 
     Route.resource('difficulties', 'DifficultyController').only(['index', 'store']);
 
-    Route.resource('exams', 'ExamController').apiOnly()
-    Route.post('exams/:id/examSections', 'ExamController.updateSections')
+    Route.resource('exams', 'ExamController').apiOnly();
+    Route.post('exams/:id/examSections', 'ExamController.updateSections');
 
-    Route.resource('examSections', 'ExamSectionController').apiOnly()
+    Route.resource('examSections', 'ExamSectionController').apiOnly();
 
-    Route.post("questions/upload", 'QuestionController.upload')
+    Route.post("questions/upload", 'QuestionController.upload');
     
-    Route.resource('questions', 'QuestionController').apiOnly()
+    Route.resource('questions', 'QuestionController').apiOnly();
 
-    Route.resource('settings', 'SettingController').only(['index', 'update'])
+    Route.resource('settings', 'SettingController').only(['index', 'update']);
 
-    Route.resource('tests', 'TestController').apiOnly()
+    Route.resource('tests', 'TestController').apiOnly();
 
-    Route.resource('testSections', 'TestSectionController').apiOnly()
+    Route.resource('testSections', 'TestSectionController').apiOnly();
 
-    Route.post('users/upload', 'UserController.uploadCSV')
-    Route.get('users/export', 'ExportController.users')
-    Route.put('users/:user_id/permissions', 'PermissionController.manage')
+    Route.post('users/upload', 'UserController.uploadCSV');
+    Route.get('users/export', 'ExportController.users');
+    Route.put('users/:user_id/permissions', 'PermissionController.manage');
     
-    Route.resource('users', 'UserController').apiOnly()
+    Route.resource('users', 'UserController').apiOnly();
 
-    Route.resource('userTests', 'UserTestController').apiOnly()
+    Route.resource('userTests', 'UserTestController').apiOnly();
 
     
 

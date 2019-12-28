@@ -1,11 +1,11 @@
 module.exports = async (entity, user_test_id=null) => {
     const baseQuery = () => {
-        const q = entity.answers()
+        const q = entity.answers();
         if(user_test_id) {
             return q.where('user_answers.user_test_id', user_test_id);
         }
         return q;
-    }
+    };
 
     const stats = {
         answers : {
@@ -19,7 +19,7 @@ module.exports = async (entity, user_test_id=null) => {
             unattempted : (await baseQuery().where('user_answers.answer', null).avg('time_taken as avg_time'))[0].avg_time,
         },
         total_time : (await baseQuery().sum('time_taken as total_time'))[0].total_time,
-    }
+    };
 
     return stats;
 };

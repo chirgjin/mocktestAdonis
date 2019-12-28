@@ -1,8 +1,8 @@
 const cheerio = require("cheerio");
-const Config = use("Config")
+const Config = use("Config");
 module.exports = function parseImages(html, images) {
     if(Config.get('app.inlineImages', true)) {
-        return html
+        return html;
     }
 
     const $ = cheerio.load(html);
@@ -18,5 +18,5 @@ module.exports = function parseImages(html, images) {
         }
     });
 
-    return $("body").html()
-}
+    return $("body").html();
+};

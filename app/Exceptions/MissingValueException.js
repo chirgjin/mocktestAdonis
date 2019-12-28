@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-const { LogicalException } = require('@adonisjs/generic-exceptions')
+const { LogicalException } = require('@adonisjs/generic-exceptions');
 
 class MissingValueException extends LogicalException {
     /**
@@ -14,4 +14,4 @@ class MissingValueException extends LogicalException {
     }
 }
 
-module.exports = MissingValueException
+module.exports = MissingValueException;

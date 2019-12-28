@@ -1,14 +1,14 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('./Model')} */
-const Model = use("Model")
+const Model = use("Model");
 
 class Difficulty extends Model {
     static get primaryKey() {
         return 'name';
     }
     static get incrementing () {
-        return false
+        return false;
     }
 
     static boot() {
@@ -18,4 +18,4 @@ class Difficulty extends Model {
     }
 }
 
-module.exports = Difficulty
+module.exports = Difficulty;

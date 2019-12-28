@@ -1,31 +1,31 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('./Model')} */
-const Model = use("Model")
+const Model = use("Model");
 
 class Exam extends Model {
 
     static get hidden() {
-        return []
+        return [];
     }
     
     sections() {
         return this
-        .belongsToMany('App/Models/ExamSection')
-        .pivotTable('exam_section_list')
+            .belongsToMany('App/Models/ExamSection')
+            .pivotTable('exam_section_list');
     }
 
     tests() {
-        return this.hasMany('App/Models/Test')
+        return this.hasMany('App/Models/Test');
     }
 
     users() {
         return this
-        .belongsToMany('App/Models/User')
-        // .pivotTable('user_exams')
-        .pivotModel('App/Models/UserExam')
+            .belongsToMany('App/Models/User')
+            // .pivotTable('user_exams')
+            .pivotModel('App/Models/UserExam');
     }
 
 }
 
-module.exports = Exam
+module.exports = Exam;

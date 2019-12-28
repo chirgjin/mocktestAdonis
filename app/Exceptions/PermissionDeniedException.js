@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-const { LogicalException } = require('@adonisjs/generic-exceptions')
+const { LogicalException } = require('@adonisjs/generic-exceptions');
 
 class PermissionDeniedException extends LogicalException {
     /**
@@ -13,4 +13,4 @@ class PermissionDeniedException extends LogicalException {
     }
 }
 
-module.exports = PermissionDeniedException
+module.exports = PermissionDeniedException;

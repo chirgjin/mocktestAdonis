@@ -1,6 +1,6 @@
-MAX_TIME = 60; //max time is 60 secs
+const MAX_TIME = 60; //max time is 60 secs
 module.exports = function (time) {
-    time = (new Date(time)).getTime()/ 1000 //in case it already isn't instance of date/ time in ms convert it to date then get time
+    time = (new Date(time)).getTime()/ 1000; //in case it already isn't instance of date/ time in ms convert it to date then get time
 
     return Math.min(
         MAX_TIME,
@@ -8,5 +8,5 @@ module.exports = function (time) {
             0,
             (Date.now()/1000) - time
         )
-    )
-}
+    );
+};

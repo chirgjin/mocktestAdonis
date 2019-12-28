@@ -1,12 +1,12 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('./Model')} */
-const Model = use("Model")
+const Model = use("Model");
 const calculateMarks = use("App/Helpers/calculateMarks");
 class UserTest extends Model {
 
     static boot () {
-        super.boot()
+        super.boot();
         
         /**
         * A hook to hash the user password before saving
@@ -17,19 +17,19 @@ class UserTest extends Model {
 
             if (userTest.dirty.status == UserTest.COMPLETED) {
                 
-                userTest.completed_at = new Date()
+                userTest.completed_at = new Date();
 
                 const answers = await userTest.answers().fetch();
                 const test = userTest.getRelated('test') || await userTest.test().first();
 
-                userTest.marks_obtained = calculateMarks(test, answers)
+                userTest.marks_obtained = calculateMarks(test, answers);
 
                 // answers.rows.forEach(answer => {
                 //     userTest.marks_obtained += calculateMarks(test, answer)
                 // });
 
             }
-        })
+        });
     }
 
     static get hidden() {
@@ -37,11 +37,11 @@ class UserTest extends Model {
     }
 
     static get computed() {
-        return ['prettyStatus']
+        return ['prettyStatus'];
     }
 
     static get getters() {
-        return ['time_taken']
+        return ['time_taken'];
     }
 
     static get ONGOING() {
@@ -86,8 +86,8 @@ class UserTest extends Model {
 
     sectionsAttempted() {
         return this
-        .belongsToMany('App/Models/TestSection')
-        .pivotTable('user_test_sections');
+            .belongsToMany('App/Models/TestSection')
+            .pivotTable('user_test_sections');
     }
 
     answers() {
@@ -97,47 +97,47 @@ class UserTest extends Model {
 
     static async attemptOrFail(userTest, testSection) {
 
-        const { PermissionDeniedException, BadRequestException} = use("App/Exceptions")
+        const { PermissionDeniedException, BadRequestException} = use("App/Exceptions");
 
         if(userTest.status != UserTest.ONGOING) {
-            throw new BadRequestException('user_test', `This test has been marked as paused/completed`)
+            throw new BadRequestException('user_test', `This test has been marked as paused/completed`);
         }
 
         if(!testSection) {
-            throw new PermissionDeniedException(`This question does not belong to given test id`)
+            throw new PermissionDeniedException(`This question does not belong to given test id`);
         }
 
         if(!userTest.$relations.sectionsAttempted) {
-            await userTest.load('sectionsAttempted')
+            await userTest.load('sectionsAttempted');
         }
 
         if(!userTest.$relations.test) {
-            await userTest.load('test')
+            await userTest.load('test');
         }
 
-        const sectionsAttempted = userTest.getRelated('sectionsAttempted')
-        const test = userTest.getRelated('test')
-        const hasAttempted = sectionsAttempted.rows.filter(section => section.id == testSection.id).length > 0
+        const sectionsAttempted = userTest.getRelated('sectionsAttempted');
+        const test = userTest.getRelated('test');
+        const hasAttempted = sectionsAttempted.rows.filter(section => section.id == testSection.id).length > 0;
 
         if(testSection.isLocked) {
             if(userTest.test_section_id && testSection.id != userTest.test_section_id && hasAttempted) {
-                throw new BadRequestException('test_section', `This section has been locked and questions from this test can not be answered any longer`)
+                throw new BadRequestException('test_section', `This section has been locked and questions from this test can not be answered any longer`);
             }
         }
 
         if(userTest.time_taken >= test.duration) {
-            throw new PermissionDeniedException(`The test time has been taken up`)
+            throw new PermissionDeniedException(`The test time has been taken up`);
         }
 
         if(!hasAttempted) {
-            await userTest.sectionsAttempted().attach([testSection.id])
+            await userTest.sectionsAttempted().attach([testSection.id]);
         }
 
         userTest.test_section_id = testSection.id;
 
-        return { hasAttempted }
+        return { hasAttempted };
 
     }
 }
 
-module.exports = UserTest
+module.exports = UserTest;

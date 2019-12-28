@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('./Model')} */
-const Model = use("Model")
+const Model = use("Model");
 
 class TestSection extends Model {
 
@@ -14,7 +14,7 @@ class TestSection extends Model {
     }
 
     static get computed() {
-        return ['isLocked']
+        return ['isLocked'];
     }
 
     test() {
@@ -23,18 +23,18 @@ class TestSection extends Model {
 
     exams() {
         return this
-        .manyThrough('App/Models/Test', 'exam', 'test_id', 'id')
+            .manyThrough('App/Models/Test', 'exam', 'test_id', 'id');
     }
 
     questions() {
         return this
-        .belongsToMany("App/Models/Question")
-        .pivotTable('test_section_questions')
+            .belongsToMany("App/Models/Question")
+            .pivotTable('test_section_questions');
     }
 
     answers() {
         return this
-        .manyThrough('App/Models/TestSectionQuestion', 'answers')
+            .manyThrough('App/Models/TestSectionQuestion', 'answers');
     }
 
     getIsLocked({duration}) {
@@ -43,4 +43,4 @@ class TestSection extends Model {
     }
 }
 
-module.exports = TestSection
+module.exports = TestSection;

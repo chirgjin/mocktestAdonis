@@ -1,4 +1,4 @@
-const {User, Permission} = use("App/Models")
+// const {User, Permission} = use("App/Models");
 
 module.exports = {
     canEditUser: (sourceUser, targetUser) => {
@@ -27,13 +27,13 @@ module.exports = {
 
         //user is an admin
         const permission = await user
-        .permissions()
-        // .where('user_id', user.)
-        .where('permissions.model_name', model)
-        .where('permissions.action', action)
-        .getCount()
+            .permissions()
+            // .where('user_id', user.)
+            .where('permissions.model_name', model)
+            .where('permissions.action', action)
+            .getCount();
 
         // console.log(permission)
-        return permission > 0
+        return permission > 0;
     }
-}
+};

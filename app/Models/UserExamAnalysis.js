@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('./Model')} */
-const Model = use("Model")
+const Model = use("Model");
 
 class UserExamAnalysis extends Model {
 
@@ -19,11 +19,11 @@ class UserExamAnalysis extends Model {
 
     getRank() {
         return this
-        .query()
-        .where('avg_percentage', '>', this.avg_percentage)
-        .getCount()
-        .then(ct => ct+1);
+            .query()
+            .where('avg_percentage', '>', this.avg_percentage)
+            .getCount()
+            .then(ct => ct+1);
     }
 }
 
-module.exports = UserExamAnalysis
+module.exports = UserExamAnalysis;

@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -8,11 +8,11 @@ const User = use('App/Models/User');
 /** @type {typeof import('../../../Models/Exam')} */
 const Exam = use('App/Models/Exam');
 
-const Setting = use('App/Models/Setting')
+const Setting = use('App/Models/Setting');
 
-const validate = use("App/Helpers/validate")
+const validate = use("App/Helpers/validate");
 const { PermissionDeniedException, IncorrectTypeException, MissingValueException } = use("App/Exceptions");
-const randomString = use('App/Helpers/randomString')
+const randomString = use('App/Helpers/randomString');
 
 
 /**
@@ -34,12 +34,12 @@ class UserController {
             throw new PermissionDeniedException();
         }
         
-        const q = User.query().setVisible(['id'])
+        const q = User.query().setVisible(['id']);
         if(request.input("firstname", null)) {
             q.where('firstname', 'like', `%${request.input("firstname")}%`);
         }
         
-        const page = parseInt(request.input("page", 1)) || 1
+        const page = parseInt(request.input("page", 1)) || 1;
         const users = await q.paginate(page);
 
         return response.success(users);
@@ -82,10 +82,10 @@ class UserController {
             throw new IncorrectTypeException('roles', 'Array', typeof roles);
         }
         else {
-            const setting = await Setting.query().first()
+            const setting = await Setting.query().first();
 
             if(setting && setting.max_users != -1 && setting.max_users <= await User.query().getCount()) {
-                return response.error('Max users achieved', 422)
+                return response.error('Max users achieved', 422);
             }
         }
 
@@ -139,26 +139,26 @@ class UserController {
         const count = await Exam.query().whereIn('id', exams).getCount();
 
         if(count != exams.length) {
-            return response.error({'exams': 'One or more exam(s) do not exist'}, 400)
+            return response.error({'exams': 'One or more exam(s) do not exist'}, 400);
         }
 
         await user.load('exams', builder => {
-            builder.whereIn('exam_id', exams)
+            builder.whereIn('exam_id', exams);
         });
-        const userExams = user.getRelated('exams')
+        const userExams = user.getRelated('exams');
 
         if(userExams && Array.isArray(userExams)) {
             exams = exams.filter(exam => {
                 let go = 0;
-                userExams.forEach(uexam => go = go || uexam.id == exam)
-                return !go
-            })
+                userExams.forEach(uexam => go = go || uexam.id == exam);
+                return !go;
+            });
         }
         delete user.$relations.exams;
 
         await user.load('exams');
 
-        return response.success(user)
+        return response.success(user);
     }
     
     /**
@@ -169,19 +169,19 @@ class UserController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async show ({ params, request, response, auth }) {
+    async show ({ params, response, auth }) {
 
         if(!await auth.user.canPerformAction('user', 'read')) {
             throw new PermissionDeniedException();
         }
 
         const user = await User
-        .query()
-        .setVisible(['id'])
-        .where("id", params.id)
-        .with('exams')
-        .with('permissions')
-        .first();
+            .query()
+            .setVisible(['id'])
+            .where("id", params.id)
+            .with('exams')
+            .with('permissions')
+            .first();
 
         if(!user) {
             throw new Error("Not found");
@@ -218,11 +218,11 @@ class UserController {
 
 
         if(user.email != request.input('email', null) && request.input('email_verified', null) === null) {
-            user.email_verified = false
+            user.email_verified = false;
         }
 
         if(user.mobile_number != request.input('mobile_number', null) && request.input("mobile_verified", null) === null) {
-            user.mobile_verified = false
+            user.mobile_verified = false;
         }
 
         user.merge(request.only(editableFields));
@@ -236,7 +236,7 @@ class UserController {
         const exams =  request.input("exams");
 
         if(exams && Array.isArray(exams)) {
-            const count = await Exam.query().whereIn('id', exams).getCount()
+            const count = await Exam.query().whereIn('id', exams).getCount();
 
             if(count != exams.length) {
                 return response.error({field: "exams", message: "One or more exams you've selected do not exist!"});
@@ -259,7 +259,7 @@ class UserController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async destroy ({ params, request, response, auth}) {
+    async destroy ({ params, response, auth}) {
 
         if(!await auth.user.canPerformAction('user', 'delete')) {
             throw new PermissionDeniedException();
@@ -334,30 +334,30 @@ class UserController {
             'section' : 'section',
             'batch' : 'batch',
 
-        }
+        };
 
         const csv = request.file('file', {
             extnames : ['csv'],
-        })
+        });
         if(!csv) {
-            throw new MissingValueException('file')
+            throw new MissingValueException('file');
         }
 
-        const data = require("fs").readFileSync(csv.tmpPath).toString().split("\n").map(row => row.split(",").map(item => item.trim()))
+        const data = require("fs").readFileSync(csv.tmpPath).toString().split("\n").map(row => row.split(",").map(item => item.trim()));
 
-        const heads = data[0].map(head => colMapping[ (head||'').toString().toLowerCase().trim() ])
+        const heads = data[0].map(head => colMapping[ (head||'').toString().toLowerCase().trim() ]);
 
         if(heads.indexOf('firstname') == -1) {
-            throw new MissingValueException('firstname')
+            throw new MissingValueException('firstname');
         }
 
-        const setting = await Setting.query().first()
+        const setting = await Setting.query().first();
 
         if(setting && setting.max_users != -1) {
-            const totalUsers = await User.query().getCount()
+            const totalUsers = await User.query().getCount();
 
             if(setting.max_users < totalUsers + data.length) {
-                return response.error(`You are trying to create ${data.length} users but can only create ${totalUsers + data.length - setting.max_users} more users!`, 422)
+                return response.error(`You are trying to create ${data.length} users but can only create ${totalUsers + data.length - setting.max_users} more users!`, 422);
             }
         }
 
@@ -369,19 +369,19 @@ class UserController {
             const obj = {};
             row.forEach((item, i) => {
                 if(heads[i]) {
-                    obj[heads[i]] = item
+                    obj[heads[i]] = item;
                 }
             });
 
             if(!obj.password) {
-                obj.password = randomString(6, 'aA1!')
+                obj.password = randomString(6, 'aA1!');
             }
             if(!obj.username) {
-                obj.username = obj.firstname + (obj.lastname||'') + randomString(6, 'aAn')
+                obj.username = obj.firstname + (obj.lastname||'') + randomString(6, 'aAn');
             }
 
-            users.push(obj)
-        })
+            users.push(obj);
+        });
 
 
         // users.forEach(user => {
@@ -401,8 +401,8 @@ class UserController {
 
         return response.success({
             users,
-        })
+        });
     }
 }
 
-module.exports = UserController
+module.exports = UserController;

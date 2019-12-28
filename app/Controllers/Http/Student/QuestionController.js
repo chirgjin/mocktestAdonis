@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -8,7 +8,7 @@
 const { TestSection, Question } = use('App/Models');
 
 
-const validate = use("App/Helpers/validate")
+const validate = use("App/Helpers/validate");
 const { NotFoundException } = use("App/Exceptions");
 
 /**
@@ -24,7 +24,7 @@ class QuestionController {
     * @param {Response} ctx.response
     * @param {View} ctx.view
     */
-    async index ({ request, response, params, auth }) {
+    async index ({ response, params, auth }) {
         const v = await validate(params, {
             test_section_id : "required|integer",
         });
@@ -34,15 +34,15 @@ class QuestionController {
         }
 
         const testSection = await TestSection
-        .query()
-        .where('id', params.test_section_id)
-        .with('questions', builder => {
-            builder.withAll();
-        })
-        .first()
+            .query()
+            .where('id', params.test_section_id)
+            .with('questions', builder => {
+                builder.withAll();
+            })
+            .first();
 
         if(!testSection) {
-            throw new NotFoundException('TestSection')
+            throw new NotFoundException('TestSection');
         }
 
         const test = await auth.user.tests().where('tests.id', testSection.test_id).first();
@@ -64,26 +64,26 @@ class QuestionController {
     * @param {Response} ctx.response
     * @param {View} ctx.view
     */
-    async show ({ params, request, response, auth }) {
+    async show ({ params, response, auth }) {
 
         const question = await Question.query()
-        .whereHas('tests', builder => {
-            builder
-            .where('test_section_questions.question_id', params.id)
-            .innerJoin('user_exams', 'tests.exam_id', 'user_exams.exam_id')
-            // .where('tests.exam_id', 'user_exams.exam_id')
-            .where('user_exams.user_id', auth.user.id)
-        })
-        .where('questions.id', params.id)
-        .withAll()
-        .first();
+            .whereHas('tests', builder => {
+                builder
+                    .where('test_section_questions.question_id', params.id)
+                    .innerJoin('user_exams', 'tests.exam_id', 'user_exams.exam_id')
+                // .where('tests.exam_id', 'user_exams.exam_id')
+                    .where('user_exams.user_id', auth.user.id);
+            })
+            .where('questions.id', params.id)
+            .withAll()
+            .first();
 
         if(!question) {
-            throw new NotFoundException('Question')
+            throw new NotFoundException('Question');
         }
 
         return response.success(question);
     }
 }
 
-module.exports = QuestionController
+module.exports = QuestionController;

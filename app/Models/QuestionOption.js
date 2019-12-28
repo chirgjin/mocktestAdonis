@@ -1,11 +1,11 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('./Model')} */
-const Model = use("Model")
+const Model = use("Model");
 
 class QuestionOption extends Model {
     static get hidden() {
-        return []
+        return [];
     }
 
     question() {
@@ -14,15 +14,15 @@ class QuestionOption extends Model {
 
     images() {
         return this
-        .hasMany('App/Models/Image', 'id', 'reference_id')
-        .where('type', 'questionOption')
+            .hasMany('App/Models/Image', 'id', 'reference_id')
+            .where('type', 'questionOption');
     }
 
     createImage(obj) {
         return this
-        .hasMany('App/Models/Image', 'id', 'reference_id')
-        .create(Object.assign(obj, {type : 'questionOption'}));
+            .hasMany('App/Models/Image', 'id', 'reference_id')
+            .create(Object.assign(obj, {type : 'questionOption'}));
     }
 }
 
-module.exports = QuestionOption
+module.exports = QuestionOption;

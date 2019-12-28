@@ -17,4 +17,4 @@ module.exports = {
     FieldException : use("App/Exceptions/FieldException"),
 
     WaitTimeException : use("App/Exceptions/WaitTimeException"),
-}
+};

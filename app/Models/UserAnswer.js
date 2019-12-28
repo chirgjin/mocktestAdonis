@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('./Model')} */
-const Model = use("Model")
+const Model = use("Model");
 
 class UserAnswer extends Model {
 
@@ -10,7 +10,7 @@ class UserAnswer extends Model {
     }
     
     static get getters() {
-        return ['time_taken']
+        return ['time_taken'];
     }
 
     getTimeTaken(time) {
@@ -27,15 +27,15 @@ class UserAnswer extends Model {
 
     user() {
         return this
-        .manyThrough('App/Models/UserTest', 'user');
+            .manyThrough('App/Models/UserTest', 'user');
     }
 
     tests() {
         return this
-        .manyThrough('App/Models/UserTest', 'test');
+            .manyThrough('App/Models/UserTest', 'test');
     }
 
     
 }
 
-module.exports = UserAnswer
+module.exports = UserAnswer;

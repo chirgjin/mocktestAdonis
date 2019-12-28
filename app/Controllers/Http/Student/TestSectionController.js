@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -8,7 +8,7 @@
 const TestSection = use('App/Models/TestSection');
 
 
-const validate = use("App/Helpers/validate")
+const validate = use("App/Helpers/validate");
 const { NotFoundException } = use("App/Exceptions");
 /**
 * Resourceful controller for interacting with testsections
@@ -33,19 +33,19 @@ class TestSectionController {
         }
 
         const test = await auth
-        .user
-        .tests()
-        .where('tests.id', params.test_id)
-        .with("sections", (builder) => {
-            builder.orderByNum();
-            if(request.input("with_questions", 1) == 1) {
-                builder.with('questions', builder => builder.withAll());
-            }
-        })
-        .first();
+            .user
+            .tests()
+            .where('tests.id', params.test_id)
+            .with("sections", (builder) => {
+                builder.orderByNum();
+                if(request.input("with_questions", 1) == 1) {
+                    builder.with('questions', builder => builder.withAll());
+                }
+            })
+            .first();
 
         if(!test) {
-            throw new NotFoundException("TestSection")
+            throw new NotFoundException("TestSection");
         }
 
         return response.success(test.getRelated('sections'));
@@ -70,19 +70,19 @@ class TestSectionController {
         }
 
         const q = TestSection
-        .query()
-        .where('id', params.id)
+            .query()
+            .where('id', params.id);
         
         if(request.input('with_questions', 1) == 1) {
             q.with('questions', builder => {
                 builder.withAll();
-            })
+            });
         }
 
         const testSection = await q.first();
 
         if(!testSection) {
-            throw new NotFoundException('TestSection')
+            throw new NotFoundException('TestSection');
         }
 
         const test = await auth.user.tests().where('tests.id', testSection.test_id).first();
@@ -97,4 +97,4 @@ class TestSectionController {
     }
 }
 
-module.exports = TestSectionController
+module.exports = TestSectionController;
