@@ -7,3 +7,6 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh && bas
 
 #mysql installation
 #RUN apt-get update && apt-get install -y mysql-server mysql-client libmysqlclient-dev && service mysql start && mysql_secure_installation -D --password=mocktestindia123
+
+RUN npm install && node initial_setup.js
+CMD ["npm", "start"]
