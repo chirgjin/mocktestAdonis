@@ -13,8 +13,9 @@ class EnvGenerate extends Command {
         { dbUser : Username for database }
         { dbName : Name of database }
         { dbPass? : Password for database user}
-        { host?=127.0.0.1 : Hostname. Defaults to 127.0.0.1 }
+        { --host?=@value : Hostname.}
         { --app_key?=@value : App Secret key to use. Generates a random key by default }
+        { --store : If provided, stores result as .env file }
         `;
     }
 
@@ -28,12 +29,19 @@ class EnvGenerate extends Command {
         ).toString();
 
         env = env
-            .replace(/%HOST%/ig, args.host)
+            .replace(/%HOST%/ig, args.host || '')
             .replace(/%DB_USER%/ig, args.dbUser)
             .replace(/%DB_PASS%/ig, args.dbPass || '')
             .replace(/%DB_NAME%/ig, args.dbName)
             .replace(/%APP_KEY%/ig, options.app_key || randomString(32));
         
+        if(options.store) {
+            fs.writeFileSync(
+                path.join(Helpers.appRoot(), ".env"),
+                env
+            );
+        }
+
         if(!Helpers.isAceCommand()) {
             return env;
         }

@@ -13,7 +13,7 @@
 /** @type {import('@adonisjs/lucid/src/Factory')} */
 // const Factory = use('Factory');
 const Setting = use("App/Models/Setting");
-const Config = use("Config")
+const Config = use("Config");
 class SettingSeeder {
     async run () {
 

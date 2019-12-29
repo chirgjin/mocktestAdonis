@@ -1,0 +1,9 @@
+FROM ubuntu:18.04
+COPY . /app
+WORKDIR /app
+RUN apt-get update && apt-get install -y curl build-essential 
+#Node js installation
+RUN curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh && bash nodesource_setup.sh && apt-get install -y nodejs
+
+#mysql installation
+#RUN apt-get update && apt-get install -y mysql-server mysql-client libmysqlclient-dev && service mysql start && mysql_secure_installation -D --password=mocktestindia123
