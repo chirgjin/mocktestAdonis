@@ -60,7 +60,8 @@ const aliases = {};
 |
 */
 const commands = [
-    'App/Commands/ParseWordZip'
+    'App/Commands/ParseWordZip',
+    'App/Commands/Test',
 ];
 
 module.exports = { providers, aceProviders, aliases, commands };
