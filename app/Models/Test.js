@@ -6,9 +6,14 @@ const Model = use("Model");
 const Exam = use("App/Models/Exam");
 const ExamSection = use("App/Models/ExamSection");
 
+const BadStateException = use("App/Exceptions/BadStateException");
 class Test extends Model {
     static get hidden() {
         return ['options', 'created_by'];
+    }
+
+    get maintainIntegrity() {
+        return true;
     }
 
     static boot() {
@@ -38,6 +43,17 @@ class Test extends Model {
             }
 
             test.name = name;
+        });
+
+
+        this.addHook("beforeSave", async test => {
+
+            if(!test.maintainIntegrity) {
+                return ;
+            }
+
+            await Test.checkIntegrity(test);
+
         });
     }
 
@@ -122,6 +138,29 @@ class Test extends Model {
         }
 
         return null;
+    }
+
+    static async checkIntegrity(test) {
+        const sections = (test.getRelated("sections") || await test.sections().fetch()).rows;
+
+        const duration = test.duration;
+
+        let sectionalDuration = 0;
+
+        for(let section of sections) {
+            if(section.duration) {
+                sectionalDuration += parseInt(section.duration);
+            }
+            else if(sectionalDuration > 0) {
+                throw new BadStateException("section.duration", "Either all sections should have duration or none");
+            }
+        }
+
+        if(duration != sectionalDuration && sections.length > 0) {
+            throw new BadStateException("duration", "Test duration must match the total of all section's duration");
+        }
+
+        return true;
     }
 }
 

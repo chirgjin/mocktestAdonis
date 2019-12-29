@@ -7,6 +7,7 @@
 const {Test, TestSection, } = use("App/Models");
 const {NotFoundException, PermissionDeniedException} = use("App/Exceptions");
 const validate = use("App/Helpers/validate");
+const Database = use("Database");
 
 /**
 * Resourceful controller for interacting with testsections
@@ -153,6 +154,7 @@ class TestSectionController {
         const v = await validate(request.post(), {
             name : "string",
             number : "integer|range:-999999,99999",
+            duration : "integer|range:0,36001"
         });
 
         if(v.fails()) {
@@ -161,11 +163,117 @@ class TestSectionController {
 
         const testSection = await TestSection.findOrFail(params.id);
 
-        testSection.merge(request.only(['name', 'number']));
+        testSection.merge(request.only(['name', 'number', 'duration']));
+
+        await testSection.load('test');
+
+        const test = await testSection.getRelated('test');
+
+        await test.load('sections');
+
+        test.getRelated('sections').rows.forEach(ts => {
+            if(ts.id == testSection.id) {
+                ts.merge(testSection);
+            }
+        });
+
+        await Test.checkIntegrity(test);
 
         await testSection.save();
 
         return response.success(testSection);
+    }
+    
+    /**
+    * Update test details.
+    * PUT or PATCH tests/:id/testSections
+    *
+    * @param {object} ctx
+    * @param {Request} ctx.request
+    * @param {Response} ctx.response
+    */
+    async updateMany ({ params, request, response, auth }) {
+
+        if(!await auth.user.canPerformAction('test', 'update')) {
+            throw new PermissionDeniedException();
+        }
+
+        const test = await Test.findOrFail(params.id);
+
+        
+        const v = await validate(request.post(), {
+            test_sections : "required|array",
+            "test_sections.*.duration" : "integer|range:0,36001",
+            "test_sections.*.name" : "required|string",
+            "test_sections.*.number" : "integer",
+            "duration" : "integer|range:0,36001",
+        });
+
+        if(v.fails()) {
+            return response.error(v.messages());
+        }
+
+        await test.load("sections");
+
+        const existingTestSections = test.getRelated("sections").rows;
+        const testSections = request.input("test_sections");
+
+        const deleteSections = [];
+        const tasks = [];
+        const proms = [];
+        const finalSections = [];
+
+        await Database.beginTransaction( async (txn) => {
+            existingTestSections.forEach( (ts) => {
+                let found = 0;
+
+                testSections.forEach( (testSection, i) => {
+
+                    if(testSection.id == ts.id) {
+                        ts.number = testSection.hasOwnProperty('number') ? testSection.number : i;
+                        ts.duration = testSection.duration;
+                        ts.name = testSection.name;
+
+                        testSection.handled = true;
+
+                        tasks.push(() => ts.save(txn));
+                        found = 1;
+
+                        finalSections.push(ts);
+                    }
+                });
+
+                if(!found) {
+                    deleteSections.push(ts.id);
+                }
+            });
+
+            testSections.forEach( (testSection, i) => {
+                if(!testSection.handled) {
+                    if(!testSection.hasOwnProperty("number")) {
+                        testSection.number = i;
+                    }
+
+                    proms.push(
+                        TestSection
+                            .create(testSection, txn)
+                            .then(ts => {
+                                finalSections.push(ts);
+                            })
+                    );
+                }
+            });
+
+            await Promise.all(testSections);
+
+            test.$relations.sections.rows = finalSections;
+
+            await test.save(txn);
+
+            await Promise.all(tasks.map(task => task()));
+        });
+
+        return response.success(test);
     }
     
     /**

@@ -82,6 +82,11 @@ class TestController {
             options : "required|integer|range:-1,11",
             slab_good : "number|range:-1,101",
             slab_fail : "number|range:-1,101",
+
+            test_sections : "array",
+            "test_sections.*.duration" : "integer|range:0,36001",
+            "test_sections.*.name" : "required|string",
+            "test_sections.*.number" : "integer"
         });
 
         if(v.fails()) {
@@ -266,6 +271,7 @@ class TestController {
 
         return response.success(true);
     }
+    
 }
 
 module.exports = TestController;
