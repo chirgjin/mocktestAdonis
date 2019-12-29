@@ -67,9 +67,14 @@ hooks.after.preloading(() => {
         
         await this.constructor.$hooks.before.exec('delete', this);
         
-        const affected = await this.constructor
+        const q =  this.constructor
             .query()
-            .transacting(txn)
+        
+        if(txn) {
+            q.transacting(txn);
+        }
+
+        const affected = await q
             .where(this.constructor.primaryKey, this.primaryKeyValue)
             .ignoreScopes()
             .delete();
