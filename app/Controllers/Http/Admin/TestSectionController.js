@@ -149,6 +149,23 @@ class TestSectionController {
         if(!await auth.user.canPerformAction('test', 'update')) {
             throw new PermissionDeniedException();
         }
+
+        const v = await validate(request.post(), {
+            name : "string",
+            number : "integer|range:-999999,99999",
+        });
+
+        if(v.fails()) {
+            return response.error(v.messages());
+        }
+
+        const testSection = await TestSection.findOrFail(params.id);
+
+        testSection.merge(request.only(['name', 'number']));
+
+        await testSection.save();
+
+        return response.success(testSection);
     }
     
     /**
@@ -159,11 +176,17 @@ class TestSectionController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    async destroy ({ params, request, response, auth }) {
+    async destroy ({ params, response, auth }) {
 
         if(!await auth.user.canPerformAction('test', 'delete')) {
             throw new PermissionDeniedException();
         }
+
+        const testSection = await TestSection.findOrFail(params.id);
+
+        await testSection.delete();
+
+        return response.success(testSection);
     }
 }
 
