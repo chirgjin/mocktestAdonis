@@ -98,6 +98,40 @@ class Question extends Model {
 
         return question.answer == parseInt(answer);
     }
+
+    /**
+     * 
+     * @param {Number[]} ids
+     */
+    static async deleteMany(ids, txn) {
+
+
+        const q = Question
+            .query();
+        
+        if(txn) {
+            q.transacting(txn);
+        }
+
+        await q
+            .whereIn("id", ids)
+            .delete();
+        
+        const QuestionDirection = use("App/Models/QuestionDirection");
+
+        //delete question direction with 0 related questions
+
+        const qdQuery = QuestionDirection
+            .query();
+        
+        if(txn) {
+            qdQuery.transacting(txn);
+        }
+
+        await qdQuery
+            .doesntHave('questions')
+            .delete();
+    }
 }
 
 module.exports = Question;

@@ -68,7 +68,7 @@ hooks.after.preloading(() => {
         await this.constructor.$hooks.before.exec('delete', this);
         
         const q =  this.constructor
-            .query()
+            .query();
         
         if(txn) {
             q.transacting(txn);

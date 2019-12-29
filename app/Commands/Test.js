@@ -16,25 +16,34 @@ class Test extends Command {
         
         console.log("WUT WUT");
 
-        const txn = await Database.beginTransaction();
-        const {Question, QuestionOption, QuestionSolution} = use("App/Models");
+        // const txn = await Database.beginTransaction();
+        // const txn = 1;
+        const {Question, QuestionOption, QuestionSolution, TestSection } = use("App/Models");
 
-        console.log("WUT");
+        // console.log("WUT");
 
-        const q = await Question.query().transacting(txn).where('id', 3).first();
+        // const q = await Question.query().transacting(txn).where('id', 3).first();
 
-        console.log(q.toJSON());
+        // console.log(q.toJSON());
 
-        await q.delete(txn);
+        // await q.delete(txn);
 
-        const opts = await QuestionOption.query().transacting(txn).where('question_id', q.id).fetch();
-        const soln = await QuestionSolution.query().transacting(txn).where('question_id', q.id).first();
+        // const opts = await QuestionOption.query().transacting(txn).where('question_id', q.id).fetch();
+        // const soln = await QuestionSolution.query().transacting(txn).where('question_id', q.id).first();
 
-        console.log(opts.rows.length);
+        // console.log(opts.rows.length);
 
-        await txn.rollback();
+        const ts = await TestSection.query().with('questions', builder => {
+            // builder.transacting(txn);
+        }).first();
 
-        // Database.close();
+        // console.log(ts.toJSON());
+
+        await ts.delete();
+
+        // await txn.rollback();
+
+        await Database.close();
     }
 }
 

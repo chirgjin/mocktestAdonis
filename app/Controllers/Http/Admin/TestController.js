@@ -8,7 +8,7 @@
 const {Test, TestSection, Exam, Difficulty, ExamSection} = use("App/Models");
 // const MissingValueException = use("App/Exceptions/MissingValueException");
 // const NotFoundException = use("App/Exceptions/NotFoundException");
-const {NotFoundException, MissingValueException, PermissionDeniedException } = use("App/Exceptions");
+const {NotFoundException, MissingValueException, PermissionDeniedException, FieldException } = use("App/Exceptions");
 const validate = use("App/Helpers/validate");
 const Helpers = use("App/Helpers");
 
@@ -81,7 +81,7 @@ class TestController {
             marks : "required|integer|range:0,51",
             options : "required|integer|range:-1,11",
             slab_good : "number|range:-1,101",
-            slab_fail : "number|range:-1,101"
+            slab_fail : "number|range:-1,101",
         });
 
         if(v.fails()) {
@@ -197,12 +197,53 @@ class TestController {
     * @param {Request} ctx.request
     * @param {Response} ctx.response
     */
-    // eslint-disable-next-line no-unused-vars
     async update ({ params, request, response, auth }) {
 
         if(!await auth.user.canPerformAction('test', 'update')) {
             throw new PermissionDeniedException();
         }
+
+        const test = await Test.findOrFail(params.id);
+
+        
+        const v = await validate(request.post(), {
+            exam_id : "integer",
+            exam_section_id : "integer",
+            difficulty : "alphaNumeric",
+            description : "string",
+            instructions: "string",
+            negative_marks : "integer|range:-1,11",
+            duration : "integer|range:0,36001",
+            marks : "integer|range:0,51",
+            options : "integer|range:-1,11",
+            slab_good : "number|range:-1,101",
+            slab_fail : "number|range:-1,101"
+        });
+
+        if(v.fails()) {
+            return response.error(v.messages());
+        }
+
+        
+        //verify exam, examSection & difficulty are valid
+        const testData = request.only(['exam_id', 'exam_section_id', 'difficulty', 'description', 'instructions', 'negative_marks', 'duration', 'enabled', 'review_enabled', 'marks', 'options', 'slab_good', 'slab_fail']);
+
+        if(!await Exam.find(testData.exam_id)) {
+            throw new FieldException('exam_id', "Given exam does not exist in db");
+        }
+        else if(!await ExamSection.find(testData.exam_section_id)) {
+            throw new FieldException("exam_section_id", "Given exam section does not exist in db");
+        }
+        else if(!await Difficulty.find(testData.difficulty)) {
+            throw new FieldException("difficulty", "Given difficulty does not exist in db");
+        }
+
+        test.merge(testData);
+
+        await test.save();
+
+        return response.success(test);
+
     }
     
     /**
@@ -219,9 +260,11 @@ class TestController {
             throw new PermissionDeniedException();
         }
 
-        params;
+        const test = await Test.findOrFail(params.id);
 
-        return response.error("duh");
+        await test.delete();
+
+        return response.success(true);
     }
 }
 

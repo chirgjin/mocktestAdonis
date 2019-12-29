@@ -2,7 +2,6 @@
 
 /** @type {typeof import('./Model')} */
 const Model = use("Model");
-const Database = use("Database");
 
 class TestSection extends Model {
 
@@ -39,10 +38,8 @@ class TestSection extends Model {
             if(Array.isArray(testSection._deleteQuestions)) {
                 const Question = use("App/Models/Question");
 
-                await Question
-                    .query()
-                    .whereIn("id", testSection._deleteQuestions)
-                    .delete();
+                await Question.deleteMany(testSection._deleteQuestions);
+
             }
         });
     }
