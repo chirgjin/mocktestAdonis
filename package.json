@@ -30,6 +30,7 @@
         "@adonisjs/shield": "^1.0.8",
         "@adonisjs/validator": "^5.0.6",
         "@sendgrid/mail": "^6.4.0",
+        "@sentry/node": "^5.10.2",
         "cheerio": "^1.0.0-rc.3",
         "excel4node": "^1.7.2",
         "html-entities": "^1.2.1",
