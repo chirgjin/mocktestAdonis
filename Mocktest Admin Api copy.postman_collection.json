@@ -1,0 +1,1366 @@
+{
+	"info": {
+		"_postman_id": "ca147d8b-be9b-44df-8e08-3827a9de33ac",
+		"name": "Mocktest Admin Api copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "chirgjin",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123456789",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/login",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"login"
+					]
+				},
+				"description": "Login as admin\nrequires 'admin'/'superAdmin' role"
+			},
+			"response": []
+		},
+		{
+			"name": "Difficulties",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/difficulties",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"difficulties"
+					]
+				},
+				"description": "Get list of difficulties from db"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Difficulty",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Hard",
+							"description": "name of difficulty to create",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/difficulties",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"difficulties"
+					]
+				},
+				"description": "Create new difficulty"
+			},
+			"response": []
+		},
+		{
+			"name": "Exams",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/exams?name=&code",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"exams"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "",
+							"description": "filters based on name if provided"
+						},
+						{
+							"key": "code",
+							"value": null,
+							"description": "filters based on code if provided"
+						}
+					]
+				},
+				"description": "Get list of exams from db"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Exam",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Bank PO",
+							"description": "Required. name of exam",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "BPO",
+							"description": "Required. short code name of exam",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/exams",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"exams"
+					]
+				},
+				"description": "Create new exam"
+			},
+			"response": []
+		},
+		{
+			"name": "Exam",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/exams/:id",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"exams",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "2",
+							"description": "Id of exam"
+						}
+					]
+				},
+				"description": "Get data of a single exam"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Exam",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "",
+							"description": "optional. new name of exam",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/exams/:id",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"exams",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Exam",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "aba52614-f522-4ffb-81f9-30d1dfd2d8c2",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/exams/:id",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"exams",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "Id of exam to delete"
+						}
+					]
+				},
+				"description": "Delete an exam\nWarning: This will delete all related Tests, UserTests, ExamSection Links!"
+			},
+			"response": []
+		},
+		{
+			"name": "Exam -> Exam Sections",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "action",
+							"value": "link",
+							"description": "Required. Possible Values: link, unlink",
+							"type": "text"
+						},
+						{
+							"key": "sections[]",
+							"value": "1",
+							"description": "Required. Array containing examSection ids",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/exams/:id/examSections",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"exams",
+						":id",
+						"examSections"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "Id of exam"
+						}
+					]
+				},
+				"description": "Add or remove exam sections related to an exam"
+			},
+			"response": []
+		},
+		{
+			"name": "ExamSections",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/examSections?name=&code=",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"examSections"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "",
+							"description": "Optional. Filters based on examsection name"
+						},
+						{
+							"key": "code",
+							"value": "",
+							"description": "Optional. Filters based on examsection code"
+						}
+					]
+				},
+				"description": "Get list of exam Sections"
+			},
+			"response": []
+		},
+		{
+			"name": "Create ExamSection",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "English",
+							"description": "Required. Exam Section's Name",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "EN",
+							"description": "Required. Exam Section's code name",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/examSections",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"examSections"
+					]
+				},
+				"description": "Create new exam section"
+			},
+			"response": []
+		},
+		{
+			"name": "Exam Section",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/examSections/:id",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"examSections",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "2",
+							"description": "Id of exam section"
+						}
+					]
+				},
+				"description": "Get data of a single exam section"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Exam Section",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/examSections/:id",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"examSections",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "2",
+							"description": "Id of exam section"
+						}
+					]
+				},
+				"description": "Deletes a given exam section.\nWarning: Deletes related Tests, UserTests, Exam_ExamSection relations"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Exam Section",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "",
+							"description": "Optional. New name of exam section",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/examSections/:id",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"examSections",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "2",
+							"description": "Id of exam section"
+						}
+					]
+				},
+				"description": "Update data of an exam section"
+			},
+			"response": []
+		},
+		{
+			"name": "Questions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/questions?test_section_id=&test_id=&page=",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"questions"
+					],
+					"query": [
+						{
+							"key": "test_section_id",
+							"value": "",
+							"description": "Optional. If provided loads all questions belonging to given test section"
+						},
+						{
+							"key": "test_id",
+							"value": "",
+							"description": "Optional. If provided loads all questions belonging to given test id"
+						},
+						{
+							"key": "page",
+							"value": "",
+							"description": "Optional. Determines the page number to load. Defaults to 1"
+						}
+					]
+				},
+				"description": "Get list of questions"
+			},
+			"response": []
+		},
+		{
+			"name": "Question",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/questions/:id",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"questions",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Get data of a question"
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Questions",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/P:/Projects/mocktest/word_docs/word_docs.zip"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/questions/upload",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"questions",
+						"upload"
+					]
+				},
+				"description": "Upload Word Zip File to get questions in json format"
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Question",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/questions/:id",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"questions",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Update data of a question\n#To Be Done"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Question",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/questions/:id",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"questions",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Delete a question\n#To Be Done"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Question",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/questions",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"questions"
+					]
+				},
+				"description": "Create new question, question options, question direction, question solutions and their images"
+			},
+			"response": []
+		},
+		{
+			"name": "Tests",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/tests?name&description&created_by=&with_sections=&with_questions=",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"tests"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": null,
+							"description": "Optional. Filters based on test name"
+						},
+						{
+							"key": "description",
+							"value": null,
+							"description": "Optional. Filters based on test description"
+						},
+						{
+							"key": "created_by",
+							"value": "",
+							"description": "Optional. Filters based on created_by. It is id of user who created tests"
+						},
+						{
+							"key": "with_sections",
+							"value": "",
+							"description": "Include test sections data or not. Defaults to 1"
+						},
+						{
+							"key": "with_questions",
+							"value": "",
+							"description": "Include Questions data or not. Defaults to 1. Ignored if with_sections is not 1"
+						}
+					]
+				},
+				"description": "Get list of tests\nSupports Filtering"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Test",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "exam_id",
+							"value": "",
+							"description": "Required. Id of exam",
+							"type": "text"
+						},
+						{
+							"key": "exam_section_id",
+							"value": "",
+							"description": "Required. Id of exam section",
+							"type": "text"
+						},
+						{
+							"key": "difficulty",
+							"value": "",
+							"description": "Required. Difficulty of test",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "",
+							"description": "Required. Description of test",
+							"type": "text"
+						},
+						{
+							"key": "instructions",
+							"value": "",
+							"description": "Required. Instructions for attempting test. May contain html/images",
+							"type": "text"
+						},
+						{
+							"key": "negative_marks",
+							"value": "",
+							"description": "Negative marking of tests. Possible Values: 0-10. Defaults to 0",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "",
+							"description": "Required. Duration of test in seconds",
+							"type": "text"
+						},
+						{
+							"key": "marks",
+							"value": "",
+							"description": "Required. Marks obtained per correct answer. Possible Values: 1-50",
+							"type": "text"
+						},
+						{
+							"key": "options",
+							"value": "",
+							"description": "Required. Number of options per mcq. Possible Values: 0-10",
+							"type": "text"
+						},
+						{
+							"key": "sections[0]",
+							"value": "",
+							"description": "Optional. Array containing test section data to be created",
+							"type": "text"
+						},
+						{
+							"key": "sections[0][name]",
+							"value": "",
+							"description": "Required. Name of test section",
+							"type": "text"
+						},
+						{
+							"key": "sections[0][duration]",
+							"value": "",
+							"description": "Conditional. Required if any other section has duration present. In seconds",
+							"type": "text"
+						},
+						{
+							"key": "sections[0][number]",
+							"value": "",
+							"description": "Optional. Defaults to section index",
+							"type": "text"
+						},
+						{
+							"key": "images[]",
+							"value": "",
+							"description": "Optional. Array containing base64'd images for test instructions",
+							"type": "text"
+						},
+						{
+							"key": "slab_good",
+							"value": "",
+							"description": "Optional. Float value telling how much marks user has to get to count as having performed above average",
+							"type": "text"
+						},
+						{
+							"key": "slab_fail",
+							"value": "",
+							"description": "Optional. Float value telling how much marks has to get to count as having failed the test",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/tests",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"tests"
+					]
+				},
+				"description": "Create new test & test sections"
+			},
+			"response": []
+		},
+		{
+			"name": "Settings",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/settings",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"settings"
+					]
+				},
+				"description": "Get current settings"
+			},
+			"response": []
+		},
+		{
+			"name": "Settings",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/D:/text.jpg",
+							"disabled": true
+						},
+						{
+							"key": "name",
+							"value": "Test 1",
+							"type": "text"
+						},
+						{
+							"key": "max_users",
+							"value": "0",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/settings/:id",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"settings",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Update settings"
+			},
+			"response": []
+		},
+		{
+			"name": "Users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/users",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users"
+					]
+				},
+				"description": "Get list of current users"
+			},
+			"response": []
+		},
+		{
+			"name": "Create user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "",
+							"description": "Required. Username of user, must be unique",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"description": "Required. Password of user",
+							"type": "text"
+						},
+						{
+							"key": "firstname",
+							"value": "",
+							"description": "Required. Firstname of user",
+							"type": "text"
+						},
+						{
+							"key": "lastname",
+							"value": "",
+							"description": "Required. Lastname of user",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "",
+							"description": "Optional",
+							"type": "text"
+						},
+						{
+							"key": "mobile_number",
+							"value": "",
+							"description": "Optional",
+							"type": "text"
+						},
+						{
+							"key": "college",
+							"value": "",
+							"description": "Optional",
+							"type": "text"
+						},
+						{
+							"key": "mobile_verified",
+							"value": "",
+							"description": "Optional. Defaults to false",
+							"type": "text"
+						},
+						{
+							"key": "email_verified",
+							"value": "",
+							"description": "Optional. Defaults to false",
+							"type": "text"
+						},
+						{
+							"key": "roles[]",
+							"value": "",
+							"description": "Array of roles to assign to user. Defaults to 'student'",
+							"type": "text"
+						},
+						{
+							"key": "rollnum",
+							"value": "",
+							"description": "Optional",
+							"type": "text"
+						},
+						{
+							"key": "branch",
+							"value": "",
+							"description": "Optional",
+							"type": "text"
+						},
+						{
+							"key": "degree",
+							"value": "",
+							"description": "Optional",
+							"type": "text"
+						},
+						{
+							"key": "section",
+							"value": "",
+							"description": "Optional",
+							"type": "text"
+						},
+						{
+							"key": "batch",
+							"value": "",
+							"description": "Optional",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/users",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users"
+					]
+				},
+				"description": "Create new user"
+			},
+			"response": []
+		},
+		{
+			"name": "User",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/users/:id",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "Id of user"
+						}
+					]
+				},
+				"description": "Get list of current users"
+			},
+			"response": []
+		},
+		{
+			"name": "User",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "firstname",
+							"value": "chirag",
+							"description": "Firstname of user. Optional",
+							"type": "text"
+						},
+						{
+							"key": "lastname",
+							"value": "",
+							"description": "Lastname of user. Optional",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "roles[]",
+							"value": "",
+							"description": "roles of user (Array). Optional",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "",
+							"description": "email of user. Optional",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "",
+							"description": "Password of user. Optional",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "email_verified",
+							"value": "",
+							"description": "mark email as verified or not. Optional",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "mobile_number",
+							"value": "",
+							"description": "mobile number of user. Optional",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "mobile_verified",
+							"value": "",
+							"description": "mark mobile num as verified or not. optional",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "college",
+							"value": "",
+							"description": "college of user. optional",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "exams[]",
+							"value": "1",
+							"description": "exams which user can access. Optional\ndeletes previously assigned exams",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "rollnum",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "branch",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "degree",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "section",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "batch",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/users/:id",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Get list of current users"
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Users",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/P:/Projects/mocktest/users.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/users/upload",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users",
+						"upload"
+					]
+				},
+				"description": "Create multiple users via CSV Upload"
+			},
+			"response": []
+		},
+		{
+			"name": "Export Users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/users/export?user_id&completed_tests_only&with_tests&test_id[]",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users",
+						"export"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "",
+							"description": "Optional. Id of user to export, if not provided then exports all users"
+						},
+						{
+							"key": "completed_tests_only",
+							"value": "",
+							"description": "Optional. 1 or 0 indicating if only completed tests are to be exported"
+						},
+						{
+							"key": "with_tests",
+							"value": "",
+							"description": "Optional. 1 or 0 indicating if test data is to be exported"
+						},
+						{
+							"key": "test_id[]",
+							"value": "",
+							"description": "Optional. Array of test ids to be exported else exports all tests"
+						}
+					]
+				},
+				"description": "Export users & tests"
+			},
+			"response": []
+		},
+		{
+			"name": "User permissions",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"permissions\" : [\n\t\t{\n\t\t\t\"model\" : \"user,test,exam,examSection\",\n\t\t\t\"permission\" : \"create,read,update,delete\",\n\t\t\t\"action\" : \"add or remove\"\n\t\t}\n\t]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/users/:id/permissions",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users",
+						":id",
+						"permissions"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
+					]
+				},
+				"description": "Add/remove user permissions"
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{AUTH_TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "692b7d01-1ef5-40d6-b4f4-08f68e7cd708",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "33e0dd21-4159-436b-99ea-206600248aca",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "58615284-2deb-44a2-97db-e30312ccbd6a",
+			"key": "API_URL",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "9f7d4954-4a58-4329-b7cb-d5ed105f857d",
+			"key": "AUTH_TOKEN",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "ea532919-4a1c-44b2-b93c-5d0af5f37502",
+			"key": "AUTH_TOKEN_LOCAL",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

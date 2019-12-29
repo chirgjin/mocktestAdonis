@@ -12,7 +12,7 @@ class UserSchema extends Schema {
             table.string('email', 254).unique();
             table.string('mobile_number', 15).unique();
             
-            table.string('password', 60).notNullable();
+            table.string('password', 100).notNullable();
             table.string('roles', 50).notNullable().defaultTo('student');
             table.string('firstname', 50).notNullable();
             table.string('lastname', 50);

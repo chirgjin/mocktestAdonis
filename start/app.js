@@ -62,6 +62,8 @@ const aliases = {};
 const commands = [
     'App/Commands/ParseWordZip',
     'App/Commands/Test',
+    'App/Commands/EnvGenerate',
+    'App/Commands/MakeSuperuser',
 ];
 
 module.exports = { providers, aceProviders, aliases, commands };

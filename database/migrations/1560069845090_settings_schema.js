@@ -11,8 +11,8 @@ class SettingsSchema extends Schema {
             table.string('name', 150);
             table.string('image', 200);
             table.integer('max_users').defaultTo(100);
-            table.timestamp('active_from').defaultTo(null);
-            table.timestamp('active_to').defaultTo(null);
+            table.datetime('active_from').defaultTo(null);
+            table.datetime('active_to').defaultTo(null);
             table.timestamps();
         });
     }

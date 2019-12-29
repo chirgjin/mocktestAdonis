@@ -36,6 +36,7 @@
         "html-entities": "^1.2.1",
         "lodash": "^4.17.15",
         "mkdirp": "^0.5.1",
+        "mysql": "^2.17.1",
         "pg": "^7.12.1",
         "promise-parallel-throttle": "^3.3.0",
         "rimraf": "^3.0.0",

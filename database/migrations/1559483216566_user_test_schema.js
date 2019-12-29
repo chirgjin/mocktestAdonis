@@ -15,7 +15,7 @@ class UserTestSchema extends Schema {
             table.integer('status').notNullable().defaultTo(0);
             table.float('time_taken', 10, 3).notNullable().defaultTo(0);
             table.float('marks_obtained', 6, 2).defaultTo(null);
-            table.timestamp('completed_at').defaultTo(null);
+            table.timestamp('completed_at').nullable().defaultTo(null);
             
             table.timestamps();
 
