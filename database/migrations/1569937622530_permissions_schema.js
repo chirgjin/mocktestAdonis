@@ -12,6 +12,8 @@ class PermissionsSchema extends Schema {
             // table.boolean('default_provided')
 
             table.timestamps();
+
+            table.unique(['model_name', 'action']);
         });
     }
     
