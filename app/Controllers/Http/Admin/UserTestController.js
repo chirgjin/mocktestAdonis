@@ -4,6 +4,11 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const UserTest = use("App/Models/UserTest");
+const { PermissionDeniedException, NotFoundException } = use("App/Exceptions");
+const analysis = use("App/Helpers/analysis");
+const validate = use("App/Helpers/validate");
+
 /**
  * Resourceful controller for interacting with usertests
  */
@@ -17,31 +22,25 @@ class UserTestController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-    async index ({ request, response, view }) {
-    }
+    async index ({ request, response, auth }) {
 
-    /**
-   * Render a form to be used for creating a new usertest.
-   * GET usertests/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-    async create ({ request, response, view }) {
-      
-    }
+        if(!await auth.user.canPerformAction('test', 'read')) {
+            throw new PermissionDeniedException();
+        }
 
-    /**
-   * Create/save a new usertest.
-   * POST usertests
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-    async store ({ request, response }) {
+        const q = UserTest.query();
+
+        if(request.input("user_id", null)) {
+            q.where('user_id', request.input('user_id'));
+        }
+        if(request.input('test_id', null)) {
+            q.where('test_id', request.input('test_id'));
+        }
+
+        q.with('user').with('test');
+
+        const page = parseInt(request.input("page", 1)) || 1;
+        return response.success(await q.paginate(page));
     }
 
     /**
@@ -53,19 +52,37 @@ class UserTestController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-    async show ({ params, request, response, view }) {
-    }
+    async show ({ params, request, response, auth }) {
+        if(!await auth.user.canPerformAction('test', 'read')) {
+            throw new PermissionDeniedException();
+        }
 
-    /**
-   * Render a form to update an existing usertest.
-   * GET usertests/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-    async edit ({ params, request, response, view }) {
+        const userTest = await UserTest
+            .query()
+            .where('id', params.id)
+            .with('user')
+            .with('test', builder => {
+                builder.with('sections');
+            })
+            .with('answers')
+            .first();
+
+        if(!userTest) {
+            throw new NotFoundException('UserTest');
+        }
+
+        if(request.input('with_analysis', 0) == '1') {
+            const sections = userTest.getRelated("test").getRelated('sections').rows;
+
+            for(let section of sections) {
+
+                //now calculate marks, incorrect, correct stats etc
+                section.$relations.stats = await analysis(section, userTest.id);
+            }
+        }
+
+        return response.success(userTest);
+
     }
 
     /**
@@ -76,8 +93,18 @@ class UserTestController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-    async update ({ params, request, response }) {
-    }
+    // async update ({ params, request, response, auth }) {
+
+    //     if(!await auth.user.canPerformAction('test', 'update')) {
+    //         throw new PermissionDeniedException();
+    //     }
+        
+    //     const userTest = await UserTest.findOrFail(params.id);
+        
+    //     const v = await validate(request.post(), {
+            
+    //     })
+    // }
 
     /**
    * Delete a usertest with id.
@@ -87,7 +114,18 @@ class UserTestController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-    async destroy ({ params, request, response }) {
+    async destroy ({ params, response, auth }) {
+
+        if(!await auth.user.canPerformAction('test', 'delete')) {
+            throw new PermissionDeniedException();
+        }
+
+        const userTest = await UserTest.findOrFail(params.id);
+
+        //delete test, delete attemptedSections pivot rows, delete answers
+        await userTest.delete();
+
+        return response.success(true);
     }
 }
 
