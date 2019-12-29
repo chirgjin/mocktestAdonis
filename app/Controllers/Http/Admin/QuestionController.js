@@ -513,9 +513,41 @@ class QuestionController {
             throw new PermissionDeniedException();
         }
 
-        params;
+        const question = await Question.findOrFail(params.id);
+
+        await Database.beginTransaction(async (transaction) => {
+
+            // await question
+            //     .options()
+            //     .transacting(transaction)
+            //     .delete();
+            
+            // await question
+            //     .solution()
+            //     .transacting(transaction)
+            //     .delete();
+            
+            if(question.direction_id) {
+                const ct = await Question.query().transacting(transaction).where('direction_id', question.direction_id).getCount();
+
+                if(ct == 1) {
+                    await question
+                        .direction()
+                        .transacting(transaction)
+                        .delete();
+                }
+            }
+
+            // await question
+            //     .images()
+            //     .transacting(transaction)
+            //     .delete();
+            
+            await question.delete(transaction);
+
+        });
         
-        return response.error("duh");
+        return response.error(true);
     }
 
 
