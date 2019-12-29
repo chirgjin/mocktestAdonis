@@ -81,6 +81,9 @@ class UserTestController {
         if(!test) {
             throw new PermissionDeniedException();
         }
+        else if(!test.enabled) {
+            throw new PermissionDeniedException('This test has been disabled');
+        }
 
         const usertest = await UserTest.create({
             user_id : auth.user.id,

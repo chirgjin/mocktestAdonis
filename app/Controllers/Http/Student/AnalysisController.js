@@ -5,7 +5,7 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 
-const {UserTest, Test, TestSection, UserAnswer, Question} = use("App/Models");
+const {UserTest} = use("App/Models");
 
 const { PermissionDeniedException, NotFoundException, FieldException } = use("App/Exceptions");
 
@@ -56,13 +56,15 @@ class AnalysisController {
 
         const test = userTest.getRelated('test');
 
+        if(!test.review_enabled) {
+            throw new PermissionDeniedException(`This test has review disabled`);
+        }
+
         const sections = test.getRelated('sections').rows;
 
         for(let section of sections) {
 
             //now calculate marks, incorrect, correct stats etc
-            
-
             section.$relations.stats = await analysis(section, params.user_test_id);
         }
 

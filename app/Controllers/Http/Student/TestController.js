@@ -39,7 +39,7 @@ class TestController {
         const examId = params.exam_id;
         const sectionId = params.exam_section_id;
 
-        const q = auth.user.tests().where('exam_section_id', sectionId).where('user_exams.exam_id', examId);
+        const q = auth.user.tests().where('exam_section_id', sectionId).where('user_exams.exam_id', examId).where('enabled', 1);
 
         
 
@@ -114,7 +114,7 @@ class TestController {
 
         const test = await q.first();
 
-        if(!test) {
+        if(!test || !test.enabled) {
             throw new NotFoundException('Test');
         }
 
