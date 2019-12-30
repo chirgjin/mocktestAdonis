@@ -48,10 +48,6 @@ class Test extends Model {
 
         this.addHook("beforeSave", async test => {
 
-            if(!test.maintainIntegrity) {
-                return ;
-            }
-
             await Test.checkIntegrity(test);
 
         });
@@ -141,6 +137,10 @@ class Test extends Model {
     }
 
     static async checkIntegrity(test) {
+        if(!test.maintainIntegrity) {
+            return ;
+        }
+        
         const sections = (test.getRelated("sections") || await test.sections().fetch()).rows;
 
         const duration = test.duration;

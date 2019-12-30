@@ -44,12 +44,16 @@ Route.group('studentApi', () => {
 
     Route.get('userTests/:user_test_id/analysis', 'AnalysisController.test');
 
+    Route.put('me', 'UserController.update');
+    Route.get('me/send_verification_mail', 'UserController.sendActivation');
+    Route.post('me/verify_email', 'UserController.confirmEmail');
+
 }).prefix('api/student').namespace('Student').middleware(['auth:jwtStudent']);
 
 Route.group('studentAuth', () => {
 
     Route.post('login', 'AuthController.login').middleware('guest');
-    // Route.post('register', 'AuthController.register');
+    
     Route.post('forgotPassword', 'AuthController.forgotPassword').middleware('guest');
 
     Route.post('resetPassword', 'AuthController.resetPassword');
@@ -59,8 +63,6 @@ Route.group('studentAuth', () => {
 Route.group('adminAuth', () => {
 
     Route.post('login', 'AuthController.login');
-
-    Route.resource('settings', 'SettingController').only(['index', 'update']);
     
 }).prefix('api/admin').namespace('Admin').middleware('guest');
 
@@ -81,18 +83,18 @@ Route.group('adminApi', () => {
     Route.resource('settings', 'SettingController').only(['index', 'update']);
 
     Route.resource('tests', 'TestController').apiOnly();
+    Route.put('tests/:id/testSections', 'TestSectionController.updateMany');
 
     Route.resource('testSections', 'TestSectionController').apiOnly();
 
+
     Route.post('users/upload', 'UserController.uploadCSV');
     Route.get('users/export', 'ExportController.users');
-    Route.put('users/:user_id/permissions', 'PermissionController.manage');
-    
     Route.resource('users', 'UserController').apiOnly();
+    Route.put('users/:user_id/permissions', 'PermissionController.manage');
+
 
     Route.resource('userTests', 'UserTestController').apiOnly();
-
-    
 
 
 }).prefix('api/admin').namespace('Admin').middleware('auth:jwtAdmin');
