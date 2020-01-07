@@ -34,7 +34,7 @@ class UserController {
             throw new PermissionDeniedException();
         }
         
-        const q = User.query().setVisible(['id']);
+        const q = User.query().setHidden(['password', 'roles']);
         if(request.input("firstname", null)) {
             q.where('firstname', 'like', `%${request.input("firstname")}%`);
         }
