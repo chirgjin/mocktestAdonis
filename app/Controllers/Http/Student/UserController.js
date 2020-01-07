@@ -149,9 +149,17 @@ class UserController {
             user.mobile_verified = false;
         }
 
-        user.merge(request.only(['firstname', 'lastname', 'college']));
+        user.merge(request.only(['firstname', 'lastname', 'college', 'rollnum', 'branch', 'degree', 'section', 'batch']));
 
         await user.save();
+
+        return response.success(user);
+    }
+
+    async show({ response, auth }) {
+
+        const user = auth.user;
+
 
         return response.success(user);
     }

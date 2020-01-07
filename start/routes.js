@@ -44,6 +44,7 @@ Route.group('studentApi', () => {
 
     Route.get('userTests/:user_test_id/analysis', 'AnalysisController.test');
 
+    Route.get('me', 'UserController.show');
     Route.put('me', 'UserController.update');
     Route.get('me/send_verification_mail', 'UserController.sendActivation');
     Route.post('me/verify_email', 'UserController.confirmEmail');
