@@ -21,12 +21,15 @@ class ExceptionHandler extends BaseExceptionHandler {
     * @return {void}
     */
     async handle (error, { request, response }) {
+
         if(error.code == 'E_ROUTE_NOT_FOUND') {
             return super.handle(error, {request, response});
         }
         else if(error.code == 'E_PASSWORD_MISMATCH' || error.code == 'E_USER_NOT_FOUND') {
             return super.handle.apply(this, arguments);
         }
+
+
         if(error.field) {
             error = {
                 status : error.status,
@@ -37,7 +40,7 @@ class ExceptionHandler extends BaseExceptionHandler {
             };
         }
         
-        response.error(error.messages||error.message, error.status||400);
+        return response.error(error.messages||error.message, error.status||400);
     }
     
     /**
@@ -51,7 +54,7 @@ class ExceptionHandler extends BaseExceptionHandler {
     * @return {void}
     */
     async report (error, { request }) {
-        console.log(error);
+        // console.log(error);
     }
 }
 

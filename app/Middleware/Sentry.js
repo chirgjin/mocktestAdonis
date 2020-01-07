@@ -5,10 +5,9 @@
 
 const Sentry = require('@sentry/node');
 const Env = use("Env");
+const exceptionHandler = new (use("App/Exceptions/Handler"));
 
 Sentry.init({ dsn: Env.get('SENTRY_DSN') });
-
-// console.log(Sentry);
 
 class SentryMiddleware {
     /**
@@ -52,7 +51,7 @@ class SentryMiddleware {
                 });
             }
 
-            return response.error(e);
+            return exceptionHandler.handle(e, arguments[0]);
         }
     }
 }
