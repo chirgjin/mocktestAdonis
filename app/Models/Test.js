@@ -137,7 +137,7 @@ class Test extends Model {
     }
 
     static async checkIntegrity(test) {
-        if(!test.maintainIntegrity) {
+        if(!test.maintainIntegrity || !test.id && !test.getRelated("sections")) {
             return ;
         }
         
